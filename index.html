@@ -1,0 +1,1029 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>GloboBYM – Boutique de Globos | Lima, Perú</title>
+  <meta name="description" content="GloboBYM – Boutique de Globos profesional en Lima, Perú. Decoración de cumpleaños, baby shower y eventos empresariales. 33K+ clientes felices." />
+  <meta property="og:title" content="GloboBYM – Boutique de Globos | Lima, Perú" />
+  <meta property="og:description" content="Boutique de globería profesional en Lima. Decoraciones únicas para tu evento especial." />
+  <meta property="og:type" content="website" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --primary:      #C2006B;
+      --primary-light:#E8198A;
+      --gold:         #D4A017;
+      --gold-light:   #F0C040;
+      --dark:         #1A1018;
+      --gray:         #5A5260;
+      --gray-light:   #F5F0F3;
+      --white:        #FFFFFF;
+      --pink-soft:    #FFF0F6;
+      --radius:       16px;
+      --shadow:       0 8px 40px rgba(194,0,107,.12);
+    }
+
+    html { scroll-behavior: smooth; }
+    body { font-family: 'Inter', sans-serif; color: var(--dark); background: var(--white); overflow-x: hidden; }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 16px 48px;
+      background: rgba(255,255,255,.92);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(194,0,107,.08);
+    }
+    .nav-logo { font-family: 'Playfair Display', serif; font-size: 1.4rem; font-weight: 700; color: var(--primary); letter-spacing: -.5px; }
+    .nav-logo span { color: var(--gold); }
+    nav ul { list-style: none; display: flex; gap: 28px; }
+    nav ul a { text-decoration: none; font-size: .875rem; font-weight: 500; color: var(--gray); transition: color .2s; }
+    nav ul a:hover { color: var(--primary); }
+    .nav-cta { background: var(--primary); color: var(--white) !important; padding: 10px 22px; border-radius: 50px; font-weight: 600 !important; transition: background .2s !important; }
+    .nav-cta:hover { background: var(--primary-light) !important; }
+
+    /* ── HERO ── */
+    .hero { min-height: 100vh; display: grid; grid-template-columns: 1fr 1fr; align-items: center; gap: 64px; padding: 120px 80px 80px; position: relative; overflow: hidden; }
+    .hero-bg { position: absolute; inset: 0; z-index: 0; }
+    .hero-bg-slide { position: absolute; inset: 0; background-size: cover; background-position: center; opacity: 0; transition: opacity 1.2s ease-in-out; }
+    .hero-bg-slide.active { opacity: 1; }
+    .hero-bg-overlay { position: absolute; inset: 0; background: linear-gradient(135deg, rgba(255,240,246,.85) 0%, rgba(255,255,255,.72) 50%, rgba(255,240,246,.62) 100%); z-index: 1; }
+    .hero > *:not(.hero-bg) { position: relative; z-index: 2; }
+    .hero-text { animation: fadeUp .8s ease both; }
+    .hero-badge { display: inline-flex; align-items: center; gap: 8px; background: rgba(194,0,107,.08); color: var(--primary); padding: 6px 16px; border-radius: 50px; font-size: .8rem; font-weight: 600; letter-spacing: .5px; text-transform: uppercase; margin-bottom: 24px; }
+    .hero-badge::before { content: '✦'; font-size: .65rem; }
+    .hero-title { font-family: 'Playfair Display', serif; font-size: clamp(2.4rem, 4vw, 3.6rem); font-weight: 700; line-height: 1.12; color: var(--dark); margin-bottom: 20px; }
+    .hero-title em { font-style: normal; color: var(--primary); }
+    .hero-bio { font-size: 1.05rem; line-height: 1.7; color: var(--gray); max-width: 480px; margin-bottom: 32px; }
+    .hero-actions { display: flex; gap: 12px; flex-wrap: wrap; }
+    .btn-primary { display: inline-flex; align-items: center; gap: 8px; background: var(--primary); color: var(--white); padding: 14px 28px; border-radius: 50px; font-size: .93rem; font-weight: 600; text-decoration: none; box-shadow: 0 6px 24px rgba(194,0,107,.35); transition: transform .2s, box-shadow .2s; }
+    .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 10px 32px rgba(194,0,107,.45); }
+    .btn-secondary { display: inline-flex; align-items: center; gap: 8px; border: 2px solid var(--primary); color: var(--primary); padding: 12px 26px; border-radius: 50px; font-size: .93rem; font-weight: 600; text-decoration: none; transition: background .2s, color .2s; }
+    .btn-secondary:hover { background: var(--primary); color: var(--white); }
+    .btn-reserva { display: inline-flex; align-items: center; gap: 8px; background: linear-gradient(135deg, var(--gold), var(--gold-light)); color: var(--dark); padding: 14px 26px; border-radius: 50px; font-size: .93rem; font-weight: 700; text-decoration: none; box-shadow: 0 6px 24px rgba(212,160,23,.4); transition: transform .2s, box-shadow .2s; }
+    .btn-reserva:hover { transform: translateY(-2px); box-shadow: 0 10px 32px rgba(212,160,23,.55); }
+
+    /* ── INSTAGRAM CARD ── */
+    .hero-card { animation: fadeUp .8s .2s ease both; background: var(--white); border-radius: 24px; box-shadow: var(--shadow); padding: 26px; max-width: 400px; margin: 0 auto; border: 1px solid rgba(194,0,107,.08); }
+    .ig-profile { display: flex; align-items: center; gap: 14px; margin-bottom: 18px; }
+    .ig-avatar-wrap { position: relative; flex-shrink: 0; width: 76px; height: 76px; }
+    .ig-avatar-ring { position: absolute; inset: 0; border-radius: 50%; background: linear-gradient(135deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888); animation: igRingRotate 3s linear infinite; }
+    .ig-avatar-ring::after { content: ''; position: absolute; inset: 3px; border-radius: 50%; background: white; }
+    @keyframes igRingRotate { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+    .ig-avatar { position: absolute; inset: 4px; width: calc(100% - 8px); height: calc(100% - 8px); border-radius: 50%; object-fit: cover; z-index: 1; display: block; }
+    .ig-name-row { display: flex; align-items: center; gap: 6px; }
+    .ig-info h3 { font-family: 'Playfair Display', serif; font-size: 1.05rem; font-weight: 700; color: var(--dark); }
+    .ig-verified { width: 18px; height: 18px; border-radius: 50%; background: linear-gradient(135deg, #0095f6, #1877f2); display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; box-shadow: 0 1px 4px rgba(0,149,246,.4); }
+    .ig-verified svg { width: 10px; height: 10px; }
+    .ig-handle { font-size: .8rem; color: var(--gray); margin: 2px 0 3px; }
+    .ig-handle a { color: inherit; text-decoration: none; }
+    .ig-location { font-size: .76rem; color: var(--gray); }
+    .ig-stats { display: grid; grid-template-columns: repeat(3,1fr); text-align: center; padding: 14px 0; border-top: 1px solid var(--gray-light); border-bottom: 1px solid var(--gray-light); margin-bottom: 14px; }
+    .ig-stats > div + div { border-left: 1px solid var(--gray-light); }
+    .ig-stat-num { font-weight: 700; font-size: 1rem; color: var(--dark); display: block; }
+    .ig-stat-label { font-size: .65rem; color: var(--gray); text-transform: uppercase; letter-spacing: .4px; }
+    .ig-bio-text { font-size: .84rem; line-height: 1.6; color: var(--gray); margin-bottom: 14px; }
+    .ig-mini-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 3px; border-radius: 8px; overflow: hidden; margin-bottom: 14px; }
+    .ig-mini-grid img { width: 100%; aspect-ratio: 1; object-fit: cover; display: block; transition: opacity .2s; }
+    .ig-mini-grid img:hover { opacity: .85; }
+    .ig-follow-btn { display: block; width: 100%; text-align: center; background: linear-gradient(135deg,#f09433,#e6683c,#dc2743,#cc2366,#bc1888); color: white; font-weight: 700; font-size: .88rem; padding: 11px; border-radius: 10px; text-decoration: none; transition: opacity .2s; }
+    .ig-follow-btn:hover { opacity: .88; }
+
+    /* ── STATS STRIP ── */
+    .stats-strip { background: var(--primary); padding: 40px 80px; display: grid; grid-template-columns: repeat(4,1fr); gap: 24px; text-align: center; }
+    .stat-item-num { font-family: 'Playfair Display', serif; font-size: 2.2rem; font-weight: 700; color: var(--white); display: block; }
+    .stat-item-label { font-size: .85rem; color: rgba(255,255,255,.75); margin-top: 4px; }
+
+    /* ── SECTION BASE ── */
+    section { padding: 96px 80px; }
+    .section-tag { display: inline-block; color: var(--primary); font-size: .75rem; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 12px; }
+    .section-title { font-family: 'Playfair Display', serif; font-size: clamp(1.8rem, 3vw, 2.6rem); font-weight: 700; color: var(--dark); margin-bottom: 16px; line-height: 1.2; }
+    .section-title em { font-style: normal; color: var(--primary); }
+    .section-sub { font-size: 1rem; color: var(--gray); max-width: 520px; line-height: 1.7; }
+
+    /* ── SERVICES ── */
+    #servicios { background: var(--pink-soft); }
+    .services-header { text-align: center; margin-bottom: 56px; }
+    .services-header .section-sub { margin: 0 auto; }
+    .services-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px,1fr)); gap: 28px; }
+    .service-card { background: var(--white); border-radius: var(--radius); padding: 36px 28px; box-shadow: 0 4px 24px rgba(0,0,0,.06); border: 1px solid rgba(194,0,107,.06); transition: transform .3s, box-shadow .3s; position: relative; overflow: hidden; }
+    .service-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px; background: linear-gradient(90deg,var(--primary),var(--gold-light)); }
+    .service-card:hover { transform: translateY(-6px); box-shadow: var(--shadow); }
+    .service-icon { width: 60px; height: 60px; border-radius: 16px; background: rgba(194,0,107,.08); display: flex; align-items: center; justify-content: center; font-size: 1.8rem; margin-bottom: 20px; }
+    .service-card h3 { font-family: 'Playfair Display', serif; font-size: 1.2rem; font-weight: 700; color: var(--dark); margin-bottom: 10px; }
+    .service-card p { font-size: .9rem; color: var(--gray); line-height: 1.65; }
+    .service-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 16px; }
+    .tag { background: rgba(194,0,107,.07); color: var(--primary); padding: 4px 12px; border-radius: 50px; font-size: .73rem; font-weight: 600; }
+
+    /* ── GALLERY ── */
+    #galeria { background: var(--white); }
+    .gallery-header { margin-bottom: 40px; }
+    .gallery-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 16px; }
+    .gallery-item { aspect-ratio: 1; border-radius: 12px; overflow: hidden; position: relative; cursor: pointer; }
+    .gallery-item img.slide { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0; transition: opacity .5s ease, transform .5s ease; transform: scale(1.04); }
+    .gallery-item img.slide.active { opacity: 1; transform: scale(1); }
+    .gallery-item-overlay { position: absolute; inset: 0; background: linear-gradient(to top, rgba(194,0,107,.65) 0%, transparent 55%); opacity: 0; transition: opacity .3s; }
+    .gallery-item:hover .gallery-item-overlay { opacity: 1; }
+    .gallery-cat-badge { position: absolute; top: 12px; left: 12px; background: rgba(194,0,107,.85); color: white; font-size: .7rem; font-weight: 700; padding: 4px 10px; border-radius: 50px; letter-spacing: .4px; text-transform: uppercase; backdrop-filter: blur(4px); z-index: 2; }
+    .gallery-expand { position: absolute; top: 12px; right: 12px; width: 34px; height: 34px; background: rgba(0,0,0,.5); border-radius: 8px; display: flex; align-items: center; justify-content: center; opacity: 0; transition: opacity .25s; z-index: 3; backdrop-filter: blur(4px); }
+    .gallery-expand svg { width: 15px; height: 15px; stroke: white; fill: none; stroke-width: 2; stroke-linecap: round; }
+    .gallery-item:hover .gallery-expand { opacity: 1; }
+    .slide-dots { position: absolute; bottom: 10px; left: 50%; transform: translateX(-50%); display: flex; gap: 6px; z-index: 3; }
+    .slide-dot { width: 7px; height: 7px; border-radius: 50%; background: rgba(255,255,255,.5); transition: background .3s, transform .3s; }
+    .slide-dot.active { background: white; transform: scale(1.3); }
+    .slide-hint { position: absolute; bottom: 34px; left: 0; right: 0; text-align: center; font-size: .7rem; color: rgba(255,255,255,.85); font-weight: 600; z-index: 3; text-shadow: 0 1px 4px rgba(0,0,0,.4); }
+    .gallery-cta { text-align: center; margin-top: 40px; }
+    .gallery-cta a { display: inline-flex; align-items: center; gap: 8px; color: var(--primary); font-weight: 600; text-decoration: none; font-size: .95rem; border-bottom: 2px solid transparent; transition: border-color .2s; }
+    .gallery-cta a:hover { border-color: var(--primary); }
+
+    /* ── LIGHTBOX ── */
+    .lightbox { position: fixed; inset: 0; z-index: 1000; background: rgba(0,0,0,.95); display: flex; align-items: center; justify-content: center; opacity: 0; pointer-events: none; transition: opacity .3s; }
+    .lightbox.open { opacity: 1; pointer-events: all; }
+    .lightbox-img { max-width: 90vw; max-height: 88vh; object-fit: contain; border-radius: 6px; display: block; }
+    .lightbox-close { position: fixed; top: 18px; right: 22px; background: rgba(255,255,255,.12); border: none; color: white; font-size: 1.4rem; width: 42px; height: 42px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: background .2s; z-index: 1001; }
+    .lightbox-close:hover { background: rgba(255,255,255,.25); }
+    .lightbox-nav { position: fixed; top: 50%; transform: translateY(-50%); background: rgba(255,255,255,.12); border: none; color: white; font-size: 1.8rem; width: 50px; height: 50px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: background .2s; z-index: 1001; line-height: 1; }
+    .lightbox-nav:hover { background: rgba(255,255,255,.25); }
+    .lightbox-prev { left: 18px; }
+    .lightbox-next { right: 18px; }
+    .lightbox-caption { position: fixed; bottom: 18px; left: 50%; transform: translateX(-50%); color: rgba(255,255,255,.6); font-size: .82rem; white-space: nowrap; }
+
+    /* ── TESTIMONIALS ── */
+    #testimonios { background: var(--pink-soft); }
+    .testimonios-header { text-align: center; margin-bottom: 56px; }
+    .testimonios-header .section-sub { margin: 0 auto; }
+    .testimonios-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 24px; }
+    .testimonio-card { background: var(--white); border-radius: var(--radius); padding: 28px; border: 1px solid rgba(194,0,107,.07); transition: transform .3s, box-shadow .3s; }
+    .testimonio-card:hover { transform: translateY(-4px); box-shadow: var(--shadow); }
+    .testimonio-stars { display: flex; gap: 3px; margin-bottom: 14px; }
+    .testimonio-stars span { color: var(--gold); font-size: .88rem; }
+    .testimonio-text { font-size: .9rem; line-height: 1.7; color: var(--gray); margin-bottom: 20px; font-style: italic; }
+    .testimonio-footer { display: flex; align-items: center; gap: 12px; }
+    .testimonio-avatar { width: 42px; height: 42px; border-radius: 50%; background: linear-gradient(135deg, var(--primary), var(--gold)); display: flex; align-items: center; justify-content: center; color: white; font-weight: 700; font-size: .85rem; flex-shrink: 0; }
+    .testimonio-name { font-weight: 700; font-size: .88rem; color: var(--dark); }
+    .testimonio-event { font-size: .75rem; color: var(--gray); margin-top: 2px; }
+
+    /* ── WHY US ── */
+    #nosotros { background: var(--white); }
+    .why-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 64px; align-items: center; }
+    .why-features { display: flex; flex-direction: column; gap: 28px; }
+    .feature { display: flex; gap: 18px; align-items: flex-start; }
+    .feature-icon { width: 48px; height: 48px; border-radius: 12px; flex-shrink: 0; background: rgba(194,0,107,.1); display: flex; align-items: center; justify-content: center; font-size: 1.3rem; }
+    .feature h4 { font-size: 1rem; font-weight: 700; color: var(--dark); margin-bottom: 4px; }
+    .feature p { font-size: .88rem; color: var(--gray); line-height: 1.6; }
+    .why-visual { background: var(--pink-soft); border-radius: 24px; padding: 40px; text-align: center; border: 1px solid rgba(194,0,107,.08); }
+    .why-visual .big-num { font-family: 'Playfair Display', serif; font-size: 5rem; font-weight: 700; color: var(--primary); line-height: 1; }
+    .why-visual .big-label { font-size: 1rem; color: var(--gray); margin: 8px 0 20px; }
+    .why-ratings { display: flex; justify-content: center; gap: 6px; margin-bottom: 8px; }
+    .star { color: var(--gold); font-size: 1.3rem; }
+    .why-sub { font-size: .8rem; color: var(--gray); margin-bottom: 28px; }
+    .why-cta { display: inline-flex; align-items: center; gap: 8px; background: var(--primary); color: white; padding: 12px 28px; border-radius: 50px; text-decoration: none; font-weight: 700; font-size: .9rem; transition: background .2s; }
+    .why-cta:hover { background: var(--primary-light); }
+
+    /* ── CONTACT ── */
+    #contacto { background: linear-gradient(135deg, var(--dark) 0%, #2D1020 100%); color: var(--white); text-align: center; }
+    #contacto .section-title { color: var(--white); }
+    #contacto .section-sub { color: rgba(255,255,255,.65); margin: 0 auto 48px; }
+    .contact-cards { display: flex; justify-content: center; gap: 16px; flex-wrap: wrap; margin-bottom: 48px; }
+    .contact-card { background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.12); border-radius: var(--radius); padding: 20px 28px; display: flex; align-items: center; gap: 14px; text-decoration: none; color: var(--white); transition: background .2s; }
+    .contact-card:hover { background: rgba(255,255,255,.12); }
+    .contact-card-icon { font-size: 1.5rem; }
+    .contact-card-label { font-size: .73rem; color: rgba(255,255,255,.5); }
+    .contact-card-value { font-size: .93rem; font-weight: 600; }
+
+    /* Form */
+    .contact-form-wrap { max-width: 620px; margin: 0 auto 48px; text-align: left; }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 14px; }
+    .form-field { display: flex; flex-direction: column; gap: 6px; }
+    .form-field.full { grid-column: 1 / -1; }
+    .form-field label { font-size: .78rem; color: rgba(255,255,255,.55); font-weight: 500; letter-spacing: .3px; }
+    .form-field input,
+    .form-field select,
+    .form-field textarea { background: rgba(255,255,255,.07); border: 1px solid rgba(255,255,255,.14); border-radius: 10px; padding: 11px 15px; color: var(--white); font-size: .9rem; font-family: inherit; outline: none; width: 100%; transition: border-color .2s, background .2s; }
+    .form-field input::placeholder, .form-field textarea::placeholder { color: rgba(255,255,255,.28); }
+    .form-field select option { background: #2D1020; }
+    .form-field input:focus, .form-field select:focus, .form-field textarea:focus { border-color: rgba(194,0,107,.6); background: rgba(255,255,255,.10); }
+    .form-field textarea { resize: vertical; min-height: 96px; }
+    .btn-form { width: 100%; background: var(--primary); color: white; border: none; padding: 15px; border-radius: 50px; font-size: .98rem; font-weight: 700; cursor: pointer; transition: background .2s, transform .2s; margin-top: 6px; font-family: inherit; }
+    .btn-form:hover { background: var(--primary-light); transform: translateY(-2px); }
+
+    .contact-divider { display: flex; align-items: center; gap: 16px; max-width: 620px; margin: 0 auto 32px; color: rgba(255,255,255,.3); font-size: .8rem; }
+    .contact-divider::before, .contact-divider::after { content: ''; flex: 1; height: 1px; background: rgba(255,255,255,.12); }
+
+    .cta-whatsapp { display: inline-flex; align-items: center; gap: 10px; background: #25D366; color: white; padding: 17px 38px; border-radius: 50px; font-size: 1.02rem; font-weight: 700; text-decoration: none; box-shadow: 0 8px 32px rgba(37,211,102,.4); transition: transform .2s, box-shadow .2s; }
+    .cta-whatsapp:hover { transform: translateY(-3px); box-shadow: 0 12px 40px rgba(37,211,102,.5); }
+
+    /* ── FOOTER ── */
+    footer { background: var(--dark); border-top: 1px solid rgba(255,255,255,.05); padding: 32px 80px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px; }
+    .footer-brand { font-family: 'Playfair Display', serif; font-size: 1.2rem; font-weight: 700; color: var(--white); }
+    .footer-brand span { color: var(--gold); }
+    footer p { font-size: .82rem; color: rgba(255,255,255,.4); }
+    .footer-social { display: flex; gap: 14px; }
+    .footer-social a { color: rgba(255,255,255,.5); text-decoration: none; font-size: .82rem; transition: color .2s; }
+    .footer-social a:hover { color: var(--primary-light); }
+
+    /* ── FORM MODAL ── */
+    .form-modal-overlay { position: fixed; inset: 0; z-index: 500; background: rgba(0,0,0,.78); display: flex; align-items: center; justify-content: center; padding: 20px; opacity: 0; pointer-events: none; transition: opacity .3s; }
+    .form-modal-overlay.open { opacity: 1; pointer-events: all; }
+    .form-modal { background: linear-gradient(135deg, var(--dark) 0%, #2D1020 100%); border-radius: 24px; padding: 40px; max-width: 660px; width: 100%; max-height: 90vh; overflow-y: auto; position: relative; transform: translateY(22px); transition: transform .3s; }
+    .form-modal-overlay.open .form-modal { transform: translateY(0); }
+    .form-modal-close { position: absolute; top: 16px; right: 20px; background: rgba(255,255,255,.1); border: none; color: white; font-size: 1.2rem; width: 38px; height: 38px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: background .2s; }
+    .form-modal-close:hover { background: rgba(255,255,255,.22); }
+    .form-modal-title { font-family: 'Playfair Display', serif; font-size: 1.6rem; font-weight: 700; color: var(--white); margin-bottom: 6px; }
+    .form-modal-sub { font-size: .9rem; color: rgba(255,255,255,.55); margin-bottom: 28px; line-height: 1.6; }
+    .btn-cotizar { display: inline-flex; align-items: center; gap: 8px; background: linear-gradient(135deg, #8B2FC9, var(--primary)); color: var(--white); padding: 14px 28px; border-radius: 50px; font-size: .93rem; font-weight: 600; text-decoration: none; box-shadow: 0 6px 24px rgba(139,47,201,.35); transition: transform .2s, box-shadow .2s; }
+    .btn-cotizar:hover { transform: translateY(-2px); box-shadow: 0 10px 32px rgba(139,47,201,.45); }
+    .btn-abrir-form-contacto { display: inline-flex; align-items: center; gap: 10px; background: linear-gradient(135deg, #8B2FC9, var(--primary)); color: white; padding: 17px 38px; border-radius: 50px; font-size: 1.02rem; font-weight: 700; border: none; cursor: pointer; box-shadow: 0 6px 24px rgba(139,47,201,.4); transition: transform .2s, box-shadow .2s; font-family: inherit; margin-bottom: 48px; }
+    .btn-abrir-form-contacto:hover { transform: translateY(-3px); box-shadow: 0 12px 40px rgba(139,47,201,.5); }
+    @media (max-width: 540px) { .form-modal { padding: 28px 20px; } .form-modal-title { font-size: 1.3rem; } }
+
+    /* ── WHATSAPP FLOAT ── */
+    .wa-float { position: fixed; bottom: 28px; right: 28px; z-index: 200; width: 58px; height: 58px; border-radius: 50%; background: #25D366; display: flex; align-items: center; justify-content: center; box-shadow: 0 6px 24px rgba(37,211,102,.5); text-decoration: none; animation: pulse 2s infinite; transition: transform .2s; }
+    .wa-float:hover { transform: scale(1.1); animation: none; }
+    .wa-float svg { width: 28px; height: 28px; fill: white; }
+
+    /* ── SCROLL REVEAL ── */
+    .reveal { opacity: 0; transform: translateY(26px); transition: opacity .55s ease, transform .55s ease; }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+    .reveal-d1 { transition-delay: .1s; }
+    .reveal-d2 { transition-delay: .2s; }
+    .reveal-d3 { transition-delay: .3s; }
+    .reveal-d4 { transition-delay: .4s; }
+    .reveal-d5 { transition-delay: .5s; }
+
+    /* ── ANIMATIONS ── */
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes pulse { 0%, 100% { box-shadow: 0 6px 24px rgba(37,211,102,.5); } 50% { box-shadow: 0 6px 40px rgba(37,211,102,.75); } }
+
+    /* ── HAMBURGER ── */
+    .nav-hamburger { display: none; flex-direction: column; justify-content: center; gap: 5px; width: 40px; height: 40px; background: none; border: none; cursor: pointer; padding: 4px; }
+    .nav-hamburger span { display: block; height: 2px; width: 100%; background: var(--primary); border-radius: 2px; transition: transform .3s, opacity .3s; }
+    .nav-hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+    .nav-hamburger.open span:nth-child(2) { opacity: 0; }
+    .nav-hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+    .nav-mobile-menu { display: none; position: fixed; top: 65px; left: 0; right: 0; z-index: 99; background: rgba(255,255,255,.97); backdrop-filter: blur(12px); border-bottom: 1px solid rgba(194,0,107,.1); flex-direction: column; padding: 8px 0 16px; }
+    .nav-mobile-menu.open { display: flex; }
+    .nav-mobile-menu a { text-decoration: none; font-size: 1rem; font-weight: 500; color: var(--gray); padding: 13px 24px; border-bottom: 1px solid rgba(194,0,107,.06); transition: color .2s, background .2s; }
+    .nav-mobile-menu a:hover { color: var(--primary); background: var(--pink-soft); }
+    .nav-mobile-menu .nav-cta { margin: 10px 24px 0; text-align: center; border-radius: 50px; border-bottom: none; background: var(--primary); color: var(--white) !important; font-weight: 600 !important; }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 900px) {
+      nav { padding: 14px 24px; }
+      nav ul { display: none; }
+      .nav-hamburger { display: flex; }
+      .hero { grid-template-columns: 1fr; padding: 100px 24px 60px; gap: 40px; }
+      .hero-card { max-width: 100%; }
+      .stats-strip { grid-template-columns: repeat(2,1fr); padding: 32px 24px; }
+      .stat-item-num { font-size: 1.8rem; }
+      section { padding: 64px 24px; }
+      .services-grid { grid-template-columns: 1fr; }
+      .gallery-grid { grid-template-columns: repeat(2,1fr); }
+      .testimonios-grid { grid-template-columns: 1fr 1fr; }
+      .why-grid { grid-template-columns: 1fr; }
+      footer { flex-direction: column; align-items: flex-start; padding: 24px; }
+      .contact-cards { flex-direction: column; align-items: stretch; max-width: 400px; margin-left: auto; margin-right: auto; }
+      .form-row { grid-template-columns: 1fr; }
+      .lightbox-nav { display: none; }
+    }
+    @media (max-width: 540px) {
+      .hero-title { font-size: 2rem; }
+      .hero-actions { flex-direction: column; }
+      .hero-actions a { width: 100%; justify-content: center; }
+      .stats-strip { grid-template-columns: repeat(2,1fr); gap: 12px; padding: 28px 20px; }
+      .stat-item-num { font-size: 1.6rem; }
+      .gallery-grid { grid-template-columns: 1fr 1fr; }
+      .testimonios-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">Globo<span>BYM</span></div>
+  <ul>
+    <li><a href="#servicios">Servicios</a></li>
+    <li><a href="#galeria">Galería</a></li>
+    <li><a href="#testimonios">Testimonios</a></li>
+    <li><a href="#nosotros">Nosotros</a></li>
+    <li><a href="#contacto" class="nav-cta">Cotizar ahora</a></li>
+  </ul>
+  <button class="nav-hamburger" id="hamburger" aria-label="Abrir menú">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<!-- MENÚ MÓVIL -->
+<div class="nav-mobile-menu" id="mobileMenu">
+  <a href="#servicios">Servicios</a>
+  <a href="#galeria">Galería</a>
+  <a href="#testimonios">Testimonios</a>
+  <a href="#nosotros">Nosotros</a>
+  <a href="#contacto" class="nav-cta">Cotizar ahora</a>
+</div>
+
+<!-- HERO -->
+<section class="hero" id="inicio">
+  <div class="hero-bg">
+    <div class="hero-bg-slide active" style="background-image:url('assets/foto1.png')"></div>
+    <div class="hero-bg-slide" style="background-image:url('assets/foto2.png')"></div>
+    <div class="hero-bg-slide" style="background-image:url('assets/foto3.png')"></div>
+    <div class="hero-bg-slide" style="background-image:url('assets/foto4.png')"></div>
+    <div class="hero-bg-overlay"></div>
+  </div>
+
+  <div class="hero-text">
+    <div class="hero-badge">Boutique de Globos · Lima, Perú</div>
+    <h1 class="hero-title">
+      Transformamos tus<br/>eventos en momentos<br/><em>inolvidables</em>
+    </h1>
+    <p class="hero-bio">
+      Somos <strong>GloboBYM</strong>, tu boutique de globería profesional personalizada en Lima.
+      Creamos decoraciones hechas a medida para esa fecha importante,
+      con más de 33.000 personas que ya confían en nosotros.
+    </p>
+    <div class="hero-actions">
+      <a href="https://wa.me/51960876002?text=Hola%20GloboBYM%2C%20me%20gustar%C3%ADa%20cotizar%20una%20decoraci%C3%B3n%20para%20mi%20evento" class="btn-primary" target="_blank">
+        💬 Cotizar por WhatsApp
+      </a>
+      <a href="#galeria" class="btn-secondary">Ver galería →</a>
+      <a href="#" class="btn-cotizar" id="btn-abrir-form-hero">📋 Solicitar cotización</a>
+      <a href="#" class="btn-reserva" id="btn-separar-fecha">
+        📅 Separar mi fecha · desde S/50
+      </a>
+    </div>
+  </div>
+
+  <!-- Instagram Card -->
+  <div class="hero-card">
+    <div class="ig-profile">
+      <div class="ig-avatar-wrap">
+        <div class="ig-avatar-ring"></div>
+        <img src="assets/avatar.jpg" alt="GloboBYM" class="ig-avatar" />
+      </div>
+      <div class="ig-info">
+        <div class="ig-name-row">
+          <h3>GloboBYM</h3>
+          <span class="ig-verified">
+            <svg viewBox="0 0 12 12" fill="none">
+              <path d="M2 6l2.5 2.5 5.5-5" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </span>
+        </div>
+        <div class="ig-handle"><a href="https://www.instagram.com/globobym_peru/" target="_blank">@globobym_peru</a></div>
+        <div class="ig-location">📍 Lima, Perú</div>
+      </div>
+    </div>
+    <div class="ig-stats">
+      <div>
+        <span class="ig-stat-num">789</span>
+        <span class="ig-stat-label">Posts</span>
+      </div>
+      <div>
+        <span class="ig-stat-num">33K</span>
+        <span class="ig-stat-label">Seguidores</span>
+      </div>
+      <div>
+        <span class="ig-stat-num">1,833</span>
+        <span class="ig-stat-label">Seguidos</span>
+      </div>
+    </div>
+    <p class="ig-bio-text">
+      ✨ Boutique de Globos<br/>
+      ▪️ Globería Profesional Personalizada<br/>
+      🎈 Cumpleaños · Eventos corporativos<br/>
+      📍 Lima, Perú
+    </p>
+    <div class="ig-mini-grid">
+      <img src="assets/post_1.jpg" alt="Post Instagram" />
+      <img src="assets/post_2.jpg" alt="Post Instagram" />
+      <img src="assets/post_3.jpg" alt="Post Instagram" />
+      <img src="assets/post_4.jpg" alt="Post Instagram" />
+      <img src="assets/post_5.jpg" alt="Post Instagram" />
+      <img src="assets/post_6.jpg" alt="Post Instagram" />
+    </div>
+    <a href="https://www.instagram.com/globobym_peru/" target="_blank" class="ig-follow-btn">
+      Ver perfil en Instagram
+    </a>
+  </div>
+</section>
+
+<!-- STATS STRIP -->
+<div class="stats-strip">
+  <div class="reveal">
+    <span class="stat-item-num">33K</span>
+    <div class="stat-item-label">Seguidores en Instagram</div>
+  </div>
+  <div class="reveal reveal-d1">
+    <span class="stat-item-num">+5</span>
+    <div class="stat-item-label">Años de experiencia</div>
+  </div>
+  <div class="reveal reveal-d2">
+    <span class="stat-item-num">+200</span>
+    <div class="stat-item-label">Eventos decorados</div>
+  </div>
+  <div class="reveal reveal-d3">
+    <span class="stat-item-num">100%</span>
+    <div class="stat-item-label">Hecho a medida</div>
+  </div>
+</div>
+
+<!-- SERVICES -->
+<section id="servicios">
+  <div class="services-header">
+    <div class="section-tag">Nuestros servicios</div>
+    <h2 class="section-title">Todo lo que necesitas para<br/><em>tu evento perfecto</em></h2>
+    <p class="section-sub">Diseñamos cada decoración desde cero, adaptada a tus colores, temática y presupuesto.</p>
+  </div>
+  <div class="services-grid">
+
+    <div class="service-card reveal">
+      <div class="service-icon">🎂</div>
+      <h3>Cumpleaños</h3>
+      <p>Decoraciones temáticas que hacen de cada cumpleaños un recuerdo único. Desde fiestas infantiles hasta adultos, con el estilo que buscas.</p>
+      <div class="service-tags"><span class="tag">Temático</span><span class="tag">Arco de globos</span><span class="tag">Backdrop</span><span class="tag">Mesa dulce</span></div>
+    </div>
+
+    <div class="service-card reveal reveal-d1">
+      <div class="service-icon">👶</div>
+      <h3>Baby Shower</h3>
+      <p>Celebra la llegada de tu bebé con una decoración llena de ternura y elegancia. Creamos ambientes únicos para este momento especial.</p>
+      <div class="service-tags"><span class="tag">Niño / Niña</span><span class="tag">Pastel & Dorado</span><span class="tag">Globos orgánicos</span><span class="tag">Personalizado</span></div>
+    </div>
+
+    <div class="service-card reveal reveal-d2">
+      <div class="service-icon">🏢</div>
+      <h3>Corporativos</h3>
+      <p>Decoraciones corporativas sofisticadas para lanzamientos, aniversarios, inauguraciones y celebraciones de empresa.</p>
+      <div class="service-tags"><span class="tag">Branding</span><span class="tag">Corporativo</span><span class="tag">Lanzamientos</span><span class="tag">Aniversarios</span></div>
+    </div>
+
+    <div class="service-card reveal reveal-d3">
+      <div class="service-icon">🎓</div>
+      <h3>Graduaciones</h3>
+      <p>Celebra el gran logro académico con una decoración que esté a la altura del esfuerzo. Elegante, emotiva y memorable.</p>
+      <div class="service-tags"><span class="tag">Universitaria</span><span class="tag">Escolar</span><span class="tag">Toga & Birrete</span><span class="tag">Temático</span></div>
+    </div>
+
+    <div class="service-card reveal reveal-d4">
+      <div class="service-icon">🕊️</div>
+      <h3>Bautizos</h3>
+      <p>Decora este momento sagrado con detalles tiernos y delicados que harán del bautizo un recuerdo eterno para toda la familia.</p>
+      <div class="service-tags"><span class="tag">Niño / Niña</span><span class="tag">Pastel</span><span class="tag">Floral</span><span class="tag">Elegante</span></div>
+    </div>
+
+    <div class="service-card reveal reveal-d5">
+      <div class="service-icon">🩷💙</div>
+      <h3>Revelación de Sexo</h3>
+      <p>El momento más esperado merece la mejor decoración. Creamos el ambiente perfecto para la gran revelación con globos sorpresa.</p>
+      <div class="service-tags"><span class="tag">Gender Reveal</span><span class="tag">Niño / Niña</span><span class="tag">Globo sorpresa</span><span class="tag">Confeti</span></div>
+    </div>
+
+    <div class="service-card reveal">
+      <div class="service-icon">💍</div>
+      <h3>Propuestas de Matrimonio</h3>
+      <p>Convierte el "¿te casas conmigo?" en un instante mágico e irrepetible. Decoraciones románticas para la propuesta perfecta.</p>
+      <div class="service-tags"><span class="tag">Romántico</span><span class="tag">Sorpresa</span><span class="tag">Pétalos & Globos</span><span class="tag">Personalizado</span></div>
+    </div>
+
+  </div>
+</section>
+
+<!-- GALLERY -->
+<section id="galeria">
+  <div class="gallery-header">
+    <div class="section-tag">Galería de trabajos</div>
+    <h2 class="section-title">Nuestras creaciones<br/>hablan por sí solas</h2>
+    <p class="section-sub">Cada decoración es única, hecha con amor y dedicación para hacer realidad tu visión. Haz clic para ver más fotos de cada categoría.</p>
+  </div>
+
+  <div class="gallery-grid">
+
+    <div class="gallery-item reveal" data-slideshow>
+      <span class="gallery-cat-badge">🎂 Cumpleaños</span>
+      <img src="assets/cumpleanos/cumple1.png" class="slide active" alt="Cumpleaños" />
+      <img src="assets/cumpleanos/cumple2.png" class="slide" alt="Cumpleaños" />
+      <img src="assets/cumpleanos/cumple3.png" class="slide" alt="Cumpleaños" />
+      <img src="assets/cumpleanos/cumple4.png" class="slide" alt="Cumpleaños" />
+      <img src="assets/cumpleanos/cumple5.png" class="slide" alt="Cumpleaños" />
+      <img src="assets/cumpleanos/cumple6.png" class="slide" alt="Cumpleaños" />
+      <div class="gallery-item-overlay"></div>
+      <div class="gallery-expand" title="Ver foto completa">
+        <svg viewBox="0 0 24 24"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg>
+      </div>
+      <div class="slide-dots"></div>
+      <div class="slide-hint">Clic para ver más →</div>
+    </div>
+
+    <div class="gallery-item reveal reveal-d1" data-slideshow>
+      <span class="gallery-cat-badge">👶 Baby Shower</span>
+      <img src="assets/baby-shower/foto2.png" class="slide active" alt="Baby Shower" />
+      <img src="assets/baby-shower/baby2.png" class="slide" alt="Baby Shower" />
+      <img src="assets/baby-shower/baby3.png" class="slide" alt="Baby Shower" />
+      <img src="assets/baby-shower/baby4.png" class="slide" alt="Baby Shower" />
+      <img src="assets/baby-shower/baby5.png" class="slide" alt="Baby Shower" />
+      <div class="gallery-item-overlay"></div>
+      <div class="gallery-expand" title="Ver foto completa">
+        <svg viewBox="0 0 24 24"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg>
+      </div>
+      <div class="slide-dots"></div>
+      <div class="slide-hint">Clic para ver más →</div>
+    </div>
+
+    <div class="gallery-item reveal reveal-d2" data-slideshow>
+      <span class="gallery-cat-badge">💍 Propuesta de matrimonio</span>
+      <img src="assets/propuesta-de-matrimonio/foto3.png" class="slide active" alt="Propuesta" />
+      <img src="assets/propuesta-de-matrimonio/propu2.png" class="slide" alt="Propuesta" />
+      <img src="assets/propuesta-de-matrimonio/propu3.png" class="slide" alt="Propuesta" />
+      <img src="assets/propuesta-de-matrimonio/propu4.png" class="slide" alt="Propuesta" />
+      <div class="gallery-item-overlay"></div>
+      <div class="gallery-expand" title="Ver foto completa">
+        <svg viewBox="0 0 24 24"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg>
+      </div>
+      <div class="slide-dots"></div>
+      <div class="slide-hint">Clic para ver más →</div>
+    </div>
+
+    <div class="gallery-item reveal reveal-d3" data-slideshow>
+      <span class="gallery-cat-badge">🎓 Graduaciones</span>
+      <img src="assets/graduaciones/graduacion1.png" class="slide active" alt="Graduaciones" />
+      <img src="assets/graduaciones/graduacion2.png" class="slide" alt="Graduaciones" />
+      <img src="assets/graduaciones/graduacion3.png" class="slide" alt="Graduaciones" />
+      <img src="assets/graduaciones/graduacion4.png" class="slide" alt="Graduaciones" />
+      <div class="gallery-item-overlay"></div>
+      <div class="gallery-expand" title="Ver foto completa">
+        <svg viewBox="0 0 24 24"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg>
+      </div>
+      <div class="slide-dots"></div>
+      <div class="slide-hint">Clic para ver más →</div>
+    </div>
+
+    <div class="gallery-item reveal reveal-d4" data-slideshow>
+      <span class="gallery-cat-badge">🕊️ Bautizos</span>
+      <img src="assets/bautizos/bautizo1.png" class="slide active" alt="Bautizos" />
+      <img src="assets/bautizos/bautizo2.png" class="slide" alt="Bautizos" />
+      <img src="assets/bautizos/bautizo3.png" class="slide" alt="Bautizos" />
+      <img src="assets/bautizos/bautizo4.png" class="slide" alt="Bautizos" />
+      <div class="gallery-item-overlay"></div>
+      <div class="gallery-expand" title="Ver foto completa">
+        <svg viewBox="0 0 24 24"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg>
+      </div>
+      <div class="slide-dots"></div>
+      <div class="slide-hint">Clic para ver más →</div>
+    </div>
+
+    <div class="gallery-item reveal reveal-d5" data-slideshow>
+      <span class="gallery-cat-badge">🩷💙 Revelación de sexo</span>
+      <img src="assets/revelacion-de-sexo/reve1.png" class="slide active" alt="Revelación de sexo" />
+      <img src="assets/revelacion-de-sexo/reve2.png" class="slide" alt="Revelación de sexo" />
+      <img src="assets/revelacion-de-sexo/reve3.png" class="slide" alt="Revelación de sexo" />
+      <div class="gallery-item-overlay"></div>
+      <div class="gallery-expand" title="Ver foto completa">
+        <svg viewBox="0 0 24 24"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg>
+      </div>
+      <div class="slide-dots"></div>
+      <div class="slide-hint">Clic para ver más →</div>
+    </div>
+
+  </div>
+
+  <div class="gallery-cta">
+    <a href="https://www.instagram.com/globobym_peru/" target="_blank">
+      Ver todos los trabajos en Instagram →
+    </a>
+  </div>
+</section>
+
+<!-- LIGHTBOX -->
+<div class="lightbox" id="lightbox" role="dialog" aria-modal="true">
+  <button class="lightbox-close" id="lightboxClose" aria-label="Cerrar">✕</button>
+  <button class="lightbox-nav lightbox-prev" id="lightboxPrev" aria-label="Anterior">‹</button>
+  <img src="" alt="" class="lightbox-img" id="lightboxImg" />
+  <button class="lightbox-nav lightbox-next" id="lightboxNext" aria-label="Siguiente">›</button>
+  <div class="lightbox-caption" id="lightboxCaption"></div>
+</div>
+
+<!-- TESTIMONIALS -->
+<section id="testimonios">
+  <div class="testimonios-header">
+    <div class="section-tag">Lo que dicen nuestros clientes</div>
+    <h2 class="section-title">Más de 33.000 personas<br/>nos <em>eligen con confianza</em></h2>
+    <p class="section-sub">Cada decoración deja una huella. Estas son algunas de las historias que nos inspiran a seguir creando momentos únicos.</p>
+  </div>
+  <div class="testimonios-grid">
+
+    <div class="testimonio-card reveal">
+      <div class="testimonio-stars"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div>
+      <p class="testimonio-text">"Todo quedó precioso para el cumpleaños de mi hija. El arco de globos era exactamente lo que imaginé, incluso mejor. Llegaron puntuales y dejaron todo impecable."</p>
+      <div class="testimonio-footer">
+        <div class="testimonio-avatar">MR</div>
+        <div>
+          <div class="testimonio-name">María R.</div>
+          <div class="testimonio-event">🎂 Cumpleaños · Lima</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="testimonio-card reveal reveal-d1">
+      <div class="testimonio-stars"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div>
+      <p class="testimonio-text">"El baby shower de mi hermana quedó de revista. Los globos orgánicos en azul y beige superaron todas las expectativas. Definitivamente las volvería a contratar."</p>
+      <div class="testimonio-footer">
+        <div class="testimonio-avatar">PG</div>
+        <div>
+          <div class="testimonio-name">Patricia G.</div>
+          <div class="testimonio-event">👶 Baby Shower · Miraflores</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="testimonio-card reveal reveal-d2">
+      <div class="testimonio-stars"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div>
+      <p class="testimonio-text">"Contraté GloboBYM para el lanzamiento de mi empresa. Muy profesionales, los colores corporativos quedaron perfectos. Todos los invitados preguntaron por ellas."</p>
+      <div class="testimonio-footer">
+        <div class="testimonio-avatar">JV</div>
+        <div>
+          <div class="testimonio-name">Jorge V.</div>
+          <div class="testimonio-event">🏢 Evento corporativo · San Isidro</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="testimonio-card reveal reveal-d3">
+      <div class="testimonio-stars"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div>
+      <p class="testimonio-text">"La propuesta fue mágica. Coordiné todo en secreto con ellas y lo ejecutaron a la perfección. Mi novio lloró de la emoción. ¡Gracias GloboBYM, son las mejores!"</p>
+      <div class="testimonio-footer">
+        <div class="testimonio-avatar">LC</div>
+        <div>
+          <div class="testimonio-name">Lucía C.</div>
+          <div class="testimonio-event">💍 Propuesta · Surco</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="testimonio-card reveal reveal-d4">
+      <div class="testimonio-stars"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div>
+      <p class="testimonio-text">"El gender reveal fue un éxito total. La decoración en rosa y azul con el globo sorpresa gigante emocionó a toda la familia. Las fotos quedaron espectaculares."</p>
+      <div class="testimonio-footer">
+        <div class="testimonio-avatar">KM</div>
+        <div>
+          <div class="testimonio-name">Karen M.</div>
+          <div class="testimonio-event">🩷💙 Gender Reveal · La Molina</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="testimonio-card reveal reveal-d5">
+      <div class="testimonio-stars"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div>
+      <p class="testimonio-text">"Mi graduación fue perfecta gracias a GloboBYM. El backdrop en dorado y negro me dejó sin palabras. El montaje fue rápido y limpio. 100% recomendadas."</p>
+      <div class="testimonio-footer">
+        <div class="testimonio-avatar">AS</div>
+        <div>
+          <div class="testimonio-name">Andrea S.</div>
+          <div class="testimonio-event">🎓 Graduación · San Borja</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- WHY US -->
+<section id="nosotros">
+  <div class="why-grid">
+    <div>
+      <div class="section-tag">¿Por qué elegirnos?</div>
+      <h2 class="section-title">Profesionalismo y<br/>pasión en cada<br/><em>detalle</em></h2>
+      <p class="section-sub" style="margin-bottom:40px">Más de 5 años de experiencia nos respaldan. Cada proyecto lo tratamos como si fuera el nuestro.</p>
+      <div class="why-features">
+        <div class="feature reveal">
+          <div class="feature-icon">🎯</div>
+          <div><h4>Diseño personalizado</h4><p>Cada decoración se diseña desde cero según tu temática, colores y presupuesto. Nada genérico.</p></div>
+        </div>
+        <div class="feature reveal reveal-d1">
+          <div class="feature-icon">⚡</div>
+          <div><h4>Montaje puntual</h4><p>Llegamos a tiempo y dejamos todo listo antes de que lleguen tus invitados.</p></div>
+        </div>
+        <div class="feature reveal reveal-d2">
+          <div class="feature-icon">💎</div>
+          <div><h4>Materiales premium</h4><p>Usamos globos y materiales de alta calidad que lucen perfectos en fotos y duran toda la fiesta.</p></div>
+        </div>
+        <div class="feature reveal reveal-d3">
+          <div class="feature-icon">📸</div>
+          <div><h4>Fotos que enamoran</h4><p>Nuestras decoraciones están pensadas para que tus fotos y videos queden espectaculares.</p></div>
+        </div>
+      </div>
+    </div>
+    <div class="why-visual reveal reveal-d1">
+      <div class="big-num">+5</div>
+      <div class="big-label">años decorando eventos en Lima</div>
+      <div class="why-ratings"><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span></div>
+      <div class="why-sub">+200 eventos decorados · 33K seguidores</div>
+      <a href="https://wa.me/51960876002" target="_blank" class="why-cta">💬 Pedir cotización</a>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contacto">
+  <div class="section-tag" style="color:rgba(255,255,255,.45)">Contáctanos</div>
+  <h2 class="section-title">¿Lista para tu evento<br/>de <em style="color:var(--gold-light)">ensueño?</em></h2>
+  <p class="section-sub">Cuéntanos tu idea y te enviamos una propuesta sin compromiso. Respondemos en menos de 2 horas.</p>
+
+  <div class="contact-cards">
+    <a href="https://wa.me/51960876002" target="_blank" class="contact-card">
+      <div class="contact-card-icon">📱</div>
+      <div><div class="contact-card-label">WhatsApp</div><div class="contact-card-value">+51 960 876 002</div></div>
+    </a>
+    <a href="https://www.tiktok.com/@globobym_peru" target="_blank" class="contact-card">
+      <div class="contact-card-icon">🎵</div>
+      <div><div class="contact-card-label">TikTok</div><div class="contact-card-value">@globobym_peru</div></div>
+    </a>
+    <a href="https://www.instagram.com/globobym_peru/" target="_blank" class="contact-card">
+      <div class="contact-card-icon">📸</div>
+      <div><div class="contact-card-label">Instagram</div><div class="contact-card-value">@globobym_peru</div></div>
+    </a>
+    <div class="contact-card" style="cursor:default">
+      <div class="contact-card-icon">📍</div>
+      <div><div class="contact-card-label">Ubicación</div><div class="contact-card-value">Lima, Perú</div></div>
+    </div>
+  </div>
+
+  <button class="btn-abrir-form-contacto" id="btn-abrir-form-contacto">
+    📋 Solicitar cotización online
+  </button>
+
+  <div class="contact-divider">o escríbenos directamente</div>
+
+  <a href="https://wa.me/51960876002?text=Hola%20GloboBYM%2C%20me%20gustar%C3%ADa%20cotizar%20una%20decoraci%C3%B3n%20para%20mi%20evento.%20%C2%BFPodr%C3%ADan%20ayudarme%3F" target="_blank" class="cta-whatsapp">
+    <svg viewBox="0 0 24 24" fill="white" width="22" height="22"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+    Cotizar por WhatsApp ahora
+  </a>
+</section>
+
+<!-- FORM MODAL -->
+<div class="form-modal-overlay" id="formModal" role="dialog" aria-modal="true" aria-labelledby="formModalTitle">
+  <div class="form-modal">
+    <button class="form-modal-close" id="formModalClose" aria-label="Cerrar">✕</button>
+    <div class="form-modal-title" id="formModalTitle">Solicitar cotización</div>
+    <p class="form-modal-sub">Cuéntanos tu idea y te enviamos una propuesta sin compromiso. Respondemos en menos de 2 horas.</p>
+    <div class="form-row">
+      <div class="form-field">
+        <label>Tu nombre</label>
+        <input type="text" id="f-nombre" placeholder="María García" required />
+      </div>
+      <div class="form-field">
+        <label>Teléfono / WhatsApp</label>
+        <input type="tel" id="f-telefono" placeholder="+51 987 654 321" required />
+      </div>
+      <div class="form-field">
+        <label>Tipo de evento</label>
+        <select id="f-tipo" required>
+          <option value="" disabled selected>Selecciona...</option>
+          <option>Cumpleaños</option>
+          <option>Baby Shower</option>
+          <option>Corporativo</option>
+          <option>Graduación</option>
+          <option>Bautizo</option>
+          <option>Revelación de Sexo</option>
+          <option>Propuesta de Matrimonio</option>
+          <option>Otro</option>
+        </select>
+      </div>
+      <div class="form-field">
+        <label>Fecha del evento</label>
+        <input type="date" id="f-fecha" required />
+      </div>
+      <div class="form-field full">
+        <label>Cuéntanos tu idea</label>
+        <textarea id="f-mensaje" placeholder="¿Qué temática tienes en mente? ¿Colores preferidos? ¿Número de invitados? Cuéntanos todo..."></textarea>
+      </div>
+    </div>
+    <button class="btn-form" onclick="enviarFormulario()">
+      📨 Enviar consulta por WhatsApp
+    </button>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-brand">Globo<span>BYM</span></div>
+  <p>© 2026 GloboBYM · Lima, Perú · Boutique de Globos Profesional</p>
+  <div class="footer-social">
+    <a href="https://www.instagram.com/globobym_peru/" target="_blank">Instagram</a>
+    <a href="https://www.tiktok.com/@globobym_peru" target="_blank">TikTok</a>
+    <a href="https://wa.me/51960876002" target="_blank">WhatsApp</a>
+  </div>
+</footer>
+
+<!-- WHATSAPP FLOAT -->
+<a href="https://wa.me/51960876002?text=Hola%20GloboBYM%2C%20me%20gustar%C3%ADa%20cotizar%20una%20decoraci%C3%B3n" target="_blank" class="wa-float" title="Cotizar por WhatsApp">
+  <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+</a>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+<script>
+  // ── FIREBASE INIT ──
+  firebase.initializeApp({
+    apiKey:            "AIzaSyDDRomYCtRzPkCLbWlqlgRNnQ8aSj2izQ4",
+    authDomain:        "globobym.firebaseapp.com",
+    projectId:         "globobym",
+    storageBucket:     "globobym.firebasestorage.app",
+    messagingSenderId: "499147123529",
+    appId:             "1:499147123529:web:ad69e31c0dbeabdcc20898"
+  });
+  const _db = firebase.firestore();
+
+  // ── SCROLL REVEAL ──
+  const ro = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) { e.target.classList.add('visible'); ro.unobserve(e.target); }
+    });
+  }, { threshold: 0.1 });
+  document.querySelectorAll('.reveal').forEach(el => ro.observe(el));
+
+  // ── GALLERY SLIDESHOW ──
+  document.querySelectorAll('.gallery-item[data-slideshow]').forEach(card => {
+    const slides = card.querySelectorAll('img.slide');
+    const dotsWrap = card.querySelector('.slide-dots');
+    const hint = card.querySelector('.slide-hint');
+    let cur = 0;
+
+    slides.forEach((_, i) => {
+      const d = document.createElement('div');
+      d.className = 'slide-dot' + (i === 0 ? ' active' : '');
+      dotsWrap.appendChild(d);
+    });
+    if (slides.length <= 1 && hint) hint.style.display = 'none';
+
+    card.addEventListener('click', e => {
+      if (e.target.closest('.gallery-expand')) return;
+      if (slides.length <= 1) return;
+      slides[cur].classList.remove('active');
+      dotsWrap.children[cur].classList.remove('active');
+      cur = (cur + 1) % slides.length;
+      slides[cur].classList.add('active');
+      dotsWrap.children[cur].classList.add('active');
+    });
+  });
+
+  // ── LIGHTBOX ──
+  const lightbox    = document.getElementById('lightbox');
+  const lbImg       = document.getElementById('lightboxImg');
+  const lbCaption   = document.getElementById('lightboxCaption');
+  let lbImages      = [];
+  let lbCurrent     = 0;
+
+  function buildLbImages() {
+    lbImages = [];
+    document.querySelectorAll('.gallery-item[data-slideshow]').forEach(card => {
+      const label = card.querySelector('.gallery-cat-badge')?.textContent || '';
+      card.querySelectorAll('img.slide').forEach(img => lbImages.push({ src: img.src, label }));
+    });
+  }
+
+  function openLightbox(src, label) {
+    buildLbImages();
+    lbCurrent = lbImages.findIndex(i => i.src === src);
+    if (lbCurrent < 0) lbCurrent = 0;
+    lbImg.src = src;
+    lbCaption.textContent = label;
+    lightbox.classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeLightbox() {
+    lightbox.classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  function lbNav(dir) {
+    lbCurrent = (lbCurrent + dir + lbImages.length) % lbImages.length;
+    lbImg.src = lbImages[lbCurrent].src;
+    lbCaption.textContent = lbImages[lbCurrent].label;
+  }
+
+  document.querySelectorAll('.gallery-expand').forEach(btn => {
+    btn.addEventListener('click', e => {
+      e.stopPropagation();
+      const card = btn.closest('.gallery-item');
+      const activeImg = card.querySelector('img.slide.active');
+      const label = card.querySelector('.gallery-cat-badge')?.textContent || '';
+      openLightbox(activeImg.src, label);
+    });
+  });
+
+  document.getElementById('lightboxClose').addEventListener('click', closeLightbox);
+  document.getElementById('lightboxPrev').addEventListener('click', () => lbNav(-1));
+  document.getElementById('lightboxNext').addEventListener('click', () => lbNav(1));
+  lightbox.addEventListener('click', e => { if (e.target === lightbox) closeLightbox(); });
+  document.addEventListener('keydown', e => {
+    if (!lightbox.classList.contains('open')) return;
+    if (e.key === 'Escape')      closeLightbox();
+    if (e.key === 'ArrowLeft')   lbNav(-1);
+    if (e.key === 'ArrowRight')  lbNav(1);
+  });
+
+  // ── HERO SLIDESHOW ──
+  const heroSlides = document.querySelectorAll('.hero-bg-slide');
+  let hCur = 0;
+  setInterval(() => {
+    heroSlides[hCur].classList.remove('active');
+    hCur = (hCur + 1) % heroSlides.length;
+    heroSlides[hCur].classList.add('active');
+  }, 4000);
+
+  // ── HAMBURGER ──
+  const hamburger  = document.getElementById('hamburger');
+  const mobileMenu = document.getElementById('mobileMenu');
+  hamburger.addEventListener('click', () => {
+    const open = mobileMenu.classList.toggle('open');
+    hamburger.classList.toggle('open', open);
+    hamburger.setAttribute('aria-label', open ? 'Cerrar menú' : 'Abrir menú');
+  });
+  mobileMenu.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
+    mobileMenu.classList.remove('open');
+    hamburger.classList.remove('open');
+  }));
+
+  // ── FORM MODAL ──
+  const formModal     = document.getElementById('formModal');
+  const formModalClose = document.getElementById('formModalClose');
+
+  function openFormModal() {
+    formModal.classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+  function closeFormModal() {
+    formModal.classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  document.getElementById('btn-abrir-form-hero').addEventListener('click', e => { e.preventDefault(); openFormModal(); });
+  document.getElementById('btn-abrir-form-contacto').addEventListener('click', openFormModal);
+  formModalClose.addEventListener('click', closeFormModal);
+  formModal.addEventListener('click', e => { if (e.target === formModal) closeFormModal(); });
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape' && formModal.classList.contains('open')) closeFormModal();
+  });
+
+  // ── FORMULARIO → FIRESTORE + WHATSAPP ──
+  async function enviarFormulario() {
+    const nombre  = document.getElementById('f-nombre').value.trim();
+    const tel     = document.getElementById('f-telefono').value.trim();
+    const tipo    = document.getElementById('f-tipo').value;
+    const fecha   = document.getElementById('f-fecha').value;
+    const mensaje = document.getElementById('f-mensaje').value.trim();
+
+    if (!nombre || !tel || !tipo || !fecha) { alert('Por favor completa los campos obligatorios: nombre, teléfono, tipo de evento y fecha.'); return; }
+
+    const btnForm = document.querySelector('#formModal .btn-form');
+    if (btnForm) { btnForm.disabled = true; btnForm.textContent = 'Enviando...'; }
+
+    // Guardar en Firestore (si está configurado)
+    if (_db) {
+      try {
+        await _db.collection('pedidos').add({
+          nombre,
+          telefono: tel,
+          tipo,
+          fecha,
+          mensaje,
+          estado: 'nuevo',
+          createdAt: firebase.firestore.FieldValue.serverTimestamp()
+        });
+      } catch(e) {
+        console.warn('No se pudo guardar en Firestore:', e.message);
+      }
+    }
+
+    if (btnForm) { btnForm.disabled = false; btnForm.textContent = '📨 Enviar consulta por WhatsApp'; }
+
+    let txt = 'Hola GloboBYM, me gustaría cotizar una decoración.\n\n';
+    txt += `*Nombre:* ${nombre}\n`;
+    if (tel)     txt += `*Teléfono:* ${tel}\n`;
+    txt += `*Tipo de evento:* ${tipo}\n`;
+    if (fecha)   txt += `*Fecha:* ${fecha}\n`;
+    if (mensaje) txt += `*Detalles:* ${mensaje}\n`;
+
+    window.open('https://wa.me/51960876002?text=' + encodeURIComponent(txt), '_blank');
+
+    document.getElementById('f-nombre').value   = '';
+    document.getElementById('f-telefono').value = '';
+    document.getElementById('f-tipo').value     = '';
+    document.getElementById('f-fecha').value    = '';
+    document.getElementById('f-mensaje').value  = '';
+
+    closeFormModal();
+  }
+</script>
+
+</body>
+</html>

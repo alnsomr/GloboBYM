@@ -1,0 +1,757 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>GloboBYM · Panel de Pedidos</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    [hidden] { display: none !important; }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --primary:      #C2006B;
+      --primary-light:#E8198A;
+      --nuevo:           #dc2626;
+      --nuevo-bg:        #fef2f2;
+      --contactado:      #d97706;
+      --contactado-bg:   #fffbeb;
+      --venta_cerrada:   #2563eb;
+      --venta_cerrada-bg:#eff6ff;
+      --pagado:          #7c3aed;
+      --pagado-bg:       #f5f3ff;
+      --atendido:        #16a34a;
+      --atendido-bg:     #f0fdf4;
+      --sin_compra:      #64748b;
+      --sin_compra-bg:   #f1f5f9;
+      --bg:           #f1f5f9;
+      --card:         #ffffff;
+      --border:       #e2e8f0;
+      --text:         #1e293b;
+      --muted:        #64748b;
+      --radius:       12px;
+    }
+    body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+
+    /* ── SETUP SCREEN ── */
+    .setup-screen { min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 24px; }
+    .setup-card { background: var(--card); border-radius: 20px; padding: 40px; max-width: 580px; width: 100%; border: 2px solid var(--nuevo); box-shadow: 0 4px 24px rgba(0,0,0,.08); }
+    .setup-title { font-size: 1.25rem; font-weight: 700; color: var(--nuevo); margin-bottom: 8px; }
+    .setup-sub { font-size: .88rem; color: var(--muted); margin-bottom: 24px; line-height: 1.6; }
+    .setup-step { display: flex; gap: 12px; margin-bottom: 10px; font-size: .88rem; line-height: 1.6; }
+    .setup-num { width: 22px; height: 22px; border-radius: 50%; background: var(--primary); color: white; font-size: .7rem; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 2px; }
+    .setup-code { background: #1e293b; color: #94a3b8; padding: 14px 16px; border-radius: 10px; font-family: monospace; font-size: .78rem; line-height: 1.8; margin: 20px 0; white-space: pre; overflow-x: auto; }
+
+    /* ── LOGIN SCREEN ── */
+    .login-screen { min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 24px; }
+    .login-card { background: var(--card); border-radius: 20px; padding: 48px 40px; max-width: 400px; width: 100%; box-shadow: 0 4px 32px rgba(0,0,0,.1); }
+    .login-logo { font-size: 1.5rem; font-weight: 700; color: var(--primary); margin-bottom: 4px; }
+    .login-logo span { color: #d4a017; }
+    .login-title { font-size: 1rem; font-weight: 600; color: var(--text); margin-bottom: 6px; }
+    .login-sub { font-size: .85rem; color: var(--muted); margin-bottom: 32px; }
+    .form-group { margin-bottom: 16px; }
+    .form-group label { display: block; font-size: .8rem; font-weight: 500; color: var(--muted); margin-bottom: 6px; }
+    .form-group input { width: 100%; padding: 11px 14px; border: 1.5px solid var(--border); border-radius: 10px; font-family: inherit; font-size: .93rem; color: var(--text); outline: none; transition: border-color .2s; }
+    .form-group input:focus { border-color: var(--primary); }
+    .btn-login { width: 100%; background: var(--primary); color: white; border: none; padding: 13px; border-radius: 50px; font-family: inherit; font-size: .95rem; font-weight: 600; cursor: pointer; transition: background .2s; margin-top: 8px; }
+    .btn-login:hover { background: var(--primary-light); }
+    .btn-login:disabled { opacity: .6; cursor: not-allowed; }
+    .login-error { color: var(--nuevo); font-size: .82rem; margin-top: 12px; text-align: center; min-height: 18px; }
+
+    /* ── APP HEADER ── */
+    .app-header { background: var(--card); border-bottom: 1px solid var(--border); padding: 14px 24px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 50; }
+    .header-logo { font-size: 1.05rem; font-weight: 700; color: var(--primary); }
+    .header-logo span { color: #d4a017; }
+    .header-right { display: flex; align-items: center; gap: 12px; }
+    .header-email { font-size: .8rem; color: var(--muted); }
+    .btn-logout { background: none; border: 1.5px solid var(--border); border-radius: 8px; padding: 6px 14px; font-family: inherit; font-size: .8rem; color: var(--muted); cursor: pointer; transition: all .2s; }
+    .btn-logout:hover { border-color: var(--primary); color: var(--primary); }
+
+    /* ── STATS BAR ── */
+    .stats-bar { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 12px; padding: 20px 24px 4px; }
+    .stat-card { background: var(--card); border-radius: var(--radius); padding: 14px 18px; border: 1.5px solid var(--border); }
+    .stat-num { font-size: 1.8rem; font-weight: 700; line-height: 1; }
+    .stat-label { font-size: .72rem; color: var(--muted); margin-top: 4px; text-transform: uppercase; letter-spacing: .4px; }
+    .stat-card.s-nuevo .stat-num          { color: var(--nuevo); }
+    .stat-card.s-contactado .stat-num     { color: var(--contactado); }
+    .stat-card.s-venta_cerrada .stat-num  { color: var(--venta_cerrada); }
+    .stat-card.s-atendido .stat-num       { color: var(--atendido); }
+    .stat-card.s-sin_compra .stat-num     { color: var(--sin_compra); }
+
+    /* ── FILTER BAR ── */
+    .filter-bar { padding: 16px 24px 12px; display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+    .tab { padding: 8px 18px; border-radius: 50px; border: 1.5px solid var(--border); background: var(--card); font-family: inherit; font-size: .82rem; font-weight: 500; cursor: pointer; color: var(--muted); transition: all .2s; }
+    .tab:hover { border-color: var(--primary); color: var(--primary); }
+    .tab.active { background: var(--primary); color: white; border-color: var(--primary); }
+    .filter-select { padding: 8px 12px; border-radius: 8px; border: 1.5px solid var(--border); font-family: inherit; font-size: .82rem; color: var(--text); background: var(--card); cursor: pointer; outline: none; transition: border-color .2s; }
+    .filter-select:focus { border-color: var(--primary); }
+    .filter-count { font-size: .8rem; color: var(--muted); margin-left: auto; }
+
+    /* ── ORDERS ── */
+    .orders-wrap { padding: 4px 24px 48px; }
+    .orders-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 16px; }
+
+    .order-card { background: var(--card); border-radius: var(--radius); border: 1.5px solid var(--border); overflow: hidden; transition: box-shadow .2s, transform .2s; }
+    .order-card:hover { box-shadow: 0 6px 24px rgba(0,0,0,.09); transform: translateY(-2px); }
+    .order-card.nuevo          { border-left: 4px solid var(--nuevo); }
+    .order-card.contactado     { border-left: 4px solid var(--contactado); }
+    .order-card.venta_cerrada  { border-left: 4px solid var(--venta_cerrada); }
+    .order-card.pagado         { border-left: 4px solid var(--pagado); }
+    .order-card.atendido       { border-left: 4px solid var(--atendido); }
+    .order-card.sin_compra     { border-left: 4px solid var(--sin_compra); opacity: .7; }
+
+    .card-header { padding: 14px 16px 10px; display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+    .status-badge { display: inline-flex; align-items: center; gap: 4px; padding: 3px 10px; border-radius: 50px; font-size: .68rem; font-weight: 700; letter-spacing: .4px; text-transform: uppercase; white-space: nowrap; }
+    .status-badge.nuevo         { background: var(--nuevo-bg);          color: var(--nuevo); }
+    .status-badge.contactado    { background: var(--contactado-bg);     color: var(--contactado); }
+    .status-badge.venta_cerrada { background: var(--venta_cerrada-bg);  color: var(--venta_cerrada); }
+    .status-badge.pagado        { background: var(--pagado-bg);         color: var(--pagado); }
+    .status-badge.atendido      { background: var(--atendido-bg);       color: var(--atendido); }
+    .status-badge.sin_compra    { background: var(--sin_compra-bg);     color: var(--sin_compra); }
+    .card-time { font-size: .7rem; color: var(--muted); white-space: nowrap; }
+
+    .card-body { padding: 0 16px 14px; }
+    .card-name { font-size: 1rem; font-weight: 700; margin-bottom: 8px; }
+    .card-meta { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 6px; }
+    .card-meta-item { font-size: .8rem; color: var(--muted); display: flex; align-items: center; gap: 4px; }
+    .card-meta-item strong { color: var(--text); font-weight: 500; }
+    .card-message { font-size: .82rem; color: var(--muted); line-height: 1.55; margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--border); display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; font-style: italic; }
+
+    .card-actions { padding: 12px 16px; border-top: 1px solid var(--border); display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+    .btn-wa   { display: inline-flex; align-items: center; gap: 5px; background: #25D366; color: white; border: none; padding: 7px 13px; border-radius: 8px; font-family: inherit; font-size: .78rem; font-weight: 600; cursor: pointer; text-decoration: none; transition: opacity .2s; }
+    .btn-wa:hover   { opacity: .85; }
+    .btn-call { display: inline-flex; align-items: center; gap: 5px; background: #3b82f6; color: white; border: none; padding: 7px 13px; border-radius: 8px; font-family: inherit; font-size: .78rem; font-weight: 600; cursor: pointer; text-decoration: none; transition: opacity .2s; }
+    .btn-call:hover { opacity: .85; }
+    .btn-status { display: inline-flex; align-items: center; gap: 5px; background: var(--bg); border: 1.5px solid var(--border); color: var(--text); padding: 6px 13px; border-radius: 8px; font-family: inherit; font-size: .78rem; font-weight: 500; cursor: pointer; transition: all .2s; }
+    .btn-status:hover { border-color: var(--primary); color: var(--primary); background: white; }
+    .btn-status:disabled { opacity: .5; cursor: not-allowed; }
+    .btn-venta { display: inline-flex; align-items: center; gap: 5px; background: var(--venta_cerrada); color: white; border: none; padding: 6px 12px; border-radius: 8px; font-family: inherit; font-size: .78rem; font-weight: 600; cursor: pointer; transition: opacity .2s; }
+    .btn-venta:hover { opacity: .85; }
+    .btn-venta:disabled { opacity: .45; cursor: not-allowed; }
+    .btn-sincompra { display: inline-flex; align-items: center; gap: 5px; background: var(--bg); border: 1.5px solid var(--border); color: var(--sin_compra); padding: 6px 12px; border-radius: 8px; font-family: inherit; font-size: .78rem; font-weight: 500; cursor: pointer; transition: all .2s; }
+    .btn-sincompra:hover { border-color: var(--sin_compra); background: var(--sin_compra-bg); }
+    .btn-sincompra:disabled { opacity: .45; cursor: not-allowed; }
+    .card-status-actions { margin-left: auto; display: flex; gap: 6px; flex-wrap: wrap; justify-content: flex-end; }
+
+    /* ── EMPTY STATE ── */
+    .empty-state { text-align: center; padding: 72px 20px; }
+    .empty-icon  { font-size: 3rem; margin-bottom: 16px; }
+    .empty-title { font-size: 1.05rem; font-weight: 600; margin-bottom: 8px; }
+    .empty-sub   { font-size: .88rem; color: var(--muted); }
+
+    /* ── TOAST ── */
+    .toast { position: fixed; bottom: 24px; right: 24px; background: #1e293b; color: white; padding: 14px 20px; border-radius: 12px; font-size: .85rem; font-weight: 500; box-shadow: 0 8px 32px rgba(0,0,0,.25); display: flex; align-items: center; gap: 10px; transform: translateY(90px); opacity: 0; transition: transform .35s cubic-bezier(.34,1.56,.64,1), opacity .35s; z-index: 999; max-width: 340px; pointer-events: none; }
+    .toast.show { transform: translateY(0); opacity: 1; }
+    .toast-dot { width: 10px; height: 10px; border-radius: 50%; background: #22c55e; flex-shrink: 0; animation: dotPulse 1.5s infinite; }
+    @keyframes dotPulse { 0%,100% { opacity: 1; } 50% { opacity: .4; } }
+
+    /* ── LOADING ── */
+    .loading-wrap { display: flex; align-items: center; justify-content: center; padding: 80px; }
+    .spinner { width: 36px; height: 36px; border: 3px solid var(--border); border-top-color: var(--primary); border-radius: 50%; animation: spin .7s linear infinite; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ── STATS BUTTON ── */
+    .btn-stats { display: inline-flex; align-items: center; gap: 6px; padding: 8px 16px; border-radius: 8px; border: 1.5px solid var(--border); background: var(--card); font-family: inherit; font-size: .82rem; font-weight: 500; cursor: pointer; color: var(--text); transition: all .2s; white-space: nowrap; }
+    .btn-stats:hover { border-color: var(--primary); color: var(--primary); }
+
+    /* ── STATS MODAL ── */
+    .stats-modal-overlay { position: fixed; inset: 0; z-index: 500; background: rgba(0,0,0,.6); display: flex; align-items: center; justify-content: center; padding: 20px; opacity: 0; pointer-events: none; transition: opacity .3s; }
+    .stats-modal-overlay.open { opacity: 1; pointer-events: all; }
+    .stats-modal { background: var(--card); border-radius: 20px; padding: 32px; max-width: 780px; width: 100%; max-height: 90vh; overflow-y: auto; position: relative; transform: translateY(20px); transition: transform .3s; }
+    .stats-modal-overlay.open .stats-modal { transform: translateY(0); }
+    .stats-modal-close { position: absolute; top: 14px; right: 18px; background: var(--bg); border: none; color: var(--text); font-size: 1rem; width: 34px; height: 34px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: background .2s; }
+    .stats-modal-close:hover { background: var(--border); }
+    .stats-modal-title { font-size: 1.15rem; font-weight: 700; color: var(--text); margin-bottom: 20px; }
+    .period-tabs { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 14px; }
+    .period-tab { padding: 7px 16px; border-radius: 50px; border: 1.5px solid var(--border); background: var(--card); font-family: inherit; font-size: .8rem; font-weight: 500; cursor: pointer; color: var(--muted); transition: all .2s; }
+    .period-tab:hover { border-color: var(--primary); color: var(--primary); }
+    .period-tab.active { background: var(--primary); color: white; border-color: var(--primary); }
+    .range-inputs { display: none; align-items: center; gap: 10px; margin-bottom: 16px; flex-wrap: wrap; }
+    .range-inputs.visible { display: flex; }
+    .range-inputs input[type="date"] { padding: 7px 12px; border: 1.5px solid var(--border); border-radius: 8px; font-family: inherit; font-size: .84rem; color: var(--text); outline: none; transition: border-color .2s; }
+    .range-inputs input[type="date"]:focus { border-color: var(--primary); }
+    .chart-wrap { position: relative; height: 300px; margin-top: 8px; }
+    .date-type-toggle { display: flex; gap: 6px; margin-bottom: 16px; }
+    .date-type-btn { padding: 6px 14px; border-radius: 50px; border: 1.5px solid var(--border); background: var(--card); font-family: inherit; font-size: .78rem; font-weight: 600; cursor: pointer; color: var(--muted); transition: all .2s; }
+    .date-type-btn:hover { border-color: var(--primary); color: var(--primary); }
+    .date-type-btn.active { background: var(--primary); color: white; border-color: var(--primary); }
+    @media (max-width: 480px) { .stats-modal { padding: 24px 16px; } .chart-wrap { height: 220px; } }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 768px) {
+      .stats-bar { grid-template-columns: repeat(3, 1fr); padding: 16px 16px 4px; }
+      .stat-num { font-size: 1.5rem; }
+      .orders-grid { grid-template-columns: 1fr; }
+      .filter-bar { padding: 12px 16px 8px; }
+      .orders-wrap { padding: 4px 16px 48px; }
+      .app-header { padding: 12px 16px; }
+      .header-email { display: none; }
+      .filter-count { display: none; }
+    }
+    @media (max-width: 480px) {
+      .login-card { padding: 36px 24px; }
+      .stat-num { font-size: 1.5rem; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ══ SETUP SCREEN ══ -->
+<div id="setupScreen" class="setup-screen" hidden>
+  <div class="setup-card">
+    <div class="setup-title">⚙️ Firebase no está configurado</div>
+    <p class="setup-sub">Sigue estos pasos una sola vez (≈5 minutos) para conectar la base de datos.</p>
+
+    <div class="setup-step"><div class="setup-num">1</div><div>Ve a <strong>console.firebase.google.com</strong> y crea un proyecto llamado <strong>GloboBYM</strong>.</div></div>
+    <div class="setup-step"><div class="setup-num">2</div><div>En el panel del proyecto, haz clic en el ícono <strong>&lt;/&gt; (Web)</strong> → apodo <code>globobym-web</code> → Registrar.</div></div>
+    <div class="setup-step"><div class="setup-num">3</div><div>Copia los valores de <code>firebaseConfig</code> y pégalos en el archivo <strong>firebase-config.js</strong>.</div></div>
+    <div class="setup-step"><div class="setup-num">4</div><div>En el menú lateral → <strong>Firestore Database</strong> → Crear base de datos → Modo producción → Reglas → pega:</div></div>
+    <pre class="setup-code">rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /pedidos/{id} {
+      allow create: true;
+      allow read, update, delete: if request.auth != null;
+    }
+  }
+}</pre>
+    <div class="setup-step"><div class="setup-num">5</div><div>En el menú lateral → <strong>Authentication</strong> → Comenzar → Email/contraseña → Habilitar.</div></div>
+    <div class="setup-step"><div class="setup-num">6</div><div>Authentication → Usuarios → <strong>Agregar usuario</strong> con tu email y contraseña. ¡Listo!</div></div>
+  </div>
+</div>
+
+<!-- ══ LOGIN SCREEN ══ -->
+<div id="loginScreen" class="login-screen" hidden>
+  <div class="login-card">
+    <div class="login-logo">Globo<span>BYM</span></div>
+    <div class="login-title">Panel de pedidos</div>
+    <p class="login-sub">Accede con tu cuenta de administrador.</p>
+    <form id="loginForm" autocomplete="on">
+      <div class="form-group">
+        <label for="loginEmail">Email</label>
+        <input type="email" id="loginEmail" placeholder="tu@email.com" required autocomplete="email" />
+      </div>
+      <div class="form-group">
+        <label for="loginPass">Contraseña</label>
+        <input type="password" id="loginPass" placeholder="••••••••" required autocomplete="current-password" />
+      </div>
+      <button type="submit" class="btn-login" id="loginBtn">Entrar al panel</button>
+    </form>
+    <div class="login-error" id="loginError"></div>
+  </div>
+</div>
+
+<!-- ══ DASHBOARD ══ -->
+<div id="dashboard" hidden>
+
+  <!-- Header -->
+  <header class="app-header">
+    <div class="header-logo">🎈 Globo<span>BYM</span> · Pedidos</div>
+    <div class="header-right">
+      <span class="header-email" id="userEmail"></span>
+      <button class="btn-logout" id="logoutBtn">Salir</button>
+    </div>
+  </header>
+
+  <!-- Stats -->
+  <div class="stats-bar">
+    <div class="stat-card s-nuevo">
+      <div class="stat-num" id="statNuevo">0</div>
+      <div class="stat-label">🔴 Nuevos</div>
+    </div>
+    <div class="stat-card s-contactado">
+      <div class="stat-num" id="statContactado">0</div>
+      <div class="stat-label">🟡 Contactados</div>
+    </div>
+    <div class="stat-card s-venta_cerrada">
+      <div class="stat-num" id="statVenta">0</div>
+      <div class="stat-label">🔵 Ventas cerradas</div>
+    </div>
+    <div class="stat-card s-atendido">
+      <div class="stat-num" id="statAtendido">0</div>
+      <div class="stat-label">🟢 Atendidos</div>
+    </div>
+    <div class="stat-card s-sin_compra">
+      <div class="stat-num" id="statSinCompra">0</div>
+      <div class="stat-label">⚪ Sin compra</div>
+    </div>
+  </div>
+
+  <!-- Filters -->
+  <div class="filter-bar">
+    <div style="display:flex;gap:6px;flex-wrap:wrap">
+      <button class="tab active" data-filter="todos">Todos</button>
+      <button class="tab" data-filter="nuevo">🔴 Nuevos</button>
+      <button class="tab" data-filter="contactado">🟡 Contactados</button>
+      <button class="tab" data-filter="venta_cerrada">🔵 Venta cerrada</button>
+      <button class="tab" data-filter="pagado">🟣 Pagados</button>
+      <button class="tab" data-filter="atendido">🟢 Atendidos</button>
+      <button class="tab" data-filter="sin_compra">⚪ Sin compra</button>
+    </div>
+    <select class="filter-select" id="typeFilter">
+      <option value="">Todos los eventos</option>
+      <option>Cumpleaños</option>
+      <option>Baby Shower</option>
+      <option>Corporativo</option>
+      <option>Graduación</option>
+      <option>Bautizo</option>
+      <option>Revelación de Sexo</option>
+      <option>Propuesta de Matrimonio</option>
+      <option>Otro</option>
+    </select>
+    <span class="filter-count" id="filterCount"></span>
+    <button class="btn-stats" id="btnStats">📊 Estadísticas</button>
+  </div>
+
+  <!-- Orders list -->
+  <div class="orders-wrap">
+    <div id="ordersList">
+      <div class="loading-wrap"><div class="spinner"></div></div>
+    </div>
+  </div>
+
+</div>
+
+<!-- Stats modal -->
+<div class="stats-modal-overlay" id="statsModal">
+  <div class="stats-modal">
+    <button class="stats-modal-close" id="statsModalClose">✕</button>
+    <div class="stats-modal-title">📊 Pedidos por fecha</div>
+    <div class="date-type-toggle">
+      <button class="date-type-btn active" data-dtype="pedido">📦 Fecha de pedido</button>
+      <button class="date-type-btn" data-dtype="evento">🎈 Fecha de evento</button>
+    </div>
+    <div class="period-tabs">
+      <button class="period-tab active" data-period="dias">Últimos 7 días</button>
+      <button class="period-tab" data-period="semanas">Últimas 4 semanas</button>
+      <button class="period-tab" data-period="meses">Últimos 12 meses</button>
+      <button class="period-tab" data-period="rango">Rango personalizado</button>
+    </div>
+    <div class="range-inputs" id="rangeInputs">
+      <input type="date" id="rangeFrom" />
+      <span style="color:var(--muted);font-size:.9rem">→</span>
+      <input type="date" id="rangeTo" />
+      <button class="tab active" style="padding:7px 16px;border-radius:8px" onclick="updateChart()">Aplicar</button>
+    </div>
+    <div class="chart-wrap">
+      <canvas id="statsChart"></canvas>
+    </div>
+  </div>
+</div>
+
+<!-- Toast notification -->
+<div class="toast" id="toast">
+  <div class="toast-dot"></div>
+  <span id="toastMsg">Nuevo pedido recibido</span>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<!-- Firebase SDKs -->
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+<script>
+  // ── FIREBASE INIT ──
+  firebase.initializeApp({
+    apiKey:            "AIzaSyDDRomYCtRzPkCLbWlqlgRNnQ8aSj2izQ4",
+    authDomain:        "globobym.firebaseapp.com",
+    projectId:         "globobym",
+    storageBucket:     "globobym.firebasestorage.app",
+    messagingSenderId: "499147123529",
+    appId:             "1:499147123529:web:ad69e31c0dbeabdcc20898"
+  });
+  const db   = firebase.firestore();
+  const auth = firebase.auth();
+
+  // ── AUTH STATE ──
+  auth.onAuthStateChanged(user => {
+    if (user) {
+      showDashboard(user);
+    } else {
+      document.getElementById('loginScreen').hidden = false;
+      document.getElementById('dashboard').hidden   = true;
+    }
+  });
+
+  // ── LOGIN ──
+  document.getElementById('loginForm').addEventListener('submit', async e => {
+    e.preventDefault();
+    const btn   = document.getElementById('loginBtn');
+    const errEl = document.getElementById('loginError');
+    const email = document.getElementById('loginEmail').value.trim();
+    const pass  = document.getElementById('loginPass').value;
+    btn.disabled = true;
+    btn.textContent = 'Entrando...';
+    errEl.textContent = '';
+    try {
+      await auth.signInWithEmailAndPassword(email, pass);
+    } catch(err) {
+      errEl.textContent = 'Email o contraseña incorrectos.';
+      btn.disabled = false;
+      btn.textContent = 'Entrar al panel';
+    }
+  });
+
+  // ── LOGOUT ──
+  document.getElementById('logoutBtn').addEventListener('click', () => auth.signOut());
+
+  // ── STATE ──
+  let allOrders     = [];
+  let currentFilter = 'todos';
+  let currentType   = '';
+  let knownIds      = null;  // null = first load pending
+
+  // ── DASHBOARD INIT ──
+  function showDashboard(user) {
+    document.getElementById('loginScreen').hidden = true;
+    document.getElementById('dashboard').hidden   = false;
+    document.getElementById('userEmail').textContent = user.email;
+
+    if ('Notification' in window && Notification.permission === 'default') {
+      Notification.requestPermission();
+    }
+
+    firebase.firestore()
+      .collection('pedidos')
+      .orderBy('createdAt', 'desc')
+      .onSnapshot(snapshot => {
+        const fresh = [];
+        snapshot.forEach(doc => fresh.push({ id: doc.id, ...doc.data() }));
+
+        if (knownIds === null) {
+          // First load — just record IDs, no notification
+          knownIds = new Set(fresh.map(o => o.id));
+        } else {
+          // Subsequent updates — notify for truly new docs
+          fresh.forEach(o => {
+            if (!knownIds.has(o.id)) {
+              notifyNew(o);
+              knownIds.add(o.id);
+            }
+          });
+        }
+
+        allOrders = fresh;
+        autoTransitionContactado();
+        updateStats();
+        renderOrders();
+      }, err => {
+        console.error('Firestore error:', err);
+      });
+  }
+
+  // ── STATS ──
+  function updateStats() {
+    const c = { nuevo: 0, contactado: 0, venta_cerrada: 0, pagado: 0, atendido: 0, sin_compra: 0 };
+    allOrders.forEach(o => { if (c[o.estado] !== undefined) c[o.estado]++; });
+    document.getElementById('statNuevo').textContent      = c.nuevo;
+    document.getElementById('statContactado').textContent = c.contactado;
+    document.getElementById('statVenta').textContent      = c.venta_cerrada + c.pagado;
+    document.getElementById('statAtendido').textContent   = c.atendido;
+    document.getElementById('statSinCompra').textContent  = c.sin_compra;
+  }
+
+  // ── RENDER ORDERS ──
+  function renderOrders() {
+    let list = [...allOrders];
+    if (currentFilter !== 'todos') list = list.filter(o => o.estado === currentFilter);
+    if (currentType)               list = list.filter(o => o.tipo   === currentType);
+
+    const count = document.getElementById('filterCount');
+    count.textContent = list.length ? `${list.length} pedido${list.length > 1 ? 's' : ''}` : '';
+
+    const wrap = document.getElementById('ordersList');
+    if (!list.length) {
+      wrap.innerHTML = `
+        <div class="empty-state">
+          <div class="empty-icon">📭</div>
+          <div class="empty-title">No hay pedidos aquí</div>
+          <div class="empty-sub">Cambia los filtros o espera nuevas consultas.</div>
+        </div>`;
+      return;
+    }
+    wrap.innerHTML = `<div class="orders-grid">${list.map(cardHTML).join('')}</div>`;
+  }
+
+  // ── CARD HTML ──
+  const STATUS_LABELS = {
+    nuevo:         '🔴 Nuevo',
+    contactado:    '🟡 Contactado',
+    venta_cerrada: '🔵 Venta Cerrada',
+    pagado:        '🟣 Pagado',
+    atendido:      '🟢 Atendido',
+    sin_compra:    '⚪ Sin Compra',
+  };
+
+  function statusActions(o) {
+    const id = o.id, st = o.estado;
+    if (st === 'nuevo') return `
+      <div class="card-status-actions">
+        <button class="btn-status" onclick="setStatus('${id}','contactado',this)">✓ Contactado</button>
+      </div>`;
+    if (st === 'contactado') return `
+      <div class="card-status-actions">
+        <button class="btn-sincompra" onclick="setStatus('${id}','sin_compra',this)">✕ Sin compra</button>
+        <button class="btn-venta"     onclick="setStatus('${id}','venta_cerrada',this)">💰 Venta cerrada</button>
+      </div>`;
+    if (st === 'venta_cerrada') return `
+      <div class="card-status-actions">
+        <button class="btn-status" onclick="setStatus('${id}','pagado',this)">💳 Marcar pagado</button>
+      </div>`;
+    if (st === 'pagado') return `
+      <div class="card-status-actions">
+        <button class="btn-status" onclick="setStatus('${id}','atendido',this)">✅ Atendido</button>
+      </div>`;
+    return '';
+  }
+
+  function cardHTML(o) {
+    const t   = o.createdAt?.toDate ? o.createdAt.toDate() : (o.createdAt?.seconds ? new Date(o.createdAt.seconds * 1000) : null);
+    const tel = o.telefono ? o.telefono.replace(/[\s\-\(\)]/g, '') : '';
+    const waText = encodeURIComponent(
+      `Hola ${esc(o.nombre) || 'cliente'} 👋, te contactamos de GloboBYM 🎈\n` +
+      `Recibimos tu consulta para *${esc(o.tipo) || 'tu evento'}*. ¿Cuándo podemos hablar?`
+    );
+
+    return `
+      <div class="order-card ${o.estado}">
+        <div class="card-header">
+          <span class="status-badge ${o.estado}">${STATUS_LABELS[o.estado] || o.estado}</span>
+          <span class="card-time">${t ? timeAgo(t) : ''}</span>
+        </div>
+        <div class="card-body">
+          <div class="card-name">${esc(o.nombre) || 'Sin nombre'}</div>
+          <div class="card-meta">
+            ${o.telefono ? `<span class="card-meta-item">📱 <strong>${esc(o.telefono)}</strong></span>` : ''}
+            ${o.tipo     ? `<span class="card-meta-item">🎈 <strong>${esc(o.tipo)}</strong></span>` : ''}
+            ${o.fecha    ? `<span class="card-meta-item">📅 <strong>${esc(o.fecha)}</strong></span>` : ''}
+          </div>
+          ${o.mensaje ? `<div class="card-message">"${esc(o.mensaje)}"</div>` : ''}
+        </div>
+        <div class="card-actions">
+          ${tel ? `
+            <a href="https://wa.me/${tel}?text=${waText}" target="_blank" class="btn-wa">💬 WhatsApp</a>
+            <a href="tel:${tel}" class="btn-call">📞 Llamar</a>
+          ` : ''}
+          ${statusActions(o)}
+        </div>
+      </div>`;
+  }
+
+  // ── SET STATUS ──
+  async function setStatus(id, newState, btn) {
+    if (btn) { btn.disabled = true; btn.closest('.card-status-actions')?.querySelectorAll('button').forEach(b => b.disabled = true); }
+    const extra = {};
+    if (newState === 'contactado')    extra.contactadoAt    = firebase.firestore.FieldValue.serverTimestamp();
+    if (newState === 'venta_cerrada') extra.ventaCerradaAt  = firebase.firestore.FieldValue.serverTimestamp();
+    if (newState === 'pagado')        extra.pagadoAt        = firebase.firestore.FieldValue.serverTimestamp();
+    if (newState === 'atendido')      extra.atendidoAt      = firebase.firestore.FieldValue.serverTimestamp();
+    try {
+      await firebase.firestore().collection('pedidos').doc(id).update({ estado: newState, ...extra });
+    } catch(e) {
+      console.error('Error updating status:', e);
+      if (btn) { btn.disabled = false; }
+    }
+  }
+
+  // ── AUTO-TRANSITION: contactado → sin_compra after 7 days ──
+  function autoTransitionContactado() {
+    const sevenDaysAgo = Date.now() - 7 * 24 * 60 * 60 * 1000;
+    allOrders.forEach(o => {
+      if (o.estado !== 'contactado') return;
+      const ref = o.contactadoAt?.toDate  ? o.contactadoAt.toDate().getTime()
+                : o.contactadoAt?.seconds ? o.contactadoAt.seconds * 1000
+                : o.createdAt?.toDate     ? o.createdAt.toDate().getTime()
+                : o.createdAt?.seconds    ? o.createdAt.seconds * 1000
+                : null;
+      if (ref && ref < sevenDaysAgo) {
+        firebase.firestore().collection('pedidos').doc(o.id).update({ estado: 'sin_compra' });
+      }
+    });
+  }
+
+  // ── FILTERS ──
+  document.querySelectorAll('.tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+      document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+      tab.classList.add('active');
+      currentFilter = tab.dataset.filter;
+      renderOrders();
+    });
+  });
+  document.getElementById('typeFilter').addEventListener('change', e => {
+    currentType = e.target.value;
+    renderOrders();
+  });
+
+  // ── NOTIFICATIONS ──
+  function notifyNew(o) {
+    showToast(`Nuevo pedido de ${o.nombre || 'un cliente'} · ${o.tipo || ''}`);
+    if ('Notification' in window && Notification.permission === 'granted') {
+      new Notification('GloboBYM · Nuevo pedido 🎈', {
+        body: `${o.nombre || 'Cliente'} · ${o.tipo || ''} · ${o.fecha || ''}`,
+        icon: 'assets/avatar.jpg'
+      });
+    }
+  }
+
+  let toastTimer;
+  function showToast(msg) {
+    const toast = document.getElementById('toast');
+    document.getElementById('toastMsg').textContent = msg;
+    toast.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => toast.classList.remove('show'), 4500);
+  }
+
+  // ── HELPERS ──
+  function esc(str) {
+    return String(str || '')
+      .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+  function timeAgo(date) {
+    const s = Math.floor((Date.now() - date) / 1000);
+    if (s <    60) return 'hace un momento';
+    if (s <  3600) return `hace ${Math.floor(s / 60)} min`;
+    if (s < 86400) return `hace ${Math.floor(s / 3600)}h`;
+    if (s < 172800) return 'ayer';
+    return `hace ${Math.floor(s / 86400)} días`;
+  }
+
+  // ── STATS CHART ──
+  let chartInstance  = null;
+  let currentPeriod  = 'dias';
+  let currentDateType = 'pedido';
+
+  document.getElementById('btnStats').addEventListener('click', () => {
+    document.getElementById('statsModal').classList.add('open');
+    updateChart();
+  });
+  document.getElementById('statsModalClose').addEventListener('click', () =>
+    document.getElementById('statsModal').classList.remove('open'));
+  document.getElementById('statsModal').addEventListener('click', e => {
+    if (e.target === document.getElementById('statsModal'))
+      document.getElementById('statsModal').classList.remove('open');
+  });
+
+  document.querySelectorAll('.period-tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+      document.querySelectorAll('.period-tab').forEach(t => t.classList.remove('active'));
+      tab.classList.add('active');
+      currentPeriod = tab.dataset.period;
+      document.getElementById('rangeInputs').classList.toggle('visible', currentPeriod === 'rango');
+      if (currentPeriod !== 'rango') updateChart();
+    });
+  });
+
+  document.querySelectorAll('.date-type-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.date-type-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      currentDateType = btn.dataset.dtype;
+      updateChart();
+    });
+  });
+
+  function getOrderDate(o) {
+    if (o.createdAt?.toDate) return o.createdAt.toDate();
+    if (o.createdAt?.seconds) return new Date(o.createdAt.seconds * 1000);
+    return null;
+  }
+
+  function getEventDate(o) {
+    if (!o.fecha) return null;
+    const d = new Date(o.fecha + 'T00:00:00');
+    return isNaN(d.getTime()) ? null : d;
+  }
+
+  function getChartDate(o) {
+    return currentDateType === 'evento' ? getEventDate(o) : getOrderDate(o);
+  }
+
+  function updateChart() {
+    const { labels, nuevo, contactado, venta_cerrada, pagado, atendido, sin_compra } = buildChartData();
+    const ctx = document.getElementById('statsChart').getContext('2d');
+    if (chartInstance) chartInstance.destroy();
+    chartInstance = new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels,
+        datasets: [
+          { label: '🔴 Nuevos',         data: nuevo,         backgroundColor: 'rgba(220,38,38,.8)',   borderRadius: 4, borderSkipped: false },
+          { label: '🟡 Contactados',     data: contactado,    backgroundColor: 'rgba(217,119,6,.8)',  borderRadius: 4, borderSkipped: false },
+          { label: '🔵 Venta Cerrada',   data: venta_cerrada, backgroundColor: 'rgba(37,99,235,.8)',  borderRadius: 4, borderSkipped: false },
+          { label: '🟣 Pagados',         data: pagado,        backgroundColor: 'rgba(124,58,237,.8)', borderRadius: 4, borderSkipped: false },
+          { label: '🟢 Atendidos',       data: atendido,      backgroundColor: 'rgba(22,163,74,.8)',  borderRadius: 4, borderSkipped: false },
+          { label: '⚪ Sin Compra',       data: sin_compra,    backgroundColor: 'rgba(100,116,139,.5)', borderRadius: 4, borderSkipped: false },
+        ]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { position: 'top', labels: { usePointStyle: true, padding: 20, font: { size: 12 } } },
+          tooltip: {
+            callbacks: { label: c => ` ${c.dataset.label.slice(3)}: ${c.parsed.y} pedido${c.parsed.y !== 1 ? 's' : ''}` }
+          }
+        },
+        scales: {
+          x: { stacked: true, grid: { display: false } },
+          y: { stacked: true, beginAtZero: true, ticks: { stepSize: 1, precision: 0 }, grid: { color: '#f1f5f9' } }
+        }
+      }
+    });
+  }
+
+  function countByEstado(orders, estado) { return orders.filter(o => o.estado === estado).length; }
+
+  function buildChartData() {
+    const now = new Date();
+    const labels = [], nuevo = [], contactado = [], venta_cerrada = [], pagado = [], atendido = [], sin_compra = [];
+
+    function pushBucket(bucketOrders) {
+      nuevo.push(countByEstado(bucketOrders, 'nuevo'));
+      contactado.push(countByEstado(bucketOrders, 'contactado'));
+      venta_cerrada.push(countByEstado(bucketOrders, 'venta_cerrada'));
+      pagado.push(countByEstado(bucketOrders, 'pagado'));
+      atendido.push(countByEstado(bucketOrders, 'atendido'));
+      sin_compra.push(countByEstado(bucketOrders, 'sin_compra'));
+    }
+
+    if (currentPeriod === 'dias') {
+      for (let i = 6; i >= 0; i--) {
+        const d = new Date(now); d.setDate(d.getDate() - i);
+        const key = d.toISOString().slice(0, 10);
+        labels.push(d.toLocaleDateString('es-PE', { weekday: 'short', day: 'numeric' }));
+        pushBucket(allOrders.filter(o => { const t = getChartDate(o); return t && t.toISOString().slice(0, 10) === key; }));
+      }
+    } else if (currentPeriod === 'semanas') {
+      for (let i = 3; i >= 0; i--) {
+        const start = new Date(now); start.setDate(start.getDate() - (i + 1) * 7);
+        const end   = new Date(now); end.setDate(end.getDate() - i * 7);
+        labels.push(`Sem. ${4 - i}`);
+        pushBucket(allOrders.filter(o => { const t = getChartDate(o); return t && t >= start && t < end; }));
+      }
+    } else if (currentPeriod === 'meses') {
+      for (let i = 11; i >= 0; i--) {
+        const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
+        labels.push(d.toLocaleDateString('es-PE', { month: 'short', year: '2-digit' }));
+        pushBucket(allOrders.filter(o => { const t = getChartDate(o); return t && t.getFullYear() === d.getFullYear() && t.getMonth() === d.getMonth(); }));
+      }
+    } else if (currentPeriod === 'rango') {
+      const from = new Date(document.getElementById('rangeFrom').value);
+      const to   = new Date(document.getElementById('rangeTo').value); to.setHours(23, 59, 59);
+      if (isNaN(from) || isNaN(to) || from > to) return { labels: ['Rango inválido'], nuevo: [0], contactado: [0], atendido: [0] };
+      const days = Math.min(Math.ceil((to - from) / 86400000) + 1, 90);
+      for (let i = 0; i < days; i++) {
+        const d = new Date(from); d.setDate(d.getDate() + i);
+        const key = d.toISOString().slice(0, 10);
+        labels.push(d.toLocaleDateString('es-PE', { day: 'numeric', month: 'short' }));
+        pushBucket(allOrders.filter(o => { const t = getChartDate(o); return t && t.toISOString().slice(0, 10) === key; }));
+      }
+    }
+    return { labels, nuevo, contactado, venta_cerrada, pagado, atendido, sin_compra };
+  }
+</script>
+</body>
+</html>
