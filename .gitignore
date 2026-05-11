@@ -1,5 +1,6 @@
 node_modules/
-assets/
+assets/*
+!assets/logo.png
 index - copia.html
 *.log
 .DS_Store
