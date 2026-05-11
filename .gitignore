@@ -6,3 +6,5 @@ index - copia.html
 .DS_Store
 Thumbs.db
 .claude/
+package.json
+package-lock.json
