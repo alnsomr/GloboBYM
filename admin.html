@@ -9,6 +9,13 @@
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-title" content="GloboBYM" />
   <meta name="theme-color" content="#C2006B" />
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-FX6KTT78Z1"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-FX6KTT78Z1');
+  </script>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <style>
@@ -27,6 +34,8 @@
       --pagado-bg:       #f5f3ff;
       --atendido:        #16a34a;
       --atendido-bg:     #f0fdf4;
+      --venta:           #d4a017;
+      --venta-bg:        #fefce8;
       --sin_compra:      #64748b;
       --sin_compra-bg:   #f1f5f9;
       --bg:           #f1f5f9;
@@ -79,7 +88,7 @@
     .stat-label { font-size: .72rem; color: var(--muted); margin-top: 4px; text-transform: uppercase; letter-spacing: .4px; }
     .stat-card.s-nuevo .stat-num          { color: var(--nuevo); }
     .stat-card.s-contactado .stat-num     { color: var(--contactado); }
-    .stat-card.s-venta_cerrada .stat-num  { color: var(--venta_cerrada); }
+    .stat-card.s-venta .stat-num          { color: var(--venta); }
     .stat-card.s-atendido .stat-num       { color: var(--atendido); }
     .stat-card.s-sin_compra .stat-num     { color: var(--sin_compra); }
 
@@ -105,6 +114,7 @@
     .order-card.venta_cerrada  { border-left: 4px solid var(--venta_cerrada); }
     .order-card.pagado         { border-left: 4px solid var(--pagado); }
     .order-card.atendido       { border-left: 4px solid var(--atendido); }
+    .order-card.venta          { border-left: 4px solid var(--venta); background: linear-gradient(90deg, rgba(212,160,23,.04) 0%, transparent 60%); }
     .order-card.sin_compra     { border-left: 4px solid var(--sin_compra); opacity: .7; }
 
     .card-header { padding: 14px 16px 10px; display: flex; align-items: center; justify-content: space-between; gap: 8px; }
@@ -114,6 +124,7 @@
     .status-badge.venta_cerrada { background: var(--venta_cerrada-bg);  color: var(--venta_cerrada); }
     .status-badge.pagado        { background: var(--pagado-bg);         color: var(--pagado); }
     .status-badge.atendido      { background: var(--atendido-bg);       color: var(--atendido); }
+    .status-badge.venta         { background: var(--venta-bg);          color: var(--venta); }
     .status-badge.sin_compra    { background: var(--sin_compra-bg);     color: var(--sin_compra); }
     .card-time { font-size: .7rem; color: var(--muted); white-space: nowrap; }
 
@@ -132,12 +143,15 @@
     .btn-status { display: inline-flex; align-items: center; gap: 5px; background: var(--bg); border: 1.5px solid var(--border); color: var(--text); padding: 6px 13px; border-radius: 8px; font-family: inherit; font-size: .78rem; font-weight: 500; cursor: pointer; transition: all .2s; }
     .btn-status:hover { border-color: var(--primary); color: var(--primary); background: white; }
     .btn-status:disabled { opacity: .5; cursor: not-allowed; }
-    .btn-venta { display: inline-flex; align-items: center; gap: 5px; background: var(--venta_cerrada); color: white; border: none; padding: 6px 12px; border-radius: 8px; font-family: inherit; font-size: .78rem; font-weight: 600; cursor: pointer; transition: opacity .2s; }
+    .btn-venta { display: inline-flex; align-items: center; gap: 5px; background: var(--pagado); color: white; border: none; padding: 6px 12px; border-radius: 8px; font-family: inherit; font-size: .78rem; font-weight: 600; cursor: pointer; transition: opacity .2s; }
     .btn-venta:hover { opacity: .85; }
     .btn-venta:disabled { opacity: .45; cursor: not-allowed; }
     .btn-sincompra { display: inline-flex; align-items: center; gap: 5px; background: var(--bg); border: 1.5px solid var(--border); color: var(--sin_compra); padding: 6px 12px; border-radius: 8px; font-family: inherit; font-size: .78rem; font-weight: 500; cursor: pointer; transition: all .2s; }
     .btn-sincompra:hover { border-color: var(--sin_compra); background: var(--sin_compra-bg); }
     .btn-sincompra:disabled { opacity: .45; cursor: not-allowed; }
+    .btn-back { display: inline-flex; align-items: center; gap: 4px; background: transparent; border: 1.5px solid var(--border); color: var(--muted); padding: 6px 10px; border-radius: 8px; font-family: inherit; font-size: .76rem; font-weight: 500; cursor: pointer; transition: all .2s; }
+    .btn-back:hover { border-color: var(--muted); color: var(--text); background: var(--bg); }
+    .btn-back:disabled { opacity: .45; cursor: not-allowed; }
     .card-status-actions { margin-left: auto; display: flex; gap: 6px; flex-wrap: wrap; justify-content: flex-end; }
 
     /* ── EMPTY STATE ── */
@@ -156,6 +170,62 @@
     .loading-wrap { display: flex; align-items: center; justify-content: center; padding: 80px; }
     .spinner { width: 36px; height: 36px; border: 3px solid var(--border); border-top-color: var(--primary); border-radius: 50%; animation: spin .7s linear infinite; }
     @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ── MAIN NAV ── */
+    .main-nav { display: flex; background: var(--card); border-bottom: 1px solid var(--border); padding: 0 24px; }
+    .main-nav-btn { padding: 14px 20px; border: none; border-bottom: 3px solid transparent; background: none; font-family: inherit; font-size: .9rem; font-weight: 600; color: var(--muted); cursor: pointer; transition: all .2s; margin-bottom: -1px; }
+    .main-nav-btn:hover { color: var(--primary); }
+    .main-nav-btn.active { color: var(--primary); border-bottom-color: var(--primary); }
+
+    /* ── TRACKING ── */
+    .tracking-wrap { padding: 20px 24px 48px; }
+    .tracking-title { font-size: 1rem; font-weight: 700; color: var(--text); margin-bottom: 16px; margin-top: 8px; }
+    .metric-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 12px; margin-bottom: 28px; }
+    .metric-card { background: var(--card); border-radius: var(--radius); border: 1.5px solid var(--border); padding: 18px 20px; }
+    .metric-num { font-size: 2rem; font-weight: 700; color: var(--primary); line-height: 1; }
+    .metric-label { font-size: .75rem; color: var(--muted); margin-top: 6px; font-weight: 500; }
+    .metric-sub { font-size: .7rem; color: var(--muted); margin-top: 3px; }
+    .metric-card.m-conversion .metric-num { color: var(--venta_cerrada); }
+    .metric-card.m-cierre .metric-num { color: var(--atendido); }
+
+    /* ── FUNNEL ── */
+    .funnel-card { background: var(--card); border-radius: var(--radius); border: 1.5px solid var(--border); padding: 20px 24px; }
+    .funnel-step { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; }
+    .funnel-step:last-child { margin-bottom: 0; }
+    .funnel-label { font-size: .8rem; color: var(--muted); font-weight: 500; min-width: 160px; }
+    .funnel-bar-wrap { flex: 1; background: var(--bg); border-radius: 50px; height: 22px; overflow: hidden; }
+    .funnel-bar { height: 100%; border-radius: 50px; transition: width .6s ease; display: flex; align-items: center; padding-left: 10px; }
+    .funnel-bar span { font-size: .7rem; font-weight: 700; color: white; white-space: nowrap; }
+    .funnel-count { font-size: .8rem; font-weight: 600; color: var(--text); min-width: 36px; text-align: right; }
+    .funnel-pct { font-size: .72rem; color: var(--muted); min-width: 40px; text-align: right; }
+
+    /* ── RANK LIST ── */
+    .rank-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 28px; }
+    .rank-list { margin-top: 12px; }
+    .rank-item { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+    .rank-item:last-child { margin-bottom: 0; }
+    .rank-item-label { flex: 1; font-size: .8rem; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .rank-item-bar-wrap { width: 70px; background: var(--bg); border-radius: 50px; height: 8px; flex-shrink: 0; }
+    .rank-item-bar { height: 8px; border-radius: 50px; background: var(--primary); transition: width .5s ease; }
+    .rank-item-count { font-size: .78rem; font-weight: 600; color: var(--muted); min-width: 20px; text-align: right; }
+
+    /* ── UPCOMING EVENTS ── */
+    .upcoming-list { margin-bottom: 28px; }
+    .upcoming-item { background: var(--card); border-radius: 10px; border: 1.5px solid var(--border); padding: 10px 14px; margin-bottom: 8px; display: flex; align-items: center; gap: 12px; }
+    .upcoming-date { font-size: .78rem; font-weight: 700; color: var(--primary); min-width: 56px; }
+    .upcoming-info { flex: 1; min-width: 0; }
+    .upcoming-name { font-size: .85rem; font-weight: 600; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .upcoming-tipo { font-size: .72rem; color: var(--muted); }
+    .upcoming-empty { font-size: .85rem; color: var(--muted); text-align: center; padding: 16px; background: var(--card); border-radius: 10px; border: 1.5px solid var(--border); }
+
+    @media (max-width: 768px) {
+      .main-nav { padding: 0 16px; }
+      .main-nav-btn { padding: 12px 14px; font-size: .82rem; }
+      .tracking-wrap { padding: 16px 12px 48px; }
+      .metric-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+      .rank-grid { grid-template-columns: 1fr; }
+      .funnel-label { min-width: 110px; font-size: .72rem; }
+    }
 
     /* ── STATS BUTTON ── */
     .btn-stats { display: inline-flex; align-items: center; gap: 6px; padding: 8px 16px; border-radius: 8px; border: 1.5px solid var(--border); background: var(--card); font-family: inherit; font-size: .82rem; font-weight: 500; cursor: pointer; color: var(--text); transition: all .2s; white-space: nowrap; }
@@ -280,69 +350,200 @@ service cloud.firestore {
 
   <!-- Header -->
   <header class="app-header">
-    <div class="header-logo">🎈 Globo<span>BYM</span> · Pedidos</div>
+    <div class="header-logo">🎈 Globo<span>BYM</span></div>
     <div class="header-right">
       <span class="header-email" id="userEmail"></span>
       <button class="btn-logout" id="logoutBtn">Salir</button>
     </div>
   </header>
 
-  <!-- Stats -->
-  <div class="stats-bar">
-    <div class="stat-card s-nuevo">
-      <div class="stat-num" id="statNuevo">0</div>
-      <div class="stat-label">🔴 Nuevos</div>
+  <!-- Main nav -->
+  <nav class="main-nav">
+    <button class="main-nav-btn active" data-section="cotizaciones">📋 Cotizaciones</button>
+    <button class="main-nav-btn" data-section="tracking">📈 Tracking</button>
+  </nav>
+
+  <!-- ══ SECCIÓN COTIZACIONES ══ -->
+  <div id="sectionCotizaciones">
+
+    <div class="stats-bar">
+      <div class="stat-card s-nuevo">
+        <div class="stat-num" id="statNuevo">0</div>
+        <div class="stat-label">🔴 Nuevos</div>
+      </div>
+      <div class="stat-card s-contactado">
+        <div class="stat-num" id="statContactado">0</div>
+        <div class="stat-label">🟡 Contactados</div>
+      </div>
+      <div class="stat-card s-venta">
+        <div class="stat-num" id="statPagado">0</div>
+        <div class="stat-label">🟣 Pagados</div>
+      </div>
+      <div class="stat-card s-atendido">
+        <div class="stat-num" id="statAtendido">0</div>
+        <div class="stat-label">🟢 Atendidos</div>
+      </div>
+      <div class="stat-card s-venta">
+        <div class="stat-num" id="statVenta">0</div>
+        <div class="stat-label">💎 Ventas</div>
+      </div>
+      <div class="stat-card s-sin_compra">
+        <div class="stat-num" id="statSinCompra">0</div>
+        <div class="stat-label">⚪ Sin compra</div>
+      </div>
     </div>
-    <div class="stat-card s-contactado">
-      <div class="stat-num" id="statContactado">0</div>
-      <div class="stat-label">🟡 Contactados</div>
+
+    <div class="filter-bar">
+      <div class="filter-tabs-row">
+        <button class="tab active" data-filter="todos">Todos</button>
+        <button class="tab" data-filter="nuevo">🔴 Nuevos</button>
+        <button class="tab" data-filter="contactado">🟡 Contactados</button>
+        <button class="tab" data-filter="pagado">🟣 Pagados</button>
+        <button class="tab" data-filter="atendido">🟢 Atendidos</button>
+        <button class="tab" data-filter="venta">💎 Ventas</button>
+        <button class="tab" data-filter="sin_compra">⚪ Sin compra</button>
+      </div>
+      <div class="filter-bottom-row">
+        <select class="filter-select" id="typeFilter">
+          <option value="">Todos los eventos</option>
+          <option>Cumpleaños</option>
+          <option>Baby Shower</option>
+          <option>Corporativo</option>
+          <option>Graduación</option>
+          <option>Bautizo</option>
+          <option>Revelación de Sexo</option>
+          <option>Propuesta de Matrimonio</option>
+          <option>Otro</option>
+        </select>
+        <span class="filter-count" id="filterCount"></span>
+        <button class="btn-stats" id="btnStats">📊 Estadísticas</button>
+      </div>
     </div>
-    <div class="stat-card s-venta_cerrada">
-      <div class="stat-num" id="statVenta">0</div>
-      <div class="stat-label">🔵 Ventas cerradas</div>
+
+    <div class="orders-wrap">
+      <div id="ordersList">
+        <div class="loading-wrap"><div class="spinner"></div></div>
+      </div>
     </div>
-    <div class="stat-card s-atendido">
-      <div class="stat-num" id="statAtendido">0</div>
-      <div class="stat-label">🟢 Atendidos</div>
-    </div>
-    <div class="stat-card s-sin_compra">
-      <div class="stat-num" id="statSinCompra">0</div>
-      <div class="stat-label">⚪ Sin compra</div>
-    </div>
+
   </div>
 
-  <!-- Filters -->
-  <div class="filter-bar">
-    <div class="filter-tabs-row">
-      <button class="tab active" data-filter="todos">Todos</button>
-      <button class="tab" data-filter="nuevo">🔴 Nuevos</button>
-      <button class="tab" data-filter="contactado">🟡 Contactados</button>
-      <button class="tab" data-filter="venta_cerrada">🔵 Venta cerrada</button>
-      <button class="tab" data-filter="pagado">🟣 Pagados</button>
-      <button class="tab" data-filter="atendido">🟢 Atendidos</button>
-      <button class="tab" data-filter="sin_compra">⚪ Sin compra</button>
-    </div>
-    <div class="filter-bottom-row">
-      <select class="filter-select" id="typeFilter">
-        <option value="">Todos los eventos</option>
-        <option>Cumpleaños</option>
-        <option>Baby Shower</option>
-        <option>Corporativo</option>
-        <option>Graduación</option>
-        <option>Bautizo</option>
-        <option>Revelación de Sexo</option>
-        <option>Propuesta de Matrimonio</option>
-        <option>Otro</option>
-      </select>
-      <span class="filter-count" id="filterCount"></span>
-      <button class="btn-stats" id="btnStats">📊 Estadísticas</button>
-    </div>
-  </div>
+  <!-- ══ SECCIÓN TRACKING ══ -->
+  <div id="sectionTracking" hidden>
+    <div class="tracking-wrap">
 
-  <!-- Orders list -->
-  <div class="orders-wrap">
-    <div id="ordersList">
-      <div class="loading-wrap"><div class="spinner"></div></div>
+      <div class="tracking-title">Visitas al sitio</div>
+      <div class="metric-grid">
+        <div class="metric-card">
+          <div class="metric-num" id="trVisitasSitio">—</div>
+          <div class="metric-label">🌐 Visitas al sitio web</div>
+          <div class="metric-sub">Personas que abrieron la página</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-num" id="trVisitas">—</div>
+          <div class="metric-label">👁 Abrieron el formulario</div>
+          <div class="metric-sub">De las visitas que vieron el form</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-num" id="trFormularios">0</div>
+          <div class="metric-label">📋 Formularios enviados</div>
+          <div class="metric-sub">Total de cotizaciones recibidas</div>
+        </div>
+        <div class="metric-card m-conversion">
+          <div class="metric-num" id="trConversion">—</div>
+          <div class="metric-label">🎯 Tasa de conversión</div>
+          <div class="metric-sub">Visitas que enviaron formulario</div>
+        </div>
+        <div class="metric-card m-cierre">
+          <div class="metric-num" id="trCierre">—</div>
+          <div class="metric-label">💰 Tasa de cierre</div>
+          <div class="metric-sub">Cotizaciones que se convirtieron en venta</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-num" id="trTiempoWeb">—</div>
+          <div class="metric-label">⏱ Tiempo promedio en la web</div>
+          <div class="metric-sub">Cuánto tiempo se quedan los visitantes</div>
+        </div>
+      </div>
+
+      <div class="tracking-title">Embudo de conversión</div>
+      <div class="funnel-card">
+        <div class="funnel-step">
+          <div class="funnel-label">🌐 Visitas al sitio</div>
+          <div class="funnel-bar-wrap"><div class="funnel-bar" id="fbarSitio" style="width:100%;background:#6366f1"></div></div>
+          <div class="funnel-count" id="fcntSitio">—</div>
+          <div class="funnel-pct">100%</div>
+        </div>
+        <div class="funnel-step">
+          <div class="funnel-label">📋 Formularios</div>
+          <div class="funnel-bar-wrap"><div class="funnel-bar" id="fbarForm" style="width:0%;background:var(--contactado)"><span id="fbarFormLbl"></span></div></div>
+          <div class="funnel-count" id="fcntForm">0</div>
+          <div class="funnel-pct" id="fpctForm">—</div>
+        </div>
+        <div class="funnel-step">
+          <div class="funnel-label">💎 Ventas</div>
+          <div class="funnel-bar-wrap"><div class="funnel-bar" id="fbarVenta" style="width:0%;background:var(--venta)"><span></span></div></div>
+          <div class="funnel-count" id="fcntVenta">0</div>
+          <div class="funnel-pct" id="fpctVenta">—</div>
+        </div>
+      </div>
+
+      <!-- OPERACIONES -->
+      <div class="tracking-title" style="margin-top:28px">Operaciones</div>
+      <div class="metric-grid">
+        <div class="metric-card">
+          <div class="metric-num" id="trRespuesta">—</div>
+          <div class="metric-label">⏱ Tiempo de respuesta</div>
+          <div class="metric-sub">Promedio de nuevo → contactado</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-num" id="trProximos">—</div>
+          <div class="metric-label">📅 Eventos en 7 días</div>
+          <div class="metric-sub">Pedidos pendientes de atender</div>
+        </div>
+      </div>
+      <div id="upcomingList" class="upcoming-list"></div>
+
+      <!-- DEMANDA -->
+      <div class="tracking-title">Demanda</div>
+      <div class="rank-grid">
+        <div class="metric-card">
+          <div class="metric-label">🎈 Tipo de evento</div>
+          <div class="rank-list" id="tipoList"></div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-label">📆 Meses más activos</div>
+          <div class="rank-list" id="mesList"></div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-label">📍 Top distritos</div>
+          <div class="rank-list" id="distritoList"></div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-label">⏰ Hora pico de cotización</div>
+          <div class="rank-list" id="horaList"></div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-label">🔗 Origen del tráfico</div>
+          <div class="rank-list" id="origenList"></div>
+        </div>
+      </div>
+
+      <!-- CLIENTES -->
+      <div class="tracking-title">Clientes</div>
+      <div class="metric-grid">
+        <div class="metric-card">
+          <div class="metric-num" id="trRecurrentes">—</div>
+          <div class="metric-label">🔄 Clientes recurrentes</div>
+          <div class="metric-sub">Han pedido 2 o más veces</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-num" id="trUnicos">—</div>
+          <div class="metric-label">👤 Clientes únicos</div>
+          <div class="metric-sub">Teléfonos distintos registrados</div>
+        </div>
+      </div>
+
     </div>
   </div>
 
@@ -468,7 +669,9 @@ service cloud.firestore {
         }
 
         allOrders = fresh;
+        migrateLegacyVentaCerrada();
         autoTransitionContactado();
+        autoTransitionAtendido();
         updateStats();
         renderOrders();
       }, err => {
@@ -478,12 +681,13 @@ service cloud.firestore {
 
   // ── STATS ──
   function updateStats() {
-    const c = { nuevo: 0, contactado: 0, venta_cerrada: 0, pagado: 0, atendido: 0, sin_compra: 0 };
+    const c = { nuevo: 0, contactado: 0, pagado: 0, atendido: 0, venta: 0, sin_compra: 0 };
     allOrders.forEach(o => { if (c[o.estado] !== undefined) c[o.estado]++; });
     document.getElementById('statNuevo').textContent      = c.nuevo;
     document.getElementById('statContactado').textContent = c.contactado;
-    document.getElementById('statVenta').textContent      = c.venta_cerrada + c.pagado;
+    document.getElementById('statPagado').textContent     = c.pagado;
     document.getElementById('statAtendido').textContent   = c.atendido;
+    document.getElementById('statVenta').textContent      = c.venta;
     document.getElementById('statSinCompra').textContent  = c.sin_compra;
   }
 
@@ -516,29 +720,47 @@ service cloud.firestore {
     venta_cerrada: '🔵 Venta Cerrada',
     pagado:        '🟣 Pagado',
     atendido:      '🟢 Atendido',
+    venta:         '💎 Venta',
     sin_compra:    '⚪ Sin Compra',
+  };
+
+  // Mapeo de retroceso (estado actual → estado al que regresa)
+  const BACK_MAP = {
+    contactado: 'nuevo',
+    sin_compra: 'contactado',
+    pagado:     'contactado',
+    atendido:   'pagado',
   };
 
   function statusActions(o) {
     const id = o.id, st = o.estado;
+    const back = BACK_MAP[st]
+      ? `<button class="btn-back" title="Volver a ${STATUS_LABELS[BACK_MAP[st]]}" onclick="setStatus('${id}','${BACK_MAP[st]}',this,true)">↩</button>`
+      : '';
     if (st === 'nuevo') return `
       <div class="card-status-actions">
         <button class="btn-status" onclick="setStatus('${id}','contactado',this)">✓ Contactado</button>
       </div>`;
     if (st === 'contactado') return `
       <div class="card-status-actions">
+        ${back}
         <button class="btn-sincompra" onclick="setStatus('${id}','sin_compra',this)">✕ Sin compra</button>
-        <button class="btn-venta"     onclick="setStatus('${id}','venta_cerrada',this)">💰 Venta cerrada</button>
+        <button class="btn-venta"     onclick="setStatus('${id}','pagado',this)">💳 Pagado</button>
       </div>`;
-    if (st === 'venta_cerrada') return `
+    if (st === 'sin_compra') return `
       <div class="card-status-actions">
-        <button class="btn-status" onclick="setStatus('${id}','pagado',this)">💳 Marcar pagado</button>
+        ${back}
       </div>`;
     if (st === 'pagado') return `
       <div class="card-status-actions">
+        ${back}
         <button class="btn-status" onclick="setStatus('${id}','atendido',this)">✅ Atendido</button>
       </div>`;
-    return '';
+    if (st === 'atendido') return `
+      <div class="card-status-actions">
+        ${back}
+      </div>`;
+    return ''; // venta: estado bloqueado (terminal automático)
   }
 
   function cardHTML(o) {
@@ -575,13 +797,16 @@ service cloud.firestore {
   }
 
   // ── SET STATUS ──
-  async function setStatus(id, newState, btn) {
+  // isBack = true → no se sobrescriben los timestamps (preserva historial al retroceder)
+  async function setStatus(id, newState, btn, isBack) {
     if (btn) { btn.disabled = true; btn.closest('.card-status-actions')?.querySelectorAll('button').forEach(b => b.disabled = true); }
     const extra = {};
-    if (newState === 'contactado')    extra.contactadoAt    = firebase.firestore.FieldValue.serverTimestamp();
-    if (newState === 'venta_cerrada') extra.ventaCerradaAt  = firebase.firestore.FieldValue.serverTimestamp();
-    if (newState === 'pagado')        extra.pagadoAt        = firebase.firestore.FieldValue.serverTimestamp();
-    if (newState === 'atendido')      extra.atendidoAt      = firebase.firestore.FieldValue.serverTimestamp();
+    if (!isBack) {
+      if (newState === 'contactado') extra.contactadoAt = firebase.firestore.FieldValue.serverTimestamp();
+      if (newState === 'pagado')     extra.pagadoAt     = firebase.firestore.FieldValue.serverTimestamp();
+      if (newState === 'atendido')   extra.atendidoAt   = firebase.firestore.FieldValue.serverTimestamp();
+      if (newState === 'sin_compra') extra.sinCompraAt  = firebase.firestore.FieldValue.serverTimestamp();
+    }
     try {
       await firebase.firestore().collection('pedidos').doc(id).update({ estado: newState, ...extra });
     } catch(e) {
@@ -590,21 +815,275 @@ service cloud.firestore {
     }
   }
 
-  // ── AUTO-TRANSITION: contactado → sin_compra after 7 days ──
+  function tsToMs(ts) {
+    if (!ts) return null;
+    if (ts.toDate) return ts.toDate().getTime();
+    if (ts.seconds) return ts.seconds * 1000;
+    return null;
+  }
+
+  // ── AUTO-TRANSITION: contactado → sin_compra después de 7 días ──
   function autoTransitionContactado() {
     const sevenDaysAgo = Date.now() - 7 * 24 * 60 * 60 * 1000;
     allOrders.forEach(o => {
       if (o.estado !== 'contactado') return;
-      const ref = o.contactadoAt?.toDate  ? o.contactadoAt.toDate().getTime()
-                : o.contactadoAt?.seconds ? o.contactadoAt.seconds * 1000
-                : o.createdAt?.toDate     ? o.createdAt.toDate().getTime()
-                : o.createdAt?.seconds    ? o.createdAt.seconds * 1000
-                : null;
+      const ref = tsToMs(o.contactadoAt) || tsToMs(o.createdAt);
       if (ref && ref < sevenDaysAgo) {
-        firebase.firestore().collection('pedidos').doc(o.id).update({ estado: 'sin_compra' });
+        firebase.firestore().collection('pedidos').doc(o.id).update({
+          estado: 'sin_compra',
+          sinCompraAt: firebase.firestore.FieldValue.serverTimestamp()
+        });
       }
     });
   }
+
+  // ── AUTO-TRANSITION: atendido → venta después de 24h ──
+  function autoTransitionAtendido() {
+    const dayAgo = Date.now() - 24 * 60 * 60 * 1000;
+    allOrders.forEach(o => {
+      if (o.estado !== 'atendido') return;
+      const ref = tsToMs(o.atendidoAt);
+      if (ref && ref < dayAgo) {
+        firebase.firestore().collection('pedidos').doc(o.id).update({
+          estado: 'venta',
+          ventaAt: firebase.firestore.FieldValue.serverTimestamp()
+        });
+      }
+    });
+  }
+
+  // ── MIGRACIÓN LEGACY: pedidos viejos en venta_cerrada → pagado ──
+  function migrateLegacyVentaCerrada() {
+    allOrders.forEach(o => {
+      if (o.estado !== 'venta_cerrada') return;
+      const update = { estado: 'pagado' };
+      if (!o.pagadoAt && o.ventaCerradaAt) update.pagadoAt = o.ventaCerradaAt;
+      firebase.firestore().collection('pedidos').doc(o.id).update(update);
+    });
+  }
+
+  // ── MAIN NAV ──
+  let visitasTotal   = null;
+  let visitasSitio   = null;
+  let tiempoTotal    = 0;
+  let tiempoSesiones = 0;
+  let origenes       = {};
+
+  document.querySelectorAll('.main-nav-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.main-nav-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      const section = btn.dataset.section;
+      document.getElementById('sectionCotizaciones').hidden = section !== 'cotizaciones';
+      document.getElementById('sectionTracking').hidden     = section !== 'tracking';
+      if (section === 'tracking') renderTracking();
+    });
+  });
+
+  function pct(num, den) {
+    if (!den) return '—';
+    return Math.round(num / den * 100) + '%';
+  }
+
+  function renderTracking() {
+    const total   = allOrders.length;
+    const ventas  = allOrders.filter(o => ['pagado','atendido','venta'].includes(o.estado)).length;
+    const visitas = visitasTotal;
+    const sitio   = visitasSitio;
+
+    // Metric cards
+    document.getElementById('trVisitasSitio').textContent = sitio !== null ? sitio : '—';
+    document.getElementById('trVisitas').textContent      = visitas !== null ? visitas : '—';
+    document.getElementById('trFormularios').textContent  = total;
+    document.getElementById('trConversion').textContent   = visitas ? pct(total, visitas) : '—';
+    document.getElementById('trCierre').textContent       = pct(ventas, total);
+
+    // ── TIEMPO PROMEDIO EN LA WEB ──
+    if (tiempoSesiones > 0) {
+      const avgSeg = Math.round(tiempoTotal / tiempoSesiones);
+      document.getElementById('trTiempoWeb').textContent =
+        avgSeg < 60  ? avgSeg + 's'
+        : avgSeg < 3600 ? Math.floor(avgSeg/60) + 'm ' + (avgSeg%60) + 's'
+        : (Math.round(avgSeg/3600 * 10) / 10) + 'h';
+    } else {
+      document.getElementById('trTiempoWeb').textContent = '—';
+    }
+
+    // Funnel bars — base es visitas al sitio (o el primer dato disponible)
+    const base = sitio || total || 1;
+    function setBar(id, cntId, pctId, count, refBase, color) {
+      const w = Math.round(count / base * 100);
+      const el = document.getElementById(id);
+      el.style.width = w + '%';
+      el.style.background = color || '';
+      document.getElementById(cntId).textContent = count;
+      if (pctId) document.getElementById(pctId).textContent = pct(count, refBase);
+    }
+
+    // Funnel paso 1: visitas al sitio
+    document.getElementById('fcntSitio').textContent = sitio !== null ? sitio : '—';
+    document.getElementById('fbarSitio').style.width = '100%';
+    setBar('fbarForm',  'fcntForm',  'fpctForm',  total,  sitio || total, 'var(--contactado)');
+    setBar('fbarVenta', 'fcntVenta', 'fpctVenta', ventas, total,          'var(--venta)');
+
+    // ── TIEMPO DE RESPUESTA ──
+    const tiempos = allOrders
+      .filter(o => o.contactadoAt && o.createdAt)
+      .map(o => {
+        const c = o.createdAt.toDate    ? o.createdAt.toDate()    : new Date(o.createdAt);
+        const r = o.contactadoAt.toDate ? o.contactadoAt.toDate() : new Date(o.contactadoAt);
+        return (r - c) / 3600000;
+      }).filter(h => h >= 0);
+    if (tiempos.length) {
+      const avg = tiempos.reduce((a,b) => a+b, 0) / tiempos.length;
+      document.getElementById('trRespuesta').textContent =
+        avg < 1  ? Math.round(avg * 60) + 'min'
+        : avg < 24 ? Math.round(avg) + 'h'
+        : (Math.round(avg / 24 * 10) / 10) + 'd';
+    } else {
+      document.getElementById('trRespuesta').textContent = '—';
+    }
+
+    // ── EVENTOS PRÓXIMOS 7 DÍAS ──
+    const hoy7 = new Date(); hoy7.setHours(0,0,0,0);
+    const en7  = new Date(hoy7); en7.setDate(en7.getDate() + 7);
+    const proximos = allOrders.filter(o => {
+      if (!o.fecha || ['atendido','sin_compra'].includes(o.estado)) return false;
+      const fev = new Date(o.fecha + 'T00:00:00');
+      return fev >= hoy7 && fev <= en7;
+    }).sort((a,b) => a.fecha.localeCompare(b.fecha));
+    document.getElementById('trProximos').textContent = proximos.length;
+    const ul = document.getElementById('upcomingList');
+    if (proximos.length) {
+      ul.innerHTML = proximos.map(o => {
+        const d = new Date(o.fecha + 'T00:00:00');
+        const lbl = d.toLocaleDateString('es-PE', {day:'numeric', month:'short'});
+        return `<div class="upcoming-item">
+          <div class="upcoming-date">${lbl}</div>
+          <div class="upcoming-info">
+            <div class="upcoming-name">${o.nombre}</div>
+            <div class="upcoming-tipo">${o.tipo || ''}</div>
+          </div>
+          <span class="badge badge-${o.estado}">${(STATUS_LABELS||{})[o.estado]||o.estado}</span>
+        </div>`;
+      }).join('');
+    } else {
+      ul.innerHTML = '<div class="upcoming-empty">Sin eventos en los próximos 7 días</div>';
+    }
+
+    // ── TIPO DE EVENTO ──
+    const tipoCount = {};
+    allOrders.forEach(o => { const t = o.tipo||'Otro'; tipoCount[t]=(tipoCount[t]||0)+1; });
+    const tipoMax = Math.max(...Object.values(tipoCount), 1);
+    document.getElementById('tipoList').innerHTML =
+      Object.entries(tipoCount).sort((a,b)=>b[1]-a[1]).slice(0,5).map(([k,v]) =>
+        `<div class="rank-item">
+          <div class="rank-item-label">${k}</div>
+          <div class="rank-item-bar-wrap"><div class="rank-item-bar" style="width:${Math.round(v/tipoMax*100)}%"></div></div>
+          <div class="rank-item-count">${v}</div>
+        </div>`
+      ).join('') || '<div class="upcoming-empty">Sin datos aún</div>';
+
+    // ── MES MÁS ACTIVO ──
+    const MESES_ES = ['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
+    const mesCount = {};
+    allOrders.forEach(o => {
+      if (!o.createdAt) return;
+      const d = o.createdAt.toDate ? o.createdAt.toDate() : new Date(o.createdAt);
+      const k = MESES_ES[d.getMonth()] + ' ' + d.getFullYear();
+      mesCount[k] = (mesCount[k]||0)+1;
+    });
+    const mesMax = Math.max(...Object.values(mesCount), 1);
+    document.getElementById('mesList').innerHTML =
+      Object.entries(mesCount).sort((a,b)=>b[1]-a[1]).slice(0,5).map(([k,v]) =>
+        `<div class="rank-item">
+          <div class="rank-item-label">${k}</div>
+          <div class="rank-item-bar-wrap"><div class="rank-item-bar" style="width:${Math.round(v/mesMax*100)}%"></div></div>
+          <div class="rank-item-count">${v}</div>
+        </div>`
+      ).join('') || '<div class="upcoming-empty">Sin datos aún</div>';
+
+    // ── DISTRITOS ──
+    const distritoCount = {};
+    allOrders.forEach(o => {
+      const d = (o.distrito || '').trim();
+      if (d) distritoCount[d] = (distritoCount[d] || 0) + 1;
+    });
+    const distritoMax = Math.max(...Object.values(distritoCount), 1);
+    document.getElementById('distritoList').innerHTML =
+      Object.entries(distritoCount).sort((a,b)=>b[1]-a[1]).slice(0,5).map(([k,v]) =>
+        `<div class="rank-item">
+          <div class="rank-item-label">${k}</div>
+          <div class="rank-item-bar-wrap"><div class="rank-item-bar" style="width:${Math.round(v/distritoMax*100)}%"></div></div>
+          <div class="rank-item-count">${v}</div>
+        </div>`
+      ).join('') || '<div class="upcoming-empty">Sin datos aún</div>';
+
+    // ── ORIGEN DEL TRÁFICO ──
+    const ORIGEN_LABELS = {
+      instagram: '📷 Instagram',
+      facebook:  '👤 Facebook',
+      tiktok:    '🎵 TikTok',
+      whatsapp:  '💬 WhatsApp',
+      google:    '🔍 Google',
+      bing:      '🔍 Bing',
+      youtube:   '▶ YouTube',
+      twitter:   '🐦 X / Twitter',
+      linkedin:  '💼 LinkedIn',
+      directo:   '🔗 Directo',
+      otro:      '🌐 Otro',
+    };
+    const origenEntries = Object.entries(origenes).filter(([,v]) => v > 0);
+    const origenMax     = Math.max(...origenEntries.map(([,v]) => v), 1);
+    document.getElementById('origenList').innerHTML =
+      origenEntries.sort((a,b)=>b[1]-a[1]).slice(0,8).map(([k,v]) => {
+        const lbl = ORIGEN_LABELS[k] || ('🌐 ' + k);
+        return `<div class="rank-item">
+          <div class="rank-item-label">${lbl}</div>
+          <div class="rank-item-bar-wrap"><div class="rank-item-bar" style="width:${Math.round(v/origenMax*100)}%"></div></div>
+          <div class="rank-item-count">${v}</div>
+        </div>`;
+      }).join('') || '<div class="upcoming-empty">Sin datos aún</div>';
+
+    // ── HORA PICO DE COTIZACIÓN ──
+    const horaCount = {};
+    allOrders.forEach(o => {
+      if (!o.createdAt) return;
+      const d = o.createdAt.toDate ? o.createdAt.toDate() : new Date(o.createdAt);
+      const h = d.getHours();
+      const lbl = String(h).padStart(2,'0') + ':00 – ' + String((h+1)%24).padStart(2,'0') + ':00';
+      horaCount[lbl] = (horaCount[lbl] || 0) + 1;
+    });
+    const horaMax = Math.max(...Object.values(horaCount), 1);
+    document.getElementById('horaList').innerHTML =
+      Object.entries(horaCount).sort((a,b)=>b[1]-a[1]).slice(0,5).map(([k,v]) =>
+        `<div class="rank-item">
+          <div class="rank-item-label">${k}</div>
+          <div class="rank-item-bar-wrap"><div class="rank-item-bar" style="width:${Math.round(v/horaMax*100)}%"></div></div>
+          <div class="rank-item-count">${v}</div>
+        </div>`
+      ).join('') || '<div class="upcoming-empty">Sin datos aún</div>';
+
+    // ── CLIENTES ──
+    const telCount = {};
+    allOrders.forEach(o => { const t = (o.telefono||'').trim(); if(t) telCount[t]=(telCount[t]||0)+1; });
+    const unicos      = Object.keys(telCount).length;
+    const recurrentes = Object.values(telCount).filter(c => c > 1).length;
+    document.getElementById('trUnicos').textContent      = unicos;
+    document.getElementById('trRecurrentes').textContent = recurrentes;
+  }
+
+  // Cargar visitas desde Firestore
+  firebase.firestore().collection('metricas').doc('general')
+    .onSnapshot(snap => {
+      const data = snap.exists ? snap.data() : {};
+      visitasTotal   = data.visitas_formulario    || 0;
+      visitasSitio   = data.visitas_sitio         || 0;
+      tiempoTotal    = data.tiempo_total_segundos || 0;
+      tiempoSesiones = data.tiempo_sesiones       || 0;
+      origenes       = data.origenes              || {};
+      if (!document.getElementById('sectionTracking').hidden) renderTracking();
+    });
 
   // ── FILTERS ──
   document.querySelectorAll('.tab').forEach(tab => {
@@ -706,7 +1185,7 @@ service cloud.firestore {
   }
 
   function updateChart() {
-    const { labels, nuevo, contactado, venta_cerrada, pagado, atendido, sin_compra } = buildChartData();
+    const { labels, nuevo, contactado, pagado, atendido, venta, sin_compra } = buildChartData();
     const ctx = document.getElementById('statsChart').getContext('2d');
     if (chartInstance) chartInstance.destroy();
     chartInstance = new Chart(ctx, {
@@ -714,12 +1193,12 @@ service cloud.firestore {
       data: {
         labels,
         datasets: [
-          { label: '🔴 Nuevos',         data: nuevo,         backgroundColor: 'rgba(220,38,38,.8)',   borderRadius: 4, borderSkipped: false },
-          { label: '🟡 Contactados',     data: contactado,    backgroundColor: 'rgba(217,119,6,.8)',  borderRadius: 4, borderSkipped: false },
-          { label: '🔵 Venta Cerrada',   data: venta_cerrada, backgroundColor: 'rgba(37,99,235,.8)',  borderRadius: 4, borderSkipped: false },
-          { label: '🟣 Pagados',         data: pagado,        backgroundColor: 'rgba(124,58,237,.8)', borderRadius: 4, borderSkipped: false },
-          { label: '🟢 Atendidos',       data: atendido,      backgroundColor: 'rgba(22,163,74,.8)',  borderRadius: 4, borderSkipped: false },
-          { label: '⚪ Sin Compra',       data: sin_compra,    backgroundColor: 'rgba(100,116,139,.5)', borderRadius: 4, borderSkipped: false },
+          { label: '🔴 Nuevos',      data: nuevo,      backgroundColor: 'rgba(220,38,38,.8)',   borderRadius: 4, borderSkipped: false },
+          { label: '🟡 Contactados', data: contactado, backgroundColor: 'rgba(217,119,6,.8)',   borderRadius: 4, borderSkipped: false },
+          { label: '🟣 Pagados',     data: pagado,     backgroundColor: 'rgba(124,58,237,.8)',  borderRadius: 4, borderSkipped: false },
+          { label: '🟢 Atendidos',   data: atendido,   backgroundColor: 'rgba(22,163,74,.8)',   borderRadius: 4, borderSkipped: false },
+          { label: '💎 Ventas',      data: venta,      backgroundColor: 'rgba(212,160,23,.85)', borderRadius: 4, borderSkipped: false },
+          { label: '⚪ Sin Compra',  data: sin_compra, backgroundColor: 'rgba(100,116,139,.5)', borderRadius: 4, borderSkipped: false },
         ]
       },
       options: {
@@ -743,14 +1222,14 @@ service cloud.firestore {
 
   function buildChartData() {
     const now = new Date();
-    const labels = [], nuevo = [], contactado = [], venta_cerrada = [], pagado = [], atendido = [], sin_compra = [];
+    const labels = [], nuevo = [], contactado = [], pagado = [], atendido = [], venta = [], sin_compra = [];
 
     function pushBucket(bucketOrders) {
       nuevo.push(countByEstado(bucketOrders, 'nuevo'));
       contactado.push(countByEstado(bucketOrders, 'contactado'));
-      venta_cerrada.push(countByEstado(bucketOrders, 'venta_cerrada'));
       pagado.push(countByEstado(bucketOrders, 'pagado'));
       atendido.push(countByEstado(bucketOrders, 'atendido'));
+      venta.push(countByEstado(bucketOrders, 'venta'));
       sin_compra.push(countByEstado(bucketOrders, 'sin_compra'));
     }
 
@@ -786,7 +1265,7 @@ service cloud.firestore {
         pushBucket(allOrders.filter(o => { const t = getChartDate(o); return t && t.toISOString().slice(0, 10) === key; }));
       }
     }
-    return { labels, nuevo, contactado, venta_cerrada, pagado, atendido, sin_compra };
+    return { labels, nuevo, contactado, pagado, atendido, venta, sin_compra };
   }
 </script>
 </body>

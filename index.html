@@ -8,6 +8,13 @@
   <meta property="og:title" content="GloboBYM – Boutique de Globos | Lima, Perú" />
   <meta property="og:description" content="Boutique de globería profesional en Lima. Decoraciones únicas para tu evento especial." />
   <meta property="og:type" content="website" />
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-FX6KTT78Z1"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-FX6KTT78Z1');
+  </script>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
@@ -800,6 +807,62 @@
         <label>Fecha del evento</label>
         <input type="date" id="f-fecha" required />
       </div>
+      <div class="form-field">
+        <label>Distrito</label>
+        <input type="text" id="f-distrito" list="distritos-lima" placeholder="Empieza a escribir..." autocomplete="off" required />
+        <datalist id="distritos-lima">
+          <option value="Ancón"></option>
+          <option value="Ate"></option>
+          <option value="Barranco"></option>
+          <option value="Breña"></option>
+          <option value="Carabayllo"></option>
+          <option value="Cercado de Lima"></option>
+          <option value="Chaclacayo"></option>
+          <option value="Chorrillos"></option>
+          <option value="Cieneguilla"></option>
+          <option value="Comas"></option>
+          <option value="El Agustino"></option>
+          <option value="Independencia"></option>
+          <option value="Jesús María"></option>
+          <option value="La Molina"></option>
+          <option value="La Victoria"></option>
+          <option value="Lince"></option>
+          <option value="Los Olivos"></option>
+          <option value="Lurigancho-Chosica"></option>
+          <option value="Lurín"></option>
+          <option value="Magdalena del Mar"></option>
+          <option value="Miraflores"></option>
+          <option value="Pachacámac"></option>
+          <option value="Pucusana"></option>
+          <option value="Pueblo Libre"></option>
+          <option value="Puente Piedra"></option>
+          <option value="Punta Hermosa"></option>
+          <option value="Punta Negra"></option>
+          <option value="Rímac"></option>
+          <option value="San Bartolo"></option>
+          <option value="San Borja"></option>
+          <option value="San Isidro"></option>
+          <option value="San Juan de Lurigancho"></option>
+          <option value="San Juan de Miraflores"></option>
+          <option value="San Luis"></option>
+          <option value="San Martín de Porres"></option>
+          <option value="San Miguel"></option>
+          <option value="Santa Anita"></option>
+          <option value="Santa María del Mar"></option>
+          <option value="Santa Rosa"></option>
+          <option value="Santiago de Surco"></option>
+          <option value="Surquillo"></option>
+          <option value="Villa El Salvador"></option>
+          <option value="Villa María del Triunfo"></option>
+          <option value="Callao"></option>
+          <option value="Bellavista"></option>
+          <option value="Carmen de la Legua"></option>
+          <option value="La Perla"></option>
+          <option value="La Punta"></option>
+          <option value="Ventanilla"></option>
+          <option value="Mi Perú"></option>
+        </datalist>
+      </div>
       <div class="form-field full">
         <label>Cuéntanos tu idea</label>
         <textarea id="f-mensaje" placeholder="¿Qué temática tienes en mente? ¿Colores preferidos? ¿Número de invitados? Cuéntanos todo..."></textarea>
@@ -840,6 +903,77 @@
     appId:             "1:499147123529:web:ad69e31c0dbeabdcc20898"
   });
   const _db = firebase.firestore();
+
+  // ── DETECTAR ORIGEN DEL TRÁFICO ──
+  function detectOrigen() {
+    // 1. UTM source tiene prioridad (links etiquetados)
+    const params = new URLSearchParams(location.search);
+    const utm = params.get('utm_source');
+    if (utm) return utm.toLowerCase().replace(/[^a-z0-9_]/g, '').slice(0, 30) || 'otro';
+
+    // 2. Referrer del navegador
+    const ref = document.referrer;
+    if (!ref) return 'directo';
+    let host = '';
+    try { host = new URL(ref).hostname.toLowerCase(); } catch { return 'directo'; }
+
+    if (host === location.hostname) return 'directo';
+    if (host.includes('instagram'))                       return 'instagram';
+    if (host.includes('facebook') || host.includes('fb.com')) return 'facebook';
+    if (host.includes('tiktok'))                          return 'tiktok';
+    if (host.includes('whatsapp') || host.includes('wa.me'))  return 'whatsapp';
+    if (host.includes('youtube'))                         return 'youtube';
+    if (host.includes('google'))                          return 'google';
+    if (host.includes('bing'))                            return 'bing';
+    if (host.includes('twitter') || host === 'x.com' || host.endsWith('.x.com')) return 'twitter';
+    if (host.includes('linkedin'))                        return 'linkedin';
+    return 'otro';
+  }
+
+  // Contar visita al sitio + origen
+  try {
+    const origen = detectOrigen();
+    _db.collection('metricas').doc('general').set({
+      visitas_sitio: firebase.firestore.FieldValue.increment(1),
+      origenes: { [origen]: firebase.firestore.FieldValue.increment(1) }
+    }, { merge: true });
+  } catch(e) {}
+
+  // ── TRACKING TIEMPO EN LA WEB ──
+  (() => {
+    let activeMs = 0;
+    let lastTick = Date.now();
+    let visible  = document.visibilityState === 'visible';
+    let flushed  = false;
+
+    function accumulate() {
+      if (visible) activeMs += Date.now() - lastTick;
+      lastTick = Date.now();
+    }
+
+    document.addEventListener('visibilitychange', () => {
+      accumulate();
+      visible = document.visibilityState === 'visible';
+      if (!visible) flush();
+    });
+
+    function flush() {
+      accumulate();
+      if (flushed) return;
+      const seg = Math.round(activeMs / 1000);
+      if (seg < 5) return;
+      flushed = true;
+      try {
+        _db.collection('metricas').doc('general').set({
+          tiempo_total_segundos: firebase.firestore.FieldValue.increment(seg),
+          tiempo_sesiones:       firebase.firestore.FieldValue.increment(1)
+        }, { merge: true });
+      } catch(e) {}
+    }
+
+    window.addEventListener('pagehide', flush);
+    window.addEventListener('beforeunload', flush);
+  })();
 
   // ── SCROLL REVEAL ──
   const ro = new IntersectionObserver(entries => {
@@ -960,6 +1094,13 @@
   function openFormModal() {
     formModal.classList.add('open');
     document.body.style.overflow = 'hidden';
+    // Registrar visita al formulario
+    try {
+      _db.collection('metricas').doc('general').set(
+        { visitas_formulario: firebase.firestore.FieldValue.increment(1) },
+        { merge: true }
+      );
+    } catch(e) {}
   }
   function closeFormModal() {
     formModal.classList.remove('open');
@@ -976,13 +1117,14 @@
 
   // ── FORMULARIO → FIRESTORE + WHATSAPP ──
   async function enviarFormulario() {
-    const nombre  = document.getElementById('f-nombre').value.trim();
-    const tel     = document.getElementById('f-telefono').value.trim();
-    const tipo    = document.getElementById('f-tipo').value;
-    const fecha   = document.getElementById('f-fecha').value;
-    const mensaje = document.getElementById('f-mensaje').value.trim();
+    const nombre   = document.getElementById('f-nombre').value.trim();
+    const tel      = document.getElementById('f-telefono').value.trim();
+    const tipo     = document.getElementById('f-tipo').value;
+    const fecha    = document.getElementById('f-fecha').value;
+    const distrito = document.getElementById('f-distrito').value.trim();
+    const mensaje  = document.getElementById('f-mensaje').value.trim();
 
-    if (!nombre || !tel || !tipo || !fecha) { alert('Por favor completa los campos obligatorios: nombre, teléfono, tipo de evento y fecha.'); return; }
+    if (!nombre || !tel || !tipo || !fecha || !distrito) { alert('Por favor completa los campos obligatorios: nombre, teléfono, tipo de evento, fecha y distrito.'); return; }
 
     const btnForm = document.querySelector('#formModal .btn-form');
     if (btnForm) { btnForm.disabled = true; btnForm.textContent = 'Enviando...'; }
@@ -995,6 +1137,7 @@
           telefono: tel,
           tipo,
           fecha,
+          distrito,
           mensaje,
           estado: 'nuevo',
           createdAt: firebase.firestore.FieldValue.serverTimestamp()
@@ -1010,8 +1153,9 @@
     txt += `*Nombre:* ${nombre}\n`;
     if (tel)     txt += `*Teléfono:* ${tel}\n`;
     txt += `*Tipo de evento:* ${tipo}\n`;
-    if (fecha)   txt += `*Fecha:* ${fecha}\n`;
-    if (mensaje) txt += `*Detalles:* ${mensaje}\n`;
+    if (fecha)    txt += `*Fecha:* ${fecha}\n`;
+    if (distrito) txt += `*Distrito:* ${distrito}\n`;
+    if (mensaje)  txt += `*Detalles:* ${mensaje}\n`;
 
     window.open('https://wa.me/51960876002?text=' + encodeURIComponent(txt), '_blank');
 
@@ -1019,6 +1163,7 @@
     document.getElementById('f-telefono').value = '';
     document.getElementById('f-tipo').value     = '';
     document.getElementById('f-fecha').value    = '';
+    document.getElementById('f-distrito').value = '';
     document.getElementById('f-mensaje').value  = '';
 
     closeFormModal();
