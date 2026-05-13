@@ -3,11 +3,87 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>GloboBYM – Boutique de Globos | Lima, Perú</title>
-  <meta name="description" content="GloboBYM – Boutique de Globos profesional en Lima, Perú. Decoración de cumpleaños, baby shower y eventos empresariales. 33K+ clientes felices." />
-  <meta property="og:title" content="GloboBYM – Boutique de Globos | Lima, Perú" />
-  <meta property="og:description" content="Boutique de globería profesional en Lima. Decoraciones únicas para tu evento especial." />
+  <title>GloboBYM – Decoración con Globos a Domicilio en Lima, Perú</title>
+  <meta name="description" content="Boutique de globería profesional en Lima. Decoraciones personalizadas para cumpleaños, baby shower, bautizos, graduaciones, propuestas de matrimonio y eventos corporativos. +200 eventos realizados · 33K seguidores." />
+  <meta name="keywords" content="decoración con globos Lima, globería Lima, decoración cumpleaños Lima, baby shower Lima, decoración eventos Lima, arco de globos, globos personalizados Perú" />
+  <meta name="author" content="GloboBYM" />
+  <meta name="robots" content="index, follow" />
+  <link rel="canonical" href="https://globobym.netlify.app/" />
+
+  <!-- Open Graph (Facebook, WhatsApp, LinkedIn) -->
   <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://globobym.netlify.app/" />
+  <meta property="og:site_name" content="GloboBYM" />
+  <meta property="og:locale" content="es_PE" />
+  <meta property="og:title" content="GloboBYM – Decoración con Globos a Domicilio en Lima" />
+  <meta property="og:description" content="Boutique de globería profesional en Lima. Decoraciones personalizadas para cumpleaños, baby shower y eventos. +200 eventos realizados." />
+  <meta property="og:image" content="https://globobym.netlify.app/assets/foto1.jpg" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:image:alt" content="Decoración con globos profesional GloboBYM" />
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="GloboBYM – Decoración con Globos a Domicilio en Lima" />
+  <meta name="twitter:description" content="Boutique de globería profesional en Lima. +200 eventos · 33K seguidores." />
+  <meta name="twitter:image" content="https://globobym.netlify.app/assets/foto1.jpg" />
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/jpeg" href="assets/logo.jpg" />
+  <link rel="apple-touch-icon" href="assets/logo.jpg" />
+
+  <!-- JSON-LD: Service Area Business (sin local físico, atendemos en Lima) -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "LocalBusiness",
+    "@id": "https://globobym.netlify.app/#business",
+    "name": "GloboBYM",
+    "alternateName": "GloboBYM Perú",
+    "description": "Boutique de globería profesional en Lima, Perú. Decoraciones personalizadas para cumpleaños, baby shower, bautizos, graduaciones, propuestas de matrimonio y eventos corporativos. Servicio a domicilio.",
+    "url": "https://globobym.netlify.app/",
+    "image": "https://globobym.netlify.app/assets/foto1.jpg",
+    "logo": "https://globobym.netlify.app/assets/logo.jpg",
+    "telephone": "+51960876002",
+    "priceRange": "S/ 650 – S/ 1,999",
+    "areaServed": [
+      { "@type": "City", "name": "Lima" },
+      { "@type": "City", "name": "Callao" }
+    ],
+    "address": {
+      "@type": "PostalAddress",
+      "addressLocality": "Lima",
+      "addressRegion": "Lima",
+      "addressCountry": "PE"
+    },
+    "geo": {
+      "@type": "GeoCoordinates",
+      "latitude": -12.0464,
+      "longitude": -77.0428
+    },
+    "sameAs": [
+      "https://www.instagram.com/globobym_peru/",
+      "https://www.tiktok.com/@globobym_peru"
+    ],
+    "aggregateRating": {
+      "@type": "AggregateRating",
+      "ratingValue": "5.0",
+      "reviewCount": "200",
+      "bestRating": "5"
+    },
+    "hasOfferCatalog": {
+      "@type": "OfferCatalog",
+      "name": "Packs de decoración con globos",
+      "itemListElement": [
+        { "@type": "Offer", "name": "Pack 1", "price": "1999", "priceCurrency": "PEN" },
+        { "@type": "Offer", "name": "Pack 2", "price": "1399", "priceCurrency": "PEN" },
+        { "@type": "Offer", "name": "Pack 3", "price": "1099", "priceCurrency": "PEN" },
+        { "@type": "Offer", "name": "Pack 4", "price": "799",  "priceCurrency": "PEN" },
+        { "@type": "Offer", "name": "Pack 5", "price": "650",  "priceCurrency": "PEN" }
+      ]
+    }
+  }
+  </script>
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-FX6KTT78Z1"></script>
   <script>
     window.dataLayer = window.dataLayer || [];
@@ -57,7 +133,9 @@
     .nav-cta:hover { background: var(--primary-light) !important; }
 
     /* ── HERO ── */
-    .hero { min-height: 100vh; display: grid; grid-template-columns: 1fr 1fr; align-items: center; gap: 64px; padding: 120px 80px 80px; position: relative; overflow: hidden; }
+    .hero { min-height: 100vh; display: grid; grid-template-columns: 1fr; justify-items: center; text-align: center; align-items: center; gap: 64px; padding: 120px 80px 80px; position: relative; overflow: hidden; }
+    .hero .hero-text { max-width: 720px; }
+    .hero .hero-actions { justify-content: center; }
     .hero-bg { position: absolute; inset: 0; z-index: 0; }
     .hero-bg-slide { position: absolute; inset: 0; background-size: cover; background-position: center; opacity: 0; transition: opacity 1.2s ease-in-out; }
     .hero-bg-slide.active { opacity: 1; }
@@ -373,7 +451,7 @@
   </div>
 
   <div class="hero-text">
-    <div class="hero-badge">Boutique de Globos · Lima, Perú</div>
+    <div class="hero-badge">Boutique de Globos · 33K seguidores · Lima, Perú</div>
     <h1 class="hero-title">
       Transformamos tus<br/>eventos en momentos<br/><em>inolvidables</em>
     </h1>
@@ -392,58 +470,6 @@
     </div>
   </div>
 
-  <!-- Instagram Card -->
-  <div class="hero-card">
-    <div class="ig-profile">
-      <div class="ig-avatar-wrap">
-        <div class="ig-avatar-ring"></div>
-        <img src="assets/avatar.jpg" alt="GloboBYM" class="ig-avatar" />
-      </div>
-      <div class="ig-info">
-        <div class="ig-name-row">
-          <h3>GloboBYM</h3>
-          <span class="ig-verified">
-            <svg viewBox="0 0 12 12" fill="none">
-              <path d="M2 6l2.5 2.5 5.5-5" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-          </span>
-        </div>
-        <div class="ig-handle"><a href="https://www.instagram.com/globobym_peru/" target="_blank">@globobym_peru</a></div>
-        <div class="ig-location">📍 Lima, Perú</div>
-      </div>
-    </div>
-    <div class="ig-stats">
-      <div>
-        <span class="ig-stat-num">789</span>
-        <span class="ig-stat-label">Posts</span>
-      </div>
-      <div>
-        <span class="ig-stat-num">33K</span>
-        <span class="ig-stat-label">Seguidores</span>
-      </div>
-      <div>
-        <span class="ig-stat-num">1,833</span>
-        <span class="ig-stat-label">Seguidos</span>
-      </div>
-    </div>
-    <p class="ig-bio-text">
-      ✨ Boutique de Globos<br/>
-      ▪️ Globería Profesional Personalizada<br/>
-      🎈 Cumpleaños · Eventos corporativos<br/>
-      📍 Lima, Perú
-    </p>
-    <div class="ig-mini-grid">
-      <img src="assets/post_1.jpg" alt="Post Instagram" />
-      <img src="assets/post_2.jpg" alt="Post Instagram" />
-      <img src="assets/post_3.jpg" alt="Post Instagram" />
-      <img src="assets/post_4.jpg" alt="Post Instagram" />
-      <img src="assets/post_5.jpg" alt="Post Instagram" />
-      <img src="assets/post_6.jpg" alt="Post Instagram" />
-    </div>
-    <a href="https://www.instagram.com/globobym_peru/" target="_blank" class="ig-follow-btn">
-      Ver perfil en Instagram
-    </a>
-  </div>
 </section>
 
 <!-- STATS STRIP -->
