@@ -183,7 +183,7 @@
     .resumen-filtros input[type="text"] { min-width: 240px; flex: 1; }
     .resumen-filtros input:focus, .resumen-filtros select:focus { border-color: var(--primary); }
     .resumen-results-info { font-size: .82rem; color: var(--muted); margin: 12px 0 14px; }
-    .resumen-row { display: grid; grid-template-columns: 1.4fr 1fr 1fr .9fr 1fr .9fr; gap: 12px; align-items: center; padding: 13px 16px; border: 1px solid var(--border); border-radius: 12px; background: var(--card); margin-bottom: 8px; font-size: .85rem; }
+    .resumen-row { display: grid; grid-template-columns: 1.3fr 1fr 1.1fr .9fr .9fr .9fr .9fr; gap: 12px; align-items: center; padding: 13px 16px; border: 1px solid var(--border); border-radius: 12px; background: var(--card); margin-bottom: 8px; font-size: .85rem; }
     .resumen-row.header { background: var(--bg); font-weight: 700; color: var(--muted); font-size: .72rem; letter-spacing: .5px; text-transform: uppercase; padding: 10px 16px; }
     .resumen-row .col-name { font-weight: 600; color: var(--text); }
     .resumen-row .col-muted { color: var(--muted); }
@@ -442,7 +442,8 @@ service cloud.firestore {
       <div class="filter-bottom-row">
         <select class="filter-select" id="typeFilter">
           <option value="">Todos los eventos</option>
-          <option>Cumpleaños</option>
+          <option>Cumpleaños Infantil</option>
+          <option>Cumpleaños Adulto</option>
           <option>Baby Shower</option>
           <option>Corporativo</option>
           <option>Graduación</option>
@@ -496,7 +497,8 @@ service cloud.firestore {
         <input type="text" id="rsmFilterNombre" placeholder="🔍 Nombre del cliente..." />
         <select id="rsmFilterEvento">
           <option value="">Todos los eventos</option>
-          <option>Cumpleaños</option>
+          <option>Cumpleaños Infantil</option>
+          <option>Cumpleaños Adulto</option>
           <option>Baby Shower</option>
           <option>Corporativo</option>
           <option>Graduación</option>
@@ -870,6 +872,7 @@ service cloud.firestore {
           <div class="card-meta">
             ${o.telefono ? `<span class="card-meta-item">📱 <strong>${esc(o.telefono)}</strong></span>` : ''}
             ${o.tipo     ? `<span class="card-meta-item">🎈 <strong>${esc(o.tipo)}</strong></span>` : ''}
+            ${o.pack     ? `<span class="card-meta-item">📦 <strong>${esc(o.pack)}</strong></span>` : ''}
             ${o.fecha    ? `<span class="card-meta-item">📅 <strong>${esc(o.fecha)}</strong></span>` : ''}
           </div>
           ${o.mensaje ? `<div class="card-message">"${esc(o.mensaje)}"</div>` : ''}
@@ -1105,7 +1108,7 @@ service cloud.firestore {
       return;
     }
     const headers = [
-      'Cliente', 'Teléfono', 'Evento', 'Fecha del evento', 'Distrito',
+      'Cliente', 'Teléfono', 'Evento', 'Pack', 'Fecha del evento', 'Distrito',
       'Estado', 'Precio total (S/)', 'Monto separado (S/)', 'Saldo (S/)',
       'Mensaje', 'Fecha de cotización'
     ];
@@ -1119,7 +1122,7 @@ service cloud.firestore {
       // Estado en texto plano (sin emoji para Excel)
       const estadoLabel = (STATUS_LABELS[o.estado] || o.estado).replace(/^[^\w\sñÑáéíóúÁÉÍÓÚ]+\s*/, '');
       return [
-        o.nombre || '', o.telefono || '', o.tipo || '', o.fecha || '', o.distrito || '',
+        o.nombre || '', o.telefono || '', o.tipo || '', o.pack || '', o.fecha || '', o.distrito || '',
         estadoLabel, precio, separado, saldo,
         (o.mensaje || '').replace(/[\r\n]+/g, ' '),
         fmtFechaCreacion(o.createdAt)
@@ -1218,6 +1221,7 @@ service cloud.firestore {
         <div class="resumen-row">
           <div class="col-name" data-label="Cliente">${esc(o.nombre) || '—'}</div>
           <div data-label="Evento">${esc(o.tipo) || '—'}</div>
+          <div data-label="Pack">${esc(o.pack) || '—'}</div>
           <div class="col-muted" data-label="Fecha">${esc(o.fecha) || '—'}</div>
           <div class="col-state" data-label="Estado"><span class="status-badge ${o.estado}">${STATUS_LABELS[o.estado] || o.estado}</span></div>
           <div class="col-precio" data-label="Precio">${precio !== null ? 'S/ ' + precio.toLocaleString('es-PE') : '—'}</div>
@@ -1229,6 +1233,7 @@ service cloud.firestore {
       <div class="resumen-row header">
         <div>Cliente</div>
         <div>Evento</div>
+        <div>Pack</div>
         <div>Fecha</div>
         <div>Estado</div>
         <div>Precio</div>
