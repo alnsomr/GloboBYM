@@ -49,6 +49,7 @@
     }
     .nav-logo { font-family: 'Playfair Display', serif; font-size: 1.4rem; font-weight: 700; color: var(--primary); letter-spacing: -.5px; }
     .nav-logo span { color: var(--gold); }
+    .nav-logo-img { height: 44px; width: auto; display: block; }
     nav ul { list-style: none; display: flex; gap: 28px; }
     nav ul a { text-decoration: none; font-size: .875rem; font-weight: 500; color: var(--gray); transition: color .2s; }
     nav ul a:hover { color: var(--primary); }
@@ -79,7 +80,7 @@
     /* ── INSTAGRAM CARD ── */
     .hero-card { animation: fadeUp .8s .2s ease both; background: var(--white); border-radius: 24px; box-shadow: var(--shadow); padding: 26px; max-width: 400px; margin: 0 auto; border: 1px solid rgba(194,0,107,.08); }
     .ig-profile { display: flex; align-items: center; gap: 14px; margin-bottom: 18px; }
-    .ig-avatar-wrap { position: relative; flex-shrink: 0; width: 76px; height: 76px; }
+    .ig-avatar-wrap { position: relative; flex-shrink: 0; width: 60px; height: 60px; }
     .ig-avatar-ring { position: absolute; inset: 0; border-radius: 50%; background: linear-gradient(135deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888); animation: igRingRotate 3s linear infinite; }
     .ig-avatar-ring::after { content: ''; position: absolute; inset: 3px; border-radius: 50%; background: white; }
     @keyframes igRingRotate { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
@@ -131,7 +132,11 @@
     /* ── GALLERY ── */
     #galeria { background: var(--white); }
     .gallery-header { margin-bottom: 40px; }
-    .gallery-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 16px; }
+    .gallery-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 16px; }
+    .gallery-item.coming-soon { background: linear-gradient(135deg, #faecf3 0%, #f0d8e6 50%, #f5e9d8 100%); pointer-events: none; }
+    .gallery-item.coming-soon .slide-hint, .gallery-item.coming-soon .gallery-expand, .gallery-item.coming-soon .slide-dots { display: none; }
+    .gallery-item.coming-soon::after { content: 'Próximamente'; position: absolute; inset: 0; display: flex; align-items: flex-end; justify-content: center; padding-bottom: 28px; color: var(--primary); font-family: 'Playfair Display', serif; font-size: 1.15rem; font-weight: 600; letter-spacing: .8px; }
+    .gallery-item.coming-soon::before { content: '🏢'; position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-size: 3.2rem; opacity: .55; }
     .gallery-item { aspect-ratio: 1; border-radius: 12px; overflow: hidden; position: relative; cursor: pointer; }
     .gallery-item img.slide { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0; transition: opacity .5s ease, transform .5s ease; transform: scale(1.04); }
     .gallery-item img.slide.active { opacity: 1; transform: scale(1); }
@@ -263,6 +268,8 @@
     .reveal-d3 { transition-delay: .3s; }
     .reveal-d4 { transition-delay: .4s; }
     .reveal-d5 { transition-delay: .5s; }
+    .reveal-d6 { transition-delay: .6s; }
+    .reveal-d7 { transition-delay: .7s; }
 
     /* ── ANIMATIONS ── */
     @keyframes fadeUp { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: translateY(0); } }
@@ -314,13 +321,13 @@
 
 <!-- NAV -->
 <nav>
-  <div class="nav-logo">Globo<span>BYM</span></div>
+  <a href="#inicio" aria-label="GloboBYM"><img src="assets/logo.jpg" alt="GloboBYM" class="nav-logo-img" /></a>
   <ul>
     <li><a href="#servicios">Servicios</a></li>
     <li><a href="#galeria">Galería</a></li>
     <li><a href="#testimonios">Testimonios</a></li>
     <li><a href="#nosotros">Nosotros</a></li>
-    <li><a href="#contacto" class="nav-cta">Cotizar ahora</a></li>
+    <li><a href="#" class="nav-cta" id="nav-cta-desktop">Cotizar ahora</a></li>
   </ul>
   <button class="nav-hamburger" id="hamburger" aria-label="Abrir menú">
     <span></span><span></span><span></span>
@@ -333,16 +340,16 @@
   <a href="#galeria">Galería</a>
   <a href="#testimonios">Testimonios</a>
   <a href="#nosotros">Nosotros</a>
-  <a href="#contacto" class="nav-cta">Cotizar ahora</a>
+  <a href="#" class="nav-cta" id="nav-cta-mobile">Cotizar ahora</a>
 </div>
 
 <!-- HERO -->
 <section class="hero" id="inicio">
   <div class="hero-bg">
-    <div class="hero-bg-slide active" style="background-image:url('assets/foto1.png')"></div>
-    <div class="hero-bg-slide" style="background-image:url('assets/foto2.png')"></div>
-    <div class="hero-bg-slide" style="background-image:url('assets/foto3.png')"></div>
-    <div class="hero-bg-slide" style="background-image:url('assets/foto4.png')"></div>
+    <div class="hero-bg-slide active" style="background-image:url('assets/foto1.jpg')"></div>
+    <div class="hero-bg-slide" style="background-image:url('assets/foto2.jpg')"></div>
+    <div class="hero-bg-slide" style="background-image:url('assets/foto3.jpg')"></div>
+    <div class="hero-bg-slide" style="background-image:url('assets/foto4.jpg')"></div>
     <div class="hero-bg-overlay"></div>
   </div>
 
@@ -362,9 +369,6 @@
       </a>
       <a href="#galeria" class="btn-secondary">Ver galería →</a>
       <a href="#" class="btn-cotizar" id="btn-abrir-form-hero">📋 Solicitar cotización</a>
-      <a href="#" class="btn-reserva" id="btn-separar-fecha">
-        📅 Separar mi fecha · desde S/50
-      </a>
     </div>
   </div>
 
@@ -433,7 +437,7 @@
     <div class="stat-item-label">Años de experiencia</div>
   </div>
   <div class="reveal reveal-d2">
-    <span class="stat-item-num">+200</span>
+    <span class="stat-item-num">+500</span>
     <div class="stat-item-label">Eventos decorados</div>
   </div>
   <div class="reveal reveal-d3">
@@ -514,13 +518,10 @@
   <div class="gallery-grid">
 
     <div class="gallery-item reveal" data-slideshow>
-      <span class="gallery-cat-badge">🎂 Cumpleaños</span>
-      <img src="assets/cumpleanos/cumple1.png" class="slide active" alt="Cumpleaños" />
-      <img src="assets/cumpleanos/cumple2.png" class="slide" alt="Cumpleaños" />
-      <img src="assets/cumpleanos/cumple3.png" class="slide" alt="Cumpleaños" />
-      <img src="assets/cumpleanos/cumple4.png" class="slide" alt="Cumpleaños" />
-      <img src="assets/cumpleanos/cumple5.png" class="slide" alt="Cumpleaños" />
-      <img src="assets/cumpleanos/cumple6.png" class="slide" alt="Cumpleaños" />
+      <span class="gallery-cat-badge">🎂 Cumpleaños Infantil</span>
+      <img src="assets/cumpleanos-infantil/cumple1.jpg" class="slide active" alt="Cumpleaños Infantil" loading="lazy" />
+      <img src="assets/cumpleanos-infantil/cumple4.jpg" class="slide" alt="Cumpleaños Infantil" loading="lazy" />
+      <img src="assets/cumpleanos-infantil/cumple5.jpg" class="slide" alt="Cumpleaños Infantil" loading="lazy" />
       <div class="gallery-item-overlay"></div>
       <div class="gallery-expand" title="Ver foto completa">
         <svg viewBox="0 0 24 24"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg>
@@ -530,12 +531,10 @@
     </div>
 
     <div class="gallery-item reveal reveal-d1" data-slideshow>
-      <span class="gallery-cat-badge">👶 Baby Shower</span>
-      <img src="assets/baby-shower/foto2.png" class="slide active" alt="Baby Shower" />
-      <img src="assets/baby-shower/baby2.png" class="slide" alt="Baby Shower" />
-      <img src="assets/baby-shower/baby3.png" class="slide" alt="Baby Shower" />
-      <img src="assets/baby-shower/baby4.png" class="slide" alt="Baby Shower" />
-      <img src="assets/baby-shower/baby5.png" class="slide" alt="Baby Shower" />
+      <span class="gallery-cat-badge">🥂 Cumpleaños Adulto</span>
+      <img src="assets/cumpleanos-adulto/cumple2.jpg" class="slide active" alt="Cumpleaños Adulto" loading="lazy" />
+      <img src="assets/cumpleanos-adulto/cumple3.jpg" class="slide" alt="Cumpleaños Adulto" loading="lazy" />
+      <img src="assets/cumpleanos-adulto/cumple6.jpg" class="slide" alt="Cumpleaños Adulto" loading="lazy" />
       <div class="gallery-item-overlay"></div>
       <div class="gallery-expand" title="Ver foto completa">
         <svg viewBox="0 0 24 24"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg>
@@ -545,11 +544,12 @@
     </div>
 
     <div class="gallery-item reveal reveal-d2" data-slideshow>
-      <span class="gallery-cat-badge">💍 Propuesta de matrimonio</span>
-      <img src="assets/propuesta-de-matrimonio/foto3.png" class="slide active" alt="Propuesta" />
-      <img src="assets/propuesta-de-matrimonio/propu2.png" class="slide" alt="Propuesta" />
-      <img src="assets/propuesta-de-matrimonio/propu3.png" class="slide" alt="Propuesta" />
-      <img src="assets/propuesta-de-matrimonio/propu4.png" class="slide" alt="Propuesta" />
+      <span class="gallery-cat-badge">👶 Baby Shower</span>
+      <img src="assets/baby-shower/foto2.jpg" class="slide active" alt="Baby Shower" loading="lazy" />
+      <img src="assets/baby-shower/baby2.jpg" class="slide" alt="Baby Shower" loading="lazy" />
+      <img src="assets/baby-shower/baby3.jpg" class="slide" alt="Baby Shower" loading="lazy" />
+      <img src="assets/baby-shower/baby4.jpg" class="slide" alt="Baby Shower" loading="lazy" />
+      <img src="assets/baby-shower/baby5.jpg" class="slide" alt="Baby Shower" loading="lazy" />
       <div class="gallery-item-overlay"></div>
       <div class="gallery-expand" title="Ver foto completa">
         <svg viewBox="0 0 24 24"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg>
@@ -559,11 +559,11 @@
     </div>
 
     <div class="gallery-item reveal reveal-d3" data-slideshow>
-      <span class="gallery-cat-badge">🎓 Graduaciones</span>
-      <img src="assets/graduaciones/graduacion1.png" class="slide active" alt="Graduaciones" />
-      <img src="assets/graduaciones/graduacion2.png" class="slide" alt="Graduaciones" />
-      <img src="assets/graduaciones/graduacion3.png" class="slide" alt="Graduaciones" />
-      <img src="assets/graduaciones/graduacion4.png" class="slide" alt="Graduaciones" />
+      <span class="gallery-cat-badge">💍 Propuesta de matrimonio</span>
+      <img src="assets/propuesta-de-matrimonio/foto3.jpg" class="slide active" alt="Propuesta" loading="lazy" />
+      <img src="assets/propuesta-de-matrimonio/propu2.jpg" class="slide" alt="Propuesta" loading="lazy" />
+      <img src="assets/propuesta-de-matrimonio/propu3.jpg" class="slide" alt="Propuesta" loading="lazy" />
+      <img src="assets/propuesta-de-matrimonio/propu4.jpg" class="slide" alt="Propuesta" loading="lazy" />
       <div class="gallery-item-overlay"></div>
       <div class="gallery-expand" title="Ver foto completa">
         <svg viewBox="0 0 24 24"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg>
@@ -573,11 +573,11 @@
     </div>
 
     <div class="gallery-item reveal reveal-d4" data-slideshow>
-      <span class="gallery-cat-badge">🕊️ Bautizos</span>
-      <img src="assets/bautizos/bautizo1.png" class="slide active" alt="Bautizos" />
-      <img src="assets/bautizos/bautizo2.png" class="slide" alt="Bautizos" />
-      <img src="assets/bautizos/bautizo3.png" class="slide" alt="Bautizos" />
-      <img src="assets/bautizos/bautizo4.png" class="slide" alt="Bautizos" />
+      <span class="gallery-cat-badge">🎓 Graduaciones</span>
+      <img src="assets/graduaciones/graduacion1.jpg" class="slide active" alt="Graduaciones" loading="lazy" />
+      <img src="assets/graduaciones/graduacion2.jpg" class="slide" alt="Graduaciones" loading="lazy" />
+      <img src="assets/graduaciones/graduacion3.jpg" class="slide" alt="Graduaciones" loading="lazy" />
+      <img src="assets/graduaciones/graduacion4.jpg" class="slide" alt="Graduaciones" loading="lazy" />
       <div class="gallery-item-overlay"></div>
       <div class="gallery-expand" title="Ver foto completa">
         <svg viewBox="0 0 24 24"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg>
@@ -587,14 +587,35 @@
     </div>
 
     <div class="gallery-item reveal reveal-d5" data-slideshow>
-      <span class="gallery-cat-badge">🩷💙 Revelación de sexo</span>
-      <img src="assets/revelacion-de-sexo/reve1.png" class="slide active" alt="Revelación de sexo" />
-      <img src="assets/revelacion-de-sexo/reve2.png" class="slide" alt="Revelación de sexo" />
-      <img src="assets/revelacion-de-sexo/reve3.png" class="slide" alt="Revelación de sexo" />
+      <span class="gallery-cat-badge">🕊️ Bautizos</span>
+      <img src="assets/bautizos/bautizo1.jpg" class="slide active" alt="Bautizos" loading="lazy" />
+      <img src="assets/bautizos/bautizo2.jpg" class="slide" alt="Bautizos" loading="lazy" />
+      <img src="assets/bautizos/bautizo3.jpg" class="slide" alt="Bautizos" loading="lazy" />
+      <img src="assets/bautizos/bautizo4.jpg" class="slide" alt="Bautizos" loading="lazy" />
       <div class="gallery-item-overlay"></div>
       <div class="gallery-expand" title="Ver foto completa">
         <svg viewBox="0 0 24 24"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg>
       </div>
+      <div class="slide-dots"></div>
+      <div class="slide-hint">Clic para ver más →</div>
+    </div>
+
+    <div class="gallery-item reveal reveal-d6" data-slideshow>
+      <span class="gallery-cat-badge">🩷💙 Revelación de sexo</span>
+      <img src="assets/revelacion-de-sexo/reve1.jpg" class="slide active" alt="Revelación de sexo" loading="lazy" />
+      <img src="assets/revelacion-de-sexo/reve2.jpg" class="slide" alt="Revelación de sexo" loading="lazy" />
+      <img src="assets/revelacion-de-sexo/reve3.jpg" class="slide" alt="Revelación de sexo" loading="lazy" />
+      <div class="gallery-item-overlay"></div>
+      <div class="gallery-expand" title="Ver foto completa">
+        <svg viewBox="0 0 24 24"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg>
+      </div>
+      <div class="slide-dots"></div>
+      <div class="slide-hint">Clic para ver más →</div>
+    </div>
+
+    <div class="gallery-item coming-soon reveal reveal-d7">
+      <span class="gallery-cat-badge">🏢 Corporativo</span>
+      <div class="gallery-item-overlay"></div>
       <div class="slide-dots"></div>
       <div class="slide-hint">Clic para ver más →</div>
     </div>
@@ -732,7 +753,6 @@
       <div class="big-label">años decorando eventos en Lima</div>
       <div class="why-ratings"><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span></div>
       <div class="why-sub">+200 eventos decorados · 33K seguidores</div>
-      <a href="https://wa.me/51960876002" target="_blank" class="why-cta">💬 Pedir cotización</a>
     </div>
   </div>
 </section>
@@ -869,7 +889,7 @@
       </div>
     </div>
     <button class="btn-form" onclick="enviarFormulario()">
-      📨 Enviar consulta por WhatsApp
+      📨 Enviar consulta
     </button>
   </div>
 </div>
@@ -1109,13 +1129,19 @@
 
   document.getElementById('btn-abrir-form-hero').addEventListener('click', e => { e.preventDefault(); openFormModal(); });
   document.getElementById('btn-abrir-form-contacto').addEventListener('click', openFormModal);
+  document.getElementById('nav-cta-desktop').addEventListener('click', e => { e.preventDefault(); openFormModal(); });
+  document.getElementById('nav-cta-mobile').addEventListener('click', e => {
+    e.preventDefault();
+    document.getElementById('mobileMenu').classList.remove('open');
+    openFormModal();
+  });
   formModalClose.addEventListener('click', closeFormModal);
   formModal.addEventListener('click', e => { if (e.target === formModal) closeFormModal(); });
   document.addEventListener('keydown', e => {
     if (e.key === 'Escape' && formModal.classList.contains('open')) closeFormModal();
   });
 
-  // ── FORMULARIO → FIRESTORE + WHATSAPP ──
+  // ── FORMULARIO → FIRESTORE ──
   async function enviarFormulario() {
     const nombre   = document.getElementById('f-nombre').value.trim();
     const tel      = document.getElementById('f-telefono').value.trim();
@@ -1129,7 +1155,7 @@
     const btnForm = document.querySelector('#formModal .btn-form');
     if (btnForm) { btnForm.disabled = true; btnForm.textContent = 'Enviando...'; }
 
-    // Guardar en Firestore (si está configurado)
+    let ok = false;
     if (_db) {
       try {
         await _db.collection('pedidos').add({
@@ -1142,22 +1168,18 @@
           estado: 'nuevo',
           createdAt: firebase.firestore.FieldValue.serverTimestamp()
         });
+        ok = true;
       } catch(e) {
         console.warn('No se pudo guardar en Firestore:', e.message);
       }
     }
 
-    if (btnForm) { btnForm.disabled = false; btnForm.textContent = '📨 Enviar consulta por WhatsApp'; }
+    if (btnForm) { btnForm.disabled = false; btnForm.textContent = '📨 Enviar consulta'; }
 
-    let txt = 'Hola GloboBYM, me gustaría cotizar una decoración.\n\n';
-    txt += `*Nombre:* ${nombre}\n`;
-    if (tel)     txt += `*Teléfono:* ${tel}\n`;
-    txt += `*Tipo de evento:* ${tipo}\n`;
-    if (fecha)    txt += `*Fecha:* ${fecha}\n`;
-    if (distrito) txt += `*Distrito:* ${distrito}\n`;
-    if (mensaje)  txt += `*Detalles:* ${mensaje}\n`;
-
-    window.open('https://wa.me/51960876002?text=' + encodeURIComponent(txt), '_blank');
+    if (!ok) {
+      alert('No pudimos enviar tu consulta. Revisa tu conexión e inténtalo de nuevo, o contáctanos por WhatsApp.');
+      return;
+    }
 
     document.getElementById('f-nombre').value   = '';
     document.getElementById('f-telefono').value = '';
@@ -1167,6 +1189,7 @@
     document.getElementById('f-mensaje').value  = '';
 
     closeFormModal();
+    alert('✅ ¡Gracias ' + nombre + '! Recibimos tu solicitud. Te contactaremos pronto.');
   }
 </script>
 

@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>GloboBYM · Panel de Pedidos</title>
   <link rel="manifest" href="manifest.json" />
-  <link rel="apple-touch-icon" href="assets/logo.png" />
+  <link rel="apple-touch-icon" href="assets/logo.jpg" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-title" content="GloboBYM" />
   <meta name="theme-color" content="#C2006B" />
@@ -176,6 +176,41 @@
     .main-nav-btn { padding: 14px 20px; border: none; border-bottom: 3px solid transparent; background: none; font-family: inherit; font-size: .9rem; font-weight: 600; color: var(--muted); cursor: pointer; transition: all .2s; margin-bottom: -1px; }
     .main-nav-btn:hover { color: var(--primary); }
     .main-nav-btn.active { color: var(--primary); border-bottom-color: var(--primary); }
+
+    /* ── RESUMEN ── */
+    .resumen-filtros { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 16px; align-items: center; }
+    .resumen-filtros input[type="text"], .resumen-filtros input[type="month"], .resumen-filtros select { padding: 9px 12px; border-radius: 8px; border: 1.5px solid var(--border); font-family: inherit; font-size: .85rem; color: var(--text); background: var(--card); outline: none; transition: border-color .2s; }
+    .resumen-filtros input[type="text"] { min-width: 240px; flex: 1; }
+    .resumen-filtros input:focus, .resumen-filtros select:focus { border-color: var(--primary); }
+    .resumen-results-info { font-size: .82rem; color: var(--muted); margin: 12px 0 14px; }
+    .resumen-row { display: grid; grid-template-columns: 1.4fr 1fr 1fr .9fr 1fr .9fr; gap: 12px; align-items: center; padding: 13px 16px; border: 1px solid var(--border); border-radius: 12px; background: var(--card); margin-bottom: 8px; font-size: .85rem; }
+    .resumen-row.header { background: var(--bg); font-weight: 700; color: var(--muted); font-size: .72rem; letter-spacing: .5px; text-transform: uppercase; padding: 10px 16px; }
+    .resumen-row .col-name { font-weight: 600; color: var(--text); }
+    .resumen-row .col-muted { color: var(--muted); }
+    .resumen-row .col-state { display: inline-flex; }
+    .resumen-row .col-precio { font-variant-numeric: tabular-nums; font-weight: 600; }
+    .resumen-row .col-saldo { font-variant-numeric: tabular-nums; }
+    .resumen-row .col-saldo.zero { color: var(--atendido); font-weight: 600; }
+    .resumen-row .col-saldo.pending { color: var(--contactado); font-weight: 600; }
+    @media (max-width: 800px) {
+      .resumen-row, .resumen-row.header { grid-template-columns: 1fr 1fr; gap: 8px; font-size: .82rem; }
+      .resumen-row.header { display: none; }
+      .resumen-row > div::before { content: attr(data-label); display: block; font-size: .68rem; color: var(--muted); text-transform: uppercase; letter-spacing: .4px; margin-bottom: 2px; font-weight: 700; }
+    }
+
+    /* ── PRECIO BUTTON / DISPLAY ── */
+    .card-precio-row { padding: 10px 16px; background: var(--bg); border-top: 1px solid var(--border); display: flex; align-items: center; gap: 12px; font-size: .82rem; flex-wrap: wrap; }
+    .card-precio-row .precio-val { font-weight: 700; color: var(--text); font-variant-numeric: tabular-nums; }
+    .card-precio-row .saldo-val { font-weight: 700; font-variant-numeric: tabular-nums; }
+    .card-precio-row .saldo-val.zero { color: var(--atendido); }
+    .card-precio-row .saldo-val.pending { color: var(--contactado); }
+    .btn-precio { display: inline-flex; align-items: center; gap: 5px; background: var(--card); border: 1.5px dashed var(--border); color: var(--muted); padding: 6px 12px; border-radius: 8px; font-family: inherit; font-size: .78rem; font-weight: 500; cursor: pointer; transition: all .2s; }
+    .btn-precio:hover { border-color: var(--primary); color: var(--primary); border-style: solid; }
+    .btn-precio-edit { background: transparent; border: none; color: var(--muted); cursor: pointer; padding: 2px 6px; border-radius: 4px; font-size: .75rem; }
+    .btn-precio-edit:hover { background: var(--border); color: var(--text); }
+    .btn-export { display: inline-flex; align-items: center; gap: 6px; background: #16a34a; color: white; border: none; padding: 9px 16px; border-radius: 8px; font-family: inherit; font-size: .85rem; font-weight: 600; cursor: pointer; transition: opacity .2s, transform .15s; margin-left: auto; }
+    .btn-export:hover { opacity: .9; transform: translateY(-1px); }
+    .btn-export:disabled { opacity: .5; cursor: not-allowed; transform: none; }
 
     /* ── TRACKING ── */
     .tracking-wrap { padding: 20px 24px 48px; }
@@ -360,6 +395,7 @@ service cloud.firestore {
   <!-- Main nav -->
   <nav class="main-nav">
     <button class="main-nav-btn active" data-section="cotizaciones">📋 Cotizaciones</button>
+    <button class="main-nav-btn" data-section="resumen">📊 Resumen</button>
     <button class="main-nav-btn" data-section="tracking">📈 Tracking</button>
   </nav>
 
@@ -377,7 +413,7 @@ service cloud.firestore {
       </div>
       <div class="stat-card s-venta">
         <div class="stat-num" id="statPagado">0</div>
-        <div class="stat-label">🟣 Pagados</div>
+        <div class="stat-label">🟣 Separados</div>
       </div>
       <div class="stat-card s-atendido">
         <div class="stat-num" id="statAtendido">0</div>
@@ -398,7 +434,7 @@ service cloud.firestore {
         <button class="tab active" data-filter="todos">Todos</button>
         <button class="tab" data-filter="nuevo">🔴 Nuevos</button>
         <button class="tab" data-filter="contactado">🟡 Contactados</button>
-        <button class="tab" data-filter="pagado">🟣 Pagados</button>
+        <button class="tab" data-filter="pagado">🟣 Separados</button>
         <button class="tab" data-filter="atendido">🟢 Atendidos</button>
         <button class="tab" data-filter="venta">💎 Ventas</button>
         <button class="tab" data-filter="sin_compra">⚪ Sin compra</button>
@@ -426,6 +462,57 @@ service cloud.firestore {
       </div>
     </div>
 
+  </div>
+
+  <!-- ══ SECCIÓN RESUMEN ══ -->
+  <div id="sectionResumen" hidden>
+    <div class="tracking-wrap">
+      <div class="tracking-title">Totales</div>
+      <div class="metric-grid">
+        <div class="metric-card">
+          <div class="metric-num" id="rsmAtendidos">0</div>
+          <div class="metric-label">✅ Pedidos atendidos</div>
+          <div class="metric-sub">Servicios completados</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-num" id="rsmVentas">0</div>
+          <div class="metric-label">💎 Ventas cerradas</div>
+          <div class="metric-sub">Pedidos finalizados</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-num" id="rsmIngresos">S/ 0</div>
+          <div class="metric-label">💰 Ingresos totales</div>
+          <div class="metric-sub">Suma de precios cobrados</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-num" id="rsmSaldoPendiente">S/ 0</div>
+          <div class="metric-label">⏳ Saldo pendiente</div>
+          <div class="metric-sub">Por cobrar el día del evento</div>
+        </div>
+      </div>
+
+      <div class="tracking-title" style="margin-top:28px">Buscar pedidos</div>
+      <div class="resumen-filtros">
+        <input type="text" id="rsmFilterNombre" placeholder="🔍 Nombre del cliente..." />
+        <select id="rsmFilterEvento">
+          <option value="">Todos los eventos</option>
+          <option>Cumpleaños</option>
+          <option>Baby Shower</option>
+          <option>Corporativo</option>
+          <option>Graduación</option>
+          <option>Bautizo</option>
+          <option>Revelación de Sexo</option>
+          <option>Propuesta de Matrimonio</option>
+          <option>Otro</option>
+        </select>
+        <input type="month" id="rsmFilterMes" />
+        <button class="btn-status" id="rsmFilterClear">Limpiar</button>
+        <button class="btn-export" id="rsmExportBtn" title="Descargar resultados como archivo CSV (se abre en Excel)">📥 Exportar a Excel</button>
+      </div>
+
+      <div class="resumen-results-info" id="rsmResultsInfo"></div>
+      <div id="rsmResultsList"></div>
+    </div>
   </div>
 
   <!-- ══ SECCIÓN TRACKING ══ -->
@@ -674,6 +761,7 @@ service cloud.firestore {
         autoTransitionAtendido();
         updateStats();
         renderOrders();
+        if (!document.getElementById('sectionResumen').hidden) renderResumen();
       }, err => {
         console.error('Firestore error:', err);
       });
@@ -718,7 +806,7 @@ service cloud.firestore {
     nuevo:         '🔴 Nuevo',
     contactado:    '🟡 Contactado',
     venta_cerrada: '🔵 Venta Cerrada',
-    pagado:        '🟣 Pagado',
+    pagado:        '🟣 Separado',
     atendido:      '🟢 Atendido',
     venta:         '💎 Venta',
     sin_compra:    '⚪ Sin Compra',
@@ -745,7 +833,7 @@ service cloud.firestore {
       <div class="card-status-actions">
         ${back}
         <button class="btn-sincompra" onclick="setStatus('${id}','sin_compra',this)">✕ Sin compra</button>
-        <button class="btn-venta"     onclick="setStatus('${id}','pagado',this)">💳 Pagado</button>
+        <button class="btn-venta"     onclick="setStatus('${id}','pagado',this)">💳 Separado</button>
       </div>`;
     if (st === 'sin_compra') return `
       <div class="card-status-actions">
@@ -786,6 +874,7 @@ service cloud.firestore {
           </div>
           ${o.mensaje ? `<div class="card-message">"${esc(o.mensaje)}"</div>` : ''}
         </div>
+        ${precioRowHTML(o)}
         <div class="card-actions">
           ${tel ? `
             <a href="https://wa.me/${tel}?text=${waText}" target="_blank" class="btn-wa">💬 WhatsApp</a>
@@ -794,6 +883,69 @@ service cloud.firestore {
           ${statusActions(o)}
         </div>
       </div>`;
+  }
+
+  // ── PRECIO / SALDO ──
+  const MONTO_SEPARADO = 100;
+
+  function precioRowHTML(o) {
+    // Solo se muestra cuando el pedido está separado, atendido o venta
+    if (!['pagado', 'atendido', 'venta'].includes(o.estado)) return '';
+    const precio = typeof o.precioTotal === 'number' ? o.precioTotal : null;
+    if (precio === null) {
+      return `
+        <div class="card-precio-row">
+          <button class="btn-precio" onclick="askPrecio('${o.id}')">💰 Ingresar precio total</button>
+          <span class="col-muted">Separado: S/ ${MONTO_SEPARADO}</span>
+        </div>`;
+    }
+    // Atendido / venta: saldo se considera cobrado al marcar el evento como atendido
+    const cobradoFull = ['atendido', 'venta'].includes(o.estado);
+    const saldo = Math.max(0, precio - MONTO_SEPARADO);
+    const saldoClass = cobradoFull || saldo === 0 ? 'zero' : 'pending';
+    const saldoText  = cobradoFull
+      ? `✅ Cobrado completo (S/ ${precio})`
+      : saldo === 0
+        ? '✅ Pagado completo'
+        : `Saldo: S/ ${saldo}`;
+    return `
+      <div class="card-precio-row">
+        <span>💰 Precio: <span class="precio-val">S/ ${precio}</span></span>
+        <span>· Separado: <span class="precio-val">S/ ${MONTO_SEPARADO}</span></span>
+        <span class="saldo-val ${saldoClass}">${saldoText}</span>
+        <button class="btn-precio-edit" title="Editar precio" onclick="askPrecio('${o.id}')">✏️</button>
+      </div>`;
+  }
+
+  async function askPrecio(id) {
+    const o = allOrders.find(x => x.id === id);
+    const current = (o && typeof o.precioTotal === 'number') ? o.precioTotal : '';
+    const input = prompt(`Precio total del servicio en soles (S/):\n\nSe descontarán S/ ${MONTO_SEPARADO} (monto separado) y se mostrará el saldo pendiente.`, current);
+    if (input === null) return;
+    const trimmed = String(input).trim();
+    if (trimmed === '') {
+      // Permite borrar el precio
+      try {
+        await firebase.firestore().collection('pedidos').doc(id).update({
+          precioTotal: firebase.firestore.FieldValue.delete()
+        });
+      } catch (e) { console.error('Error borrando precio:', e); }
+      return;
+    }
+    const n = Number(trimmed.replace(',', '.'));
+    if (!isFinite(n) || n < 0) {
+      alert('Precio inválido. Ingresa un número positivo.');
+      return;
+    }
+    try {
+      await firebase.firestore().collection('pedidos').doc(id).update({
+        precioTotal: n,
+        precioSetAt: firebase.firestore.FieldValue.serverTimestamp()
+      });
+    } catch (e) {
+      console.error('Error guardando precio:', e);
+      alert('No se pudo guardar el precio. Revisa la conexión.');
+    }
   }
 
   // ── SET STATUS ──
@@ -875,14 +1027,214 @@ service cloud.firestore {
       btn.classList.add('active');
       const section = btn.dataset.section;
       document.getElementById('sectionCotizaciones').hidden = section !== 'cotizaciones';
+      document.getElementById('sectionResumen').hidden      = section !== 'resumen';
       document.getElementById('sectionTracking').hidden     = section !== 'tracking';
       if (section === 'tracking') renderTracking();
+      if (section === 'resumen')  renderResumen();
     });
   });
 
   function pct(num, den) {
     if (!den) return '—';
     return Math.round(num / den * 100) + '%';
+  }
+
+  // ── RESUMEN ──
+  let resumenFilters = { nombre: '', evento: '', mes: '' };
+
+  function bindResumenFilters() {
+    if (bindResumenFilters._done) return;
+    bindResumenFilters._done = true;
+    const fn = document.getElementById('rsmFilterNombre');
+    const fe = document.getElementById('rsmFilterEvento');
+    const fm = document.getElementById('rsmFilterMes');
+    const fc = document.getElementById('rsmFilterClear');
+    const fx = document.getElementById('rsmExportBtn');
+    fn.addEventListener('input', () => { resumenFilters.nombre = fn.value.trim().toLowerCase(); renderResumen(); });
+    fe.addEventListener('change', () => { resumenFilters.evento = fe.value; renderResumen(); });
+    fm.addEventListener('change', () => { resumenFilters.mes = fm.value; renderResumen(); });
+    fc.addEventListener('click', () => {
+      resumenFilters = { nombre: '', evento: '', mes: '' };
+      fn.value = ''; fe.value = ''; fm.value = '';
+      renderResumen();
+    });
+    fx.addEventListener('click', exportResumenCSV);
+  }
+
+  function getFilteredResumenOrders() {
+    const { nombre, evento, mes } = resumenFilters;
+    return allOrders.filter(o => {
+      if (o.estado === 'sin_compra') return false;
+      if (nombre && !(o.nombre || '').toLowerCase().includes(nombre)) return false;
+      if (evento && o.tipo !== evento) return false;
+      if (mes) {
+        const f = parseFechaEvento(o.fecha);
+        if (!f) return false;
+        const orderMes = `${f.year}-${String(f.month).padStart(2, '0')}`;
+        if (orderMes !== mes) return false;
+      }
+      return true;
+    }).sort((a, b) => {
+      const fa = parseFechaEvento(a.fecha);
+      const fb = parseFechaEvento(b.fecha);
+      if (!fa && !fb) return 0;
+      if (!fa) return 1;
+      if (!fb) return -1;
+      return fb.raw.localeCompare(fa.raw);
+    });
+  }
+
+  function csvCell(v) {
+    const s = (v === null || v === undefined) ? '' : String(v);
+    if (/[";\n\r]/.test(s)) return '"' + s.replace(/"/g, '""') + '"';
+    return s;
+  }
+
+  function fmtFechaCreacion(ts) {
+    if (!ts) return '';
+    const d = ts.toDate ? ts.toDate() : (ts.seconds ? new Date(ts.seconds * 1000) : null);
+    if (!d) return '';
+    const pad = n => String(n).padStart(2, '0');
+    return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())} ${pad(d.getHours())}:${pad(d.getMinutes())}`;
+  }
+
+  function exportResumenCSV() {
+    const orders = getFilteredResumenOrders();
+    if (!orders.length) {
+      alert('No hay pedidos para exportar con los filtros actuales.');
+      return;
+    }
+    const headers = [
+      'Cliente', 'Teléfono', 'Evento', 'Fecha del evento', 'Distrito',
+      'Estado', 'Precio total (S/)', 'Monto separado (S/)', 'Saldo (S/)',
+      'Mensaje', 'Fecha de cotización'
+    ];
+    const rows = orders.map(o => {
+      const precio       = typeof o.precioTotal === 'number' ? o.precioTotal : '';
+      const cobradoFull  = ['atendido', 'venta'].includes(o.estado);
+      const tieneSeparado = ['pagado', 'atendido', 'venta'].includes(o.estado) && precio !== '';
+      const separado     = tieneSeparado ? MONTO_SEPARADO : '';
+      let saldo = '';
+      if (precio !== '' && tieneSeparado) saldo = cobradoFull ? 0 : Math.max(0, precio - MONTO_SEPARADO);
+      // Estado en texto plano (sin emoji para Excel)
+      const estadoLabel = (STATUS_LABELS[o.estado] || o.estado).replace(/^[^\w\sñÑáéíóúÁÉÍÓÚ]+\s*/, '');
+      return [
+        o.nombre || '', o.telefono || '', o.tipo || '', o.fecha || '', o.distrito || '',
+        estadoLabel, precio, separado, saldo,
+        (o.mensaje || '').replace(/[\r\n]+/g, ' '),
+        fmtFechaCreacion(o.createdAt)
+      ];
+    });
+    // BOM + separador ; para compatibilidad con Excel en locale es-PE
+    const csv = '﻿' + [headers, ...rows].map(r => r.map(csvCell).join(';')).join('\r\n');
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8' });
+    const url  = URL.createObjectURL(blob);
+    const a    = document.createElement('a');
+    const ts   = new Date();
+    const pad  = n => String(n).padStart(2, '0');
+    a.href     = url;
+    a.download = `globobym_pedidos_${ts.getFullYear()}-${pad(ts.getMonth()+1)}-${pad(ts.getDate())}.csv`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
+  }
+
+  function parseFechaEvento(fechaStr) {
+    // Espera formato YYYY-MM-DD (input type=date)
+    if (!fechaStr || typeof fechaStr !== 'string') return null;
+    const m = fechaStr.match(/^(\d{4})-(\d{2})-(\d{2})/);
+    if (!m) return null;
+    return { year: +m[1], month: +m[2], day: +m[3], raw: fechaStr };
+  }
+
+  function renderResumen() {
+    bindResumenFilters();
+
+    // Totales (no afectados por filtros)
+    const atendidosCount = allOrders.filter(o => o.estado === 'atendido').length;
+    const ventasCount    = allOrders.filter(o => o.estado === 'venta').length;
+    const ingresos = allOrders
+      .filter(o => ['atendido','venta'].includes(o.estado) && typeof o.precioTotal === 'number')
+      .reduce((sum, o) => sum + o.precioTotal, 0);
+    const saldoPendiente = allOrders
+      .filter(o => o.estado === 'pagado' && typeof o.precioTotal === 'number')
+      .reduce((sum, o) => sum + Math.max(0, o.precioTotal - MONTO_SEPARADO), 0);
+
+    document.getElementById('rsmAtendidos').textContent = atendidosCount;
+    document.getElementById('rsmVentas').textContent    = ventasCount;
+    document.getElementById('rsmIngresos').textContent  = 'S/ ' + ingresos.toLocaleString('es-PE');
+    document.getElementById('rsmSaldoPendiente').textContent = 'S/ ' + saldoPendiente.toLocaleString('es-PE');
+
+    // Lista filtrada (excluye sin_compra para enfocar en pedidos viables/históricos)
+    const { nombre, evento, mes } = resumenFilters;
+    const filtered = allOrders.filter(o => {
+      if (o.estado === 'sin_compra') return false;
+      if (nombre && !(o.nombre || '').toLowerCase().includes(nombre)) return false;
+      if (evento && o.tipo !== evento) return false;
+      if (mes) {
+        // mes formato YYYY-MM
+        const f = parseFechaEvento(o.fecha);
+        if (!f) return false;
+        const orderMes = `${f.year}-${String(f.month).padStart(2, '0')}`;
+        if (orderMes !== mes) return false;
+      }
+      return true;
+    });
+
+    // Ordenar por fecha del evento descendente (más recientes primero)
+    filtered.sort((a, b) => {
+      const fa = parseFechaEvento(a.fecha);
+      const fb = parseFechaEvento(b.fecha);
+      if (!fa && !fb) return 0;
+      if (!fa) return 1;
+      if (!fb) return -1;
+      return fb.raw.localeCompare(fa.raw);
+    });
+
+    const info = document.getElementById('rsmResultsInfo');
+    info.textContent = filtered.length
+      ? `${filtered.length} pedido${filtered.length > 1 ? 's' : ''} encontrado${filtered.length > 1 ? 's' : ''}`
+      : (nombre || evento || mes) ? 'Sin resultados con esos filtros' : '';
+
+    const list = document.getElementById('rsmResultsList');
+    if (!filtered.length) {
+      list.innerHTML = (nombre || evento || mes)
+        ? `<div class="empty-state"><div class="empty-icon">🔍</div><div class="empty-title">Sin coincidencias</div><div class="empty-sub">Prueba con otro nombre, evento o mes.</div></div>`
+        : `<div class="empty-state"><div class="empty-icon">📊</div><div class="empty-title">Aún no hay datos</div><div class="empty-sub">Cuando lleguen pedidos aparecerán aquí.</div></div>`;
+      return;
+    }
+
+    const rows = filtered.map(o => {
+      const precio = typeof o.precioTotal === 'number' ? o.precioTotal : null;
+      const cobradoFull = ['atendido', 'venta'].includes(o.estado);
+      const saldo  = precio !== null ? Math.max(0, precio - MONTO_SEPARADO) : null;
+      let saldoClass, saldoText;
+      if (precio === null)  { saldoClass = 'col-muted'; saldoText = '—'; }
+      else if (cobradoFull) { saldoClass = 'zero';      saldoText = '✅ Cobrado'; }
+      else if (saldo === 0) { saldoClass = 'zero';      saldoText = '✅ Pagado'; }
+      else                  { saldoClass = 'pending';   saldoText = `S/ ${saldo}`; }
+      return `
+        <div class="resumen-row">
+          <div class="col-name" data-label="Cliente">${esc(o.nombre) || '—'}</div>
+          <div data-label="Evento">${esc(o.tipo) || '—'}</div>
+          <div class="col-muted" data-label="Fecha">${esc(o.fecha) || '—'}</div>
+          <div class="col-state" data-label="Estado"><span class="status-badge ${o.estado}">${STATUS_LABELS[o.estado] || o.estado}</span></div>
+          <div class="col-precio" data-label="Precio">${precio !== null ? 'S/ ' + precio.toLocaleString('es-PE') : '—'}</div>
+          <div class="col-saldo ${saldoClass}" data-label="Saldo">${saldoText}</div>
+        </div>`;
+    }).join('');
+
+    list.innerHTML = `
+      <div class="resumen-row header">
+        <div>Cliente</div>
+        <div>Evento</div>
+        <div>Fecha</div>
+        <div>Estado</div>
+        <div>Precio</div>
+        <div>Saldo</div>
+      </div>
+      ${rows}`;
   }
 
   function renderTracking() {
@@ -1195,7 +1547,7 @@ service cloud.firestore {
         datasets: [
           { label: '🔴 Nuevos',      data: nuevo,      backgroundColor: 'rgba(220,38,38,.8)',   borderRadius: 4, borderSkipped: false },
           { label: '🟡 Contactados', data: contactado, backgroundColor: 'rgba(217,119,6,.8)',   borderRadius: 4, borderSkipped: false },
-          { label: '🟣 Pagados',     data: pagado,     backgroundColor: 'rgba(124,58,237,.8)',  borderRadius: 4, borderSkipped: false },
+          { label: '🟣 Separados',   data: pagado,     backgroundColor: 'rgba(124,58,237,.8)',  borderRadius: 4, borderSkipped: false },
           { label: '🟢 Atendidos',   data: atendido,   backgroundColor: 'rgba(22,163,74,.8)',   borderRadius: 4, borderSkipped: false },
           { label: '💎 Ventas',      data: venta,      backgroundColor: 'rgba(212,160,23,.85)', borderRadius: 4, borderSkipped: false },
           { label: '⚪ Sin Compra',  data: sin_compra, backgroundColor: 'rgba(100,116,139,.5)', borderRadius: 4, borderSkipped: false },
