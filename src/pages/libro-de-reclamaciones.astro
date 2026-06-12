@@ -1,0 +1,388 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Nav from '../components/Nav.astro';
+import Footer from '../components/Footer.astro';
+import '../styles/global.css';
+import { LEGAL } from '../data/legal.js';
+
+// Config inyectada al script del formulario (proveedor + id de negocio).
+// La base de reclamaciones es compartida entre negocios; negocioId distingue.
+const GB_CONFIG = {
+  negocioId: 'globobym',
+  sourceSite: 'globobym-web',
+  proveedor: {
+    razonSocial: LEGAL.razonSocial,
+    ruc: LEGAL.ruc,
+    domicilio: 'Lima, Lima — Perú',
+    contacto: `WhatsApp ${LEGAL.whatsapp}`,
+  },
+};
+---
+<BaseLayout title="Libro de Reclamaciones | GloboBYM" description="Hoja de reclamaciones virtual de GloboBYM. Conforme al Código de Protección y Defensa del Consumidor (Ley 29571).">
+  <Fragment slot="head">
+    <meta name="robots" content="noindex, follow" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+    <style is:inline>
+      /* ── LIBRO DE RECLAMACIONES — tema GloboBYM ── */
+      .lr-main { max-width: 820px; margin: 0 auto; padding: 110px 20px 70px; }
+      .lr-header { text-align: center; margin-bottom: 32px; }
+      .lr-badge { display: inline-flex; align-items: center; gap: 8px; padding: 6px 16px; border-radius: 50px; font-size: .74rem; font-weight: 700; letter-spacing: 1.2px; text-transform: uppercase; color: var(--gold); background: rgba(212,160,23,.1); border: 1px solid rgba(212,160,23,.35); margin-bottom: 16px; font-family: 'Inter', sans-serif; }
+      .lr-header h1 { font-family: 'Playfair Display', serif; font-size: clamp(1.7rem, 4vw, 2.3rem); color: var(--dark); margin-bottom: 10px; }
+      .lr-legal { color: var(--gray); font-size: .92rem; max-width: 60ch; margin: 0 auto; line-height: 1.65; }
+      .lr-card { background: var(--white); border: 1px solid rgba(194,0,107,.1); border-radius: var(--radius); padding: 24px 26px; margin-bottom: 18px; box-shadow: 0 2px 16px rgba(194,0,107,.04); }
+      .lr-card h2 { font-family: 'Playfair Display', serif; font-size: 1.08rem; color: var(--dark); margin-bottom: 16px; display: flex; align-items: center; gap: 10px; }
+      .lr-card h2 .num { display: inline-grid; place-items: center; width: 30px; height: 30px; border-radius: 50%; background: rgba(194,0,107,.1); color: var(--primary); font-family: 'Inter', sans-serif; font-size: .85rem; font-weight: 700; flex-shrink: 0; }
+      .lr-provider { display: grid; grid-template-columns: 1fr 1fr; gap: 10px 20px; font-size: .92rem; }
+      .lr-provider dt { color: var(--gray); font-size: .72rem; text-transform: uppercase; letter-spacing: .8px; margin-bottom: 2px; font-weight: 600; }
+      .lr-provider dd { color: var(--dark); font-weight: 500; margin: 0; }
+      .lr-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+      .lr-field { display: flex; flex-direction: column; gap: 6px; }
+      .lr-field-full { grid-column: 1 / -1; }
+      .lr-field label { font-size: .8rem; font-weight: 600; color: var(--dark); }
+      .lr-field label .req { color: var(--primary); margin-left: 2px; }
+      .lr-field input, .lr-field select, .lr-field textarea { font: inherit; color: var(--dark); background: var(--white); border: 1.5px solid rgba(0,0,0,.14); border-radius: 10px; padding: 11px 14px; transition: border-color .15s; font-size: .9rem; }
+      .lr-field input:focus, .lr-field select:focus, .lr-field textarea:focus { outline: none; border-color: var(--primary); }
+      .lr-field textarea { resize: vertical; min-height: 88px; }
+      .lr-field .hint { font-size: .76rem; color: var(--gray); line-height: 1.5; }
+      .lr-seg { display: flex; flex-wrap: wrap; gap: 8px; }
+      .lr-seg label { display: inline-flex; cursor: pointer; }
+      .lr-seg input { position: absolute; opacity: 0; pointer-events: none; }
+      .lr-seg span { display: inline-flex; align-items: center; padding: 9px 18px; font-size: .87rem; color: var(--gray); background: var(--white); border: 1.5px solid rgba(0,0,0,.14); border-radius: 50px; transition: all .15s; font-weight: 500; }
+      .lr-seg label:hover span { border-color: var(--primary); color: var(--primary); }
+      .lr-seg input:checked + span { color: white; background: var(--primary); border-color: var(--primary); }
+      .lr-check { display: flex; align-items: center; gap: 9px; padding: 10px 14px; background: var(--pink-soft); border: 1px solid rgba(194,0,107,.1); border-radius: 10px; cursor: pointer; font-size: .88rem; color: var(--gray); }
+      .lr-check input { accent-color: var(--primary); }
+      .lr-btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 15px 24px; border-radius: 50px; font-weight: 700; font-size: .98rem; border: none; cursor: pointer; transition: transform .15s, opacity .15s; font-family: 'Inter', sans-serif; }
+      .lr-btn-primary { background: var(--primary); color: white; width: 100%; box-shadow: 0 6px 24px rgba(194,0,107,.3); }
+      .lr-btn-primary:hover { transform: translateY(-1px); }
+      .lr-btn-primary:disabled { opacity: .55; cursor: not-allowed; transform: none; }
+      .lr-btn-ghost { background: var(--white); border: 1.5px solid rgba(0,0,0,.15); color: var(--dark); text-decoration: none; }
+      .lr-btn-ghost:hover { border-color: var(--primary); color: var(--primary); }
+      .lr-note { margin-top: 14px; font-size: .8rem; color: var(--gray); text-align: center; line-height: 1.55; }
+      .lr-status { margin-top: 10px; text-align: center; font-size: .9rem; min-height: 1.4em; }
+      .lr-status.is-error { color: #b91c1c; }
+      .lr-status.is-info { color: var(--primary); }
+      .lr-success { text-align: center; padding: 48px 24px; background: linear-gradient(180deg, rgba(34,197,94,.07), var(--white)); border: 1px solid rgba(34,197,94,.3); border-radius: var(--radius); }
+      .lr-success-icon { display: inline-grid; place-items: center; width: 64px; height: 64px; border-radius: 50%; background: rgba(34,197,94,.14); color: #16a34a; margin-bottom: 16px; }
+      .lr-success h2 { font-family: 'Playfair Display', serif; font-size: 1.5rem; color: var(--dark); margin-bottom: 10px; }
+      .lr-success p { color: var(--gray); margin-bottom: 12px; font-size: .92rem; line-height: 1.6; }
+      .lr-ticket { display: inline-block; padding: 9px 18px; background: var(--pink-soft); border: 1.5px dashed rgba(194,0,107,.4); border-radius: 10px; font-weight: 700; color: var(--primary); margin: 10px 0 22px; letter-spacing: .8px; font-size: 1.02rem; }
+      .lr-actions { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+      @media (max-width: 540px) {
+        .lr-grid, .lr-provider { grid-template-columns: 1fr; }
+        .lr-main { padding: 96px 16px 56px; }
+        .lr-card { padding: 18px 16px; }
+      }
+    </style>
+  </Fragment>
+
+  <Nav />
+
+  <main class="lr-main">
+    <div class="lr-header">
+      <span class="lr-badge">📖 Hoja de reclamaciones virtual</span>
+      <h1>Libro de Reclamaciones</h1>
+      <p class="lr-legal">
+        Conforme al Código de Protección y Defensa del Consumidor (Ley N° 29571).
+        Recibirás respuesta en un plazo máximo de <strong>15 días hábiles</strong>.
+      </p>
+    </div>
+
+    <!-- Datos del proveedor (desde src/data/legal.js) -->
+    <div class="lr-card">
+      <h2><span class="num">0</span>Datos del proveedor</h2>
+      <dl class="lr-provider">
+        <div><dt>Razón social</dt><dd>{GB_CONFIG.proveedor.razonSocial}</dd></div>
+        <div><dt>RUC</dt><dd>{GB_CONFIG.proveedor.ruc}</dd></div>
+        <div><dt>Domicilio</dt><dd>{GB_CONFIG.proveedor.domicilio}</dd></div>
+        <div><dt>Contacto</dt><dd>{GB_CONFIG.proveedor.contacto}</dd></div>
+      </dl>
+    </div>
+
+    <form id="reclamacion-form" novalidate>
+
+      <!-- Sección 1: Consumidor -->
+      <div class="lr-card">
+        <h2><span class="num">1</span>Identificación del consumidor</h2>
+        <div class="lr-grid">
+          <div class="lr-field lr-field-full">
+            <label for="f-nombre">Nombre completo<span class="req">*</span></label>
+            <input type="text" id="f-nombre" name="nombre" required autocomplete="name" />
+          </div>
+          <div class="lr-field lr-field-full">
+            <label for="f-domicilio">Domicilio<span class="req">*</span></label>
+            <input type="text" id="f-domicilio" name="domicilio" required autocomplete="street-address" placeholder="Calle, número, distrito" />
+          </div>
+          <div class="lr-field">
+            <label for="f-dni">DNI / CE / Pasaporte<span class="req">*</span></label>
+            <input type="text" id="f-dni" name="dni" required maxlength="20" />
+          </div>
+          <div class="lr-field">
+            <label for="f-telefono">Teléfono<span class="req">*</span></label>
+            <input type="tel" id="f-telefono" name="telefono" required autocomplete="tel" placeholder="+51 999 999 999" />
+          </div>
+          <div class="lr-field lr-field-full">
+            <label for="f-email">Email<span class="req">*</span></label>
+            <input type="email" id="f-email" name="email" required autocomplete="email" />
+          </div>
+          <div class="lr-field lr-field-full">
+            <label class="lr-check">
+              <input type="checkbox" id="f-menor" name="esMenor" />
+              <span>El consumidor es menor de edad</span>
+            </label>
+          </div>
+          <div class="lr-field lr-field-full" id="grupo-tutor" hidden>
+            <div class="lr-grid">
+              <div class="lr-field">
+                <label for="f-tutor-nombre">Nombre del padre, madre o tutor<span class="req">*</span></label>
+                <input type="text" id="f-tutor-nombre" name="tutorNombre" />
+              </div>
+              <div class="lr-field">
+                <label for="f-tutor-dni">DNI del padre, madre o tutor<span class="req">*</span></label>
+                <input type="text" id="f-tutor-dni" name="tutorDni" maxlength="20" />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Sección 2: Bien contratado -->
+      <div class="lr-card">
+        <h2><span class="num">2</span>Identificación del bien contratado</h2>
+        <div class="lr-grid">
+          <div class="lr-field lr-field-full">
+            <label>Tipo<span class="req">*</span></label>
+            <div class="lr-seg" role="radiogroup" aria-label="Tipo de bien">
+              <label><input type="radio" name="tipoBien" value="Producto" required /><span>Producto</span></label>
+              <label><input type="radio" name="tipoBien" value="Servicio" /><span>Servicio</span></label>
+            </div>
+            <p class="hint">Producto: compra de la tienda (globos, box, ramos). Servicio: decoración de evento.</p>
+          </div>
+          <div class="lr-field">
+            <label for="f-monto">Monto reclamado (S/)<span class="req">*</span></label>
+            <input type="number" id="f-monto" name="monto" required min="0" step="0.01" placeholder="0.00" />
+          </div>
+          <div class="lr-field">
+            <label for="f-fecha-adq">Fecha de adquisición<span class="req">*</span></label>
+            <input type="date" id="f-fecha-adq" name="fechaAdquisicion" required />
+          </div>
+          <div class="lr-field lr-field-full">
+            <label for="f-descripcion-bien">Descripción del producto o servicio<span class="req">*</span></label>
+            <textarea id="f-descripcion-bien" name="descripcionBien" rows="3" required placeholder="Ej: Decoración de cumpleaños contratada para el 15 de junio..."></textarea>
+          </div>
+        </div>
+      </div>
+
+      <!-- Sección 3: Detalle del reclamo -->
+      <div class="lr-card">
+        <h2><span class="num">3</span>Detalle de la reclamación</h2>
+        <div class="lr-grid">
+          <div class="lr-field lr-field-full">
+            <label>Tipo<span class="req">*</span></label>
+            <div class="lr-seg" role="radiogroup" aria-label="Tipo de reclamación">
+              <label><input type="radio" name="tipoReclamo" value="Reclamo" required /><span>Reclamo</span></label>
+              <label><input type="radio" name="tipoReclamo" value="Queja" /><span>Queja</span></label>
+            </div>
+            <p class="hint">
+              <strong>Reclamo:</strong> disconformidad con el producto o servicio recibido.
+              <strong>Queja:</strong> malestar con la atención al cliente.
+            </p>
+          </div>
+          <div class="lr-field lr-field-full">
+            <label for="f-detalle">Detalle del reclamo o queja<span class="req">*</span></label>
+            <textarea id="f-detalle" name="detalle" rows="5" required placeholder="Describe los hechos con la mayor claridad posible..."></textarea>
+          </div>
+          <div class="lr-field lr-field-full">
+            <label for="f-pedido">Pedido o solución que solicitas<span class="req">*</span></label>
+            <textarea id="f-pedido" name="pedido" rows="3" required placeholder="Ej: solicito reposición del producto, devolución, etc."></textarea>
+          </div>
+        </div>
+      </div>
+
+      <div style="padding-top: 6px;">
+        <button type="submit" class="lr-btn lr-btn-primary" id="btn-submit">Enviar reclamación</button>
+        <p class="lr-status" id="form-status" role="status" aria-live="polite"></p>
+        <p class="lr-note">
+          Al enviar este formulario aceptas que tus datos sean usados exclusivamente
+          para responder a tu reclamación, conforme a nuestra
+          <a href="/privacidad/" style="color:var(--primary)">Política de Privacidad</a>.
+        </p>
+      </div>
+    </form>
+
+    <!-- Estado de éxito -->
+    <div id="success" class="lr-success" hidden>
+      <div class="lr-success-icon">
+        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="20 6 9 17 4 12"></polyline>
+        </svg>
+      </div>
+      <h2>Reclamación registrada</h2>
+      <p>Tu hoja de reclamación ha sido recibida y registrada con el número:</p>
+      <div class="lr-ticket" id="ticket-number">—</div>
+      <p>Recibirás respuesta en un plazo máximo de <strong>15 días hábiles</strong> al email que proporcionaste.</p>
+      <p>Te recomendamos guardar este número como referencia.</p>
+      <div class="lr-actions">
+        <a href="/" class="lr-btn lr-btn-ghost">Volver al inicio</a>
+        <button type="button" class="lr-btn lr-btn-ghost" onclick="window.print()">Imprimir constancia</button>
+      </div>
+    </div>
+  </main>
+
+  <Footer />
+
+  <!-- Config del negocio (proveedor desde legal.js, id para distinguir en la base compartida) -->
+  <script is:inline set:html={`window.GB_RECLAMOS = ${JSON.stringify(GB_CONFIG)};`}></script>
+
+  <script is:inline type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-app.js";
+    import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore.js";
+
+    // Base de reclamaciones COMPARTIDA entre negocios (proyecto pulso-reclamaciones).
+    // Cada documento lleva negocioId para distinguir el origen.
+    const firebaseConfig = {
+      apiKey:            "AIzaSyCwoCXJ-40M83GWfWT12BpiQ4vXRoFgfnY",
+      authDomain:        "pulso-reclamaciones.firebaseapp.com",
+      projectId:         "pulso-reclamaciones",
+      storageBucket:     "pulso-reclamaciones.firebasestorage.app",
+      messagingSenderId: "530633143009",
+      appId:             "1:530633143009:web:ccdc03f881026394167da0"
+    };
+
+    // Respaldo Supabase si Firebase falla (RLS protege la lectura)
+    const SUPABASE_URL      = "https://bdsedbwasllyvwobjhjx.supabase.co";
+    const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJkc2VkYndhc2xseXZ3b2JqaGp4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk3NjUyMDgsImV4cCI6MjA5NTM0MTIwOH0.3VmlWGP223J-qcR7vxAFFDpNPVRSaVgXEg_XEMpceHg";
+
+    const CFG = window.GB_RECLAMOS;
+    const $  = (s) => document.querySelector(s);
+    const $$ = (s) => Array.from(document.querySelectorAll(s));
+
+    const form    = $("#reclamacion-form");
+    const status  = $("#form-status");
+    const btn     = $("#btn-submit");
+    const success = $("#success");
+    const ticket  = $("#ticket-number");
+
+    const app = initializeApp(firebaseConfig);
+    const db  = getFirestore(app);
+
+    // Mostrar/ocultar campos de tutor según menor de edad
+    const checkMenor = $("#f-menor");
+    const grupoTutor = $("#grupo-tutor");
+    const tutorInputs = $$("#grupo-tutor input");
+    function toggleTutor() {
+      const isMenor = checkMenor.checked;
+      grupoTutor.hidden = !isMenor;
+      tutorInputs.forEach(i => {
+        i.required = isMenor;
+        i.disabled = !isMenor;
+      });
+    }
+    checkMenor.addEventListener("change", toggleTutor);
+    toggleTutor();
+
+    function generarNumero() {
+      const d = new Date();
+      const yyyymmdd = d.getFullYear() + String(d.getMonth() + 1).padStart(2, "0") + String(d.getDate()).padStart(2, "0");
+      const rand = Math.random().toString(36).slice(2, 6).toUpperCase();
+      return "GBR-" + yyyymmdd + "-" + rand;
+    }
+
+    function showSuccess(numero) {
+      form.hidden = true;
+      ticket.textContent = numero;
+      success.hidden = false;
+      window.scrollTo({ top: success.offsetTop - 90, behavior: "smooth" });
+    }
+
+    async function guardarEnSupabase(numero, basePayload, errorOrigen) {
+      const res = await fetch(SUPABASE_URL + "/rest/v1/reclamaciones_respaldo", {
+        method: "POST",
+        headers: {
+          "apikey": SUPABASE_ANON_KEY,
+          "Authorization": "Bearer " + SUPABASE_ANON_KEY,
+          "Content-Type": "application/json",
+          "Prefer": "return=minimal"
+        },
+        body: JSON.stringify({
+          numero: numero,
+          source_site: CFG.sourceSite,
+          payload: { ...basePayload, fechaPresentacion: new Date().toISOString() },
+          error_origen: String(errorOrigen && errorOrigen.message ? errorOrigen.message : errorOrigen).slice(0, 500)
+        })
+      });
+      if (!res.ok) throw new Error("Supabase HTTP " + res.status);
+    }
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      if (!form.reportValidity()) return;
+
+      btn.disabled = true;
+      status.textContent = "Enviando reclamación…";
+      status.className = "lr-status is-info";
+
+      const fd = new FormData(form);
+      const numero = generarNumero();
+      const basePayload = {
+        numero: numero,
+        negocioId: CFG.negocioId,
+        consumidor: {
+          nombre:    fd.get("nombre") || "",
+          domicilio: fd.get("domicilio") || "",
+          dni:       fd.get("dni") || "",
+          telefono:  fd.get("telefono") || "",
+          email:     fd.get("email") || "",
+          esMenorDeEdad: fd.get("esMenor") === "on",
+          tutor: fd.get("esMenor") === "on" ? {
+            nombre: fd.get("tutorNombre") || "",
+            dni:    fd.get("tutorDni") || ""
+          } : null
+        },
+        bien: {
+          tipo:              fd.get("tipoBien") || "",
+          monto:             parseFloat(fd.get("monto")) || 0,
+          descripcion:       fd.get("descripcionBien") || "",
+          fechaAdquisicion:  fd.get("fechaAdquisicion") || ""
+        },
+        reclamo: {
+          tipo:    fd.get("tipoReclamo") || "",
+          detalle: fd.get("detalle") || "",
+          pedido:  fd.get("pedido") || ""
+        },
+        proveedor: CFG.proveedor,
+        estado: "pendiente",
+        respuestaProveedor: null,
+        fechaRespuesta: null,
+        meta: {
+          userAgent: navigator.userAgent,
+          url: location.href,
+          source: CFG.sourceSite
+        }
+      };
+
+      // 1) Destino principal: Firebase
+      try {
+        await addDoc(collection(db, "reclamaciones"), {
+          ...basePayload,
+          fechaPresentacion: serverTimestamp()
+        });
+        showSuccess(numero);
+        return;
+      } catch (firebaseErr) {
+        console.warn("[reclamaciones] Firebase falló, intento respaldo Supabase:", firebaseErr);
+        try {
+          await guardarEnSupabase(numero, basePayload, firebaseErr);
+          showSuccess(numero);
+        } catch (supabaseErr) {
+          console.error("[reclamaciones] Ambos backends fallaron:", firebaseErr, supabaseErr);
+          status.textContent = "No se pudo registrar la reclamación. Inténtalo de nuevo o escríbenos por WhatsApp.";
+          status.className = "lr-status is-error";
+          btn.disabled = false;
+        }
+      }
+    });
+  </script>
+</BaseLayout>
