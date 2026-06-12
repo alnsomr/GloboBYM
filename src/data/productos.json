@@ -1,0 +1,58 @@
+{
+  "categorias": [
+    "Globos personalizados",
+    "Box sorpresa",
+    "Ramos de globos",
+    "Accesorios"
+  ],
+  "productos": [
+    {
+      "id": "globo-burbuja-personalizado",
+      "nombre": "Globo Burbuja Personalizado",
+      "precio": 89.90,
+      "categoria": "Globos personalizados",
+      "descripcion": "Globo burbuja transparente de 24\" con dedicatoria personalizada, plumas y globos pequeños en el interior. Incluye lazo y peso decorativo.",
+      "colores": ["Rosa", "Azul", "Dorado", "Plateado"],
+      "personalizable": true,
+      "imagenes": ["globo-burbuja-1.jpg", "globo-burbuja-2.jpg"],
+      "disponible": true,
+      "destacado": true
+    },
+    {
+      "id": "box-sorpresa-cumpleanos",
+      "nombre": "Box Sorpresa de Cumpleaños",
+      "precio": 129.00,
+      "categoria": "Box sorpresa",
+      "descripcion": "Caja sorpresa con globos que se elevan al abrirla, dedicatoria impresa y espacio para regalo. Ideal para sorprender a domicilio.",
+      "colores": ["Rosa", "Lila", "Azul", "Rojo"],
+      "personalizable": true,
+      "imagenes": ["box-sorpresa-1.jpg"],
+      "disponible": true,
+      "destacado": false
+    },
+    {
+      "id": "ramo-globos-clasico",
+      "nombre": "Ramo de Globos Clásico",
+      "precio": 65.00,
+      "categoria": "Ramos de globos",
+      "descripcion": "Ramo de 6 globos de látex premium con 1 globo metálico de número o letra a elección. Incluye peso decorativo.",
+      "colores": ["A elección del cliente"],
+      "personalizable": false,
+      "imagenes": ["ramo-clasico-1.jpg"],
+      "disponible": true,
+      "destacado": false
+    },
+    {
+      "id": "ejemplo-producto-agotado",
+      "nombre": "Ejemplo de Producto Agotado",
+      "precio": 50.00,
+      "categoria": "Accesorios",
+      "descripcion": "Este producto tiene disponible:false — se muestra con etiqueta AGOTADO y no se puede agregar al carrito. Cámbialo a true cuando vuelva el stock.",
+      "colores": [],
+      "personalizable": false,
+      "imagenes": [],
+      "disponible": false,
+      "destacado": false
+    }
+  ]
+}
