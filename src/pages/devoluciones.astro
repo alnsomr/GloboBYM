@@ -1,0 +1,99 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Nav from '../components/Nav.astro';
+import Footer from '../components/Footer.astro';
+import '../styles/global.css';
+import '../styles/legal.css';
+import { LEGAL } from '../data/legal.js';
+---
+<BaseLayout title="Cambios, Devoluciones y Entregas | GloboBYM" description="Política de entregas, reprogramaciones, cambios y devoluciones de GloboBYM.">
+  <Fragment slot="head">
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  </Fragment>
+
+  <Nav />
+
+  <main class="legal-main">
+    <h1>Cambios, Devoluciones y Entregas</h1>
+    <div class="legal-updated">Última actualización: {LEGAL.fechaActualizacion}</div>
+
+    <h2>1. Cobertura y horarios de entrega</h2>
+    <p>
+      Entregamos en {LEGAL.cobertura}. Al hacer tu pedido eliges una fecha y un rango
+      horario referencial; la hora exacta se coordina por WhatsApp. El costo de envío
+      depende del distrito y se confirma antes del pago.
+    </p>
+
+    <h2>2. Ausencia del destinatario</h2>
+    <p>
+      Si nadie puede recibir el pedido en la dirección y rango coordinados, nos
+      comunicaremos contigo para reintentar la entrega. Un segundo intento de entrega
+      puede generar un costo adicional de envío.
+    </p>
+
+    <h2>3. Reprogramación</h2>
+    <p>
+      Puedes reprogramar la fecha de entrega de un pedido avisándonos con al menos
+      <strong> {LEGAL.plazoReprogramacionHoras} horas de anticipación</strong>, sujeto a
+      disponibilidad. Las reprogramaciones dentro de un plazo menor se evalúan caso por caso.
+    </p>
+
+    <h2>4. Cancelaciones</h2>
+    <ul>
+      <li>
+        Pedidos <strong>no personalizados</strong>: puedes cancelar hasta
+        <strong> {LEGAL.plazoCancelacionHoras} horas antes</strong> de la fecha de entrega
+        y se devuelve el monto pagado.
+      </li>
+      <li>
+        Pedidos <strong>personalizados</strong> (con nombres, dedicatorias o diseños a
+        medida): una vez iniciada la elaboración, no son reembolsables, por tratarse de
+        productos hechos a pedido.
+      </li>
+      <li>
+        Servicios de decoración: la separación de fecha (S/ 100) no es reembolsable en
+        caso de cancelación por parte del cliente, pues bloquea la agenda. Sí puede
+        aplicarse a una nueva fecha si reprogramas dentro del plazo indicado.
+      </li>
+    </ul>
+
+    <h2>5. Devoluciones</h2>
+    <p>
+      Conforme a la normativa peruana de protección al consumidor, los productos
+      <strong> personalizados o hechos a medida no admiten devolución</strong>, salvo
+      defecto de elaboración o daño atribuible a GloboBYM.
+    </p>
+
+    <h2>6. Producto dañado o pedido incorrecto</h2>
+    <p>
+      Si tu pedido llegó dañado o no corresponde a lo solicitado, repórtalo dentro de las
+      <strong> {LEGAL.plazoReporteDanoHoras} horas siguientes a la entrega</strong> por
+      WhatsApp (<a href={LEGAL.whatsappLink} target="_blank">{LEGAL.whatsapp}</a>),
+      adjuntando fotos. Según el caso, ofreceremos la <strong>reposición del producto</strong>
+      o el <strong>reembolso</strong> del monto pagado.
+    </p>
+
+    <h2>7. Reembolsos</h2>
+    <p>
+      Los reembolsos aprobados se procesan por el mismo medio de pago utilizado (Yape,
+      Plin o transferencia) en un plazo máximo de
+      <strong> {LEGAL.plazoReembolsoDias} días hábiles</strong>.
+    </p>
+
+    <h2>8. Reclamos</h2>
+    <p>
+      Escríbenos primero por WhatsApp — resolvemos la gran mayoría de los casos
+      directamente y rápido. También puedes presentar tu reclamo formal conforme a la
+      normativa de INDECOPI.
+    </p>
+
+    <div class="legal-box">
+      💬 ¿Dudas sobre tu pedido? Háblanos al WhatsApp
+      <a href={LEGAL.whatsappLink} target="_blank"> {LEGAL.whatsapp}</a> — respondemos en horas.
+    </div>
+  </main>
+
+  <Footer />
+</BaseLayout>

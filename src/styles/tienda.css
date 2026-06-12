@@ -107,7 +107,9 @@
 .co-item-precio { font-weight: 600; color: var(--dark); white-space: nowrap; }
 .co-total { display: flex; justify-content: space-between; font-size: 1.05rem; font-weight: 700; margin-top: 14px; color: var(--dark); }
 .co-envio-nota { font-size: .75rem; color: var(--gray); margin-top: 8px; line-height: 1.5; }
-.co-enviar { width: 100%; background: var(--primary); color: white; border: none; padding: 16px; border-radius: 50px; font-family: 'Inter', sans-serif; font-size: 1rem; font-weight: 700; cursor: pointer; transition: background .2s; margin-top: 16px; }
+.co-legal { font-size: .72rem; color: var(--gray); margin-top: 14px; line-height: 1.5; }
+.co-legal a { color: var(--primary); }
+.co-enviar { width: 100%; background: var(--primary); color: white; border: none; padding: 16px; border-radius: 50px; font-family: 'Inter', sans-serif; font-size: 1rem; font-weight: 700; cursor: pointer; transition: background .2s; margin-top: 12px; }
 .co-enviar:hover { background: var(--primary-light); }
 .co-enviar:disabled { background: #94a3b8; cursor: not-allowed; }
 .checkout-vacio { text-align: center; padding: 60px 20px; }

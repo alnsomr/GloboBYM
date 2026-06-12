@@ -236,6 +236,9 @@
     .footer-social { display: flex; gap: 14px; }
     .footer-social a { color: rgba(255,255,255,.5); text-decoration: none; font-size: .82rem; transition: color .2s; }
     .footer-social a:hover { color: var(--primary-light); }
+    .footer-legal { display: flex; gap: 14px; flex-wrap: wrap; }
+    .footer-legal a { color: rgba(255,255,255,.35); text-decoration: none; font-size: .74rem; transition: color .2s; }
+    .footer-legal a:hover { color: rgba(255,255,255,.7); }
 
     /* ── FORM MODAL ── */
     .form-modal-overlay { position: fixed; inset: 0; z-index: 500; background: rgba(0,0,0,.78); display: flex; align-items: center; justify-content: center; padding: 20px; opacity: 0; pointer-events: none; transition: opacity .3s; }

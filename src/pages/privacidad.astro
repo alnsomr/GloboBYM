@@ -1,0 +1,87 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Nav from '../components/Nav.astro';
+import Footer from '../components/Footer.astro';
+import '../styles/global.css';
+import '../styles/legal.css';
+import { LEGAL } from '../data/legal.js';
+---
+<BaseLayout title="Política de Privacidad | GloboBYM" description="Cómo GloboBYM recopila, usa y protege tus datos personales, conforme a la Ley N° 29733.">
+  <Fragment slot="head">
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  </Fragment>
+
+  <Nav />
+
+  <main class="legal-main">
+    <h1>Política de Privacidad</h1>
+    <div class="legal-updated">Última actualización: {LEGAL.fechaActualizacion}</div>
+
+    <h2>1. Responsable del tratamiento</h2>
+    <p>
+      <strong>{LEGAL.razonSocial}</strong> (RUC {LEGAL.ruc}), que opera bajo el nombre
+      comercial <strong>{LEGAL.nombreComercial}</strong>, es responsable del tratamiento
+      de los datos personales recopilados a través de este sitio, conforme a la
+      <strong> Ley N° 29733 — Ley de Protección de Datos Personales</strong> y su reglamento.
+    </p>
+
+    <h2>2. Qué datos recopilamos</h2>
+    <ul>
+      <li><strong>Formulario de cotización de eventos:</strong> nombre, teléfono, tipo de evento, fecha, distrito y mensaje.</li>
+      <li><strong>Pedidos de la tienda online:</strong> nombre, teléfono, dirección de entrega, distrito, fecha y rango horario de entrega, personalizaciones y notas.</li>
+      <li><strong>Métricas de uso del sitio:</strong> contadores anónimos de visitas, origen del tráfico (por ejemplo, si llegaste desde Instagram) y tiempo de navegación. No identifican a la persona.</li>
+      <li><strong>Cookies de Google Analytics:</strong> estadísticas de uso agregadas y anónimas.</li>
+    </ul>
+
+    <h2>3. Para qué usamos tus datos</h2>
+    <ul>
+      <li>Atender tu cotización o pedido y coordinar la entrega.</li>
+      <li>Contactarte por WhatsApp o teléfono respecto a tu solicitud.</li>
+      <li>Llevar un registro interno de pedidos y clientes.</li>
+      <li>Mejorar el sitio a partir de estadísticas de uso agregadas.</li>
+    </ul>
+    <p><strong>No vendemos ni cedemos tus datos a terceros</strong> con fines comerciales.</p>
+
+    <h2>4. Dónde se almacenan</h2>
+    <p>
+      Los datos de cotizaciones y pedidos se almacenan en <strong>Google Firebase
+      (Firestore)</strong>, un servicio de Google LLC cuyos servidores pueden ubicarse
+      fuera del Perú (flujo transfronterizo de datos, permitido por la Ley N° 29733 con
+      proveedores que garantizan niveles adecuados de protección, como es el caso de
+      Google). El acceso a esos datos está restringido por autenticación.
+    </p>
+
+    <h2>5. Cuánto tiempo los conservamos</h2>
+    <p>
+      Conservamos los datos de pedidos y cotizaciones mientras sean necesarios para la
+      gestión comercial y el historial de clientes. Puedes solicitar su eliminación en
+      cualquier momento (ver sección 6).
+    </p>
+
+    <h2>6. Tus derechos (ARCO)</h2>
+    <p>
+      Puedes ejercer tus derechos de <strong>acceso, rectificación, cancelación y
+      oposición</strong> sobre tus datos personales escribiéndonos al WhatsApp
+      <a href={LEGAL.whatsappLink} target="_blank"> {LEGAL.whatsapp}</a>. Atenderemos tu
+      solicitud en los plazos establecidos por la ley.
+    </p>
+
+    <h2>7. Cookies</h2>
+    <p>
+      Este sitio usa cookies de Google Analytics para estadísticas de uso. Puedes
+      bloquearlas desde la configuración de tu navegador sin que ello afecte la
+      funcionalidad esencial del sitio. El carrito de compras se guarda únicamente en
+      el almacenamiento local de tu navegador y no se transmite hasta que envías tu pedido.
+    </p>
+
+    <h2>8. Cambios en esta política</h2>
+    <p>
+      Cualquier cambio se publicará en esta página con la fecha de actualización
+      correspondiente.
+    </p>
+  </main>
+
+  <Footer />
+</BaseLayout>

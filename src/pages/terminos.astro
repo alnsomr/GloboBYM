@@ -1,0 +1,116 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Nav from '../components/Nav.astro';
+import Footer from '../components/Footer.astro';
+import '../styles/global.css';
+import '../styles/legal.css';
+import { LEGAL } from '../data/legal.js';
+---
+<BaseLayout title="Términos y Condiciones | GloboBYM" description="Términos y condiciones de uso del sitio web y la tienda online de GloboBYM.">
+  <Fragment slot="head">
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  </Fragment>
+
+  <Nav />
+
+  <main class="legal-main">
+    <h1>Términos y Condiciones</h1>
+    <div class="legal-updated">Última actualización: {LEGAL.fechaActualizacion}</div>
+
+    <h2>1. Identificación</h2>
+    <p>
+      Este sitio web ({LEGAL.web}) es operado por <strong>{LEGAL.razonSocial}</strong>,
+      con RUC <strong>{LEGAL.ruc}</strong>, bajo el nombre comercial
+      <strong> {LEGAL.nombreComercial}</strong> (en adelante, "GloboBYM").
+      Contacto: WhatsApp <a href={LEGAL.whatsappLink} target="_blank">{LEGAL.whatsapp}</a>.
+    </p>
+
+    <h2>2. Ámbito</h2>
+    <p>GloboBYM ofrece a través de este sitio dos tipos de prestaciones:</p>
+    <ul>
+      <li><strong>Servicios de decoración de eventos</strong> a domicilio, contratados mediante cotización personalizada.</li>
+      <li><strong>Venta de productos</strong> (globos personalizados, box sorpresa, ramos y similares) a través de la tienda online.</li>
+    </ul>
+    <p>El uso del sitio implica la aceptación de estos términos.</p>
+
+    <h2>3. Precios</h2>
+    <p>
+      Todos los precios se expresan en soles peruanos (S/). Los precios de los productos
+      no incluyen el costo de envío, el cual se informa según el distrito de entrega
+      antes de confirmar el pedido. GloboBYM puede actualizar los precios del catálogo
+      en cualquier momento; los pedidos ya confirmados mantienen el precio pactado.
+    </p>
+
+    <h2>4. Pedidos de la tienda online</h2>
+    <p>
+      El envío del formulario de pedido constituye una <strong>solicitud de compra</strong>.
+      GloboBYM confirmará la disponibilidad, el costo de envío y los datos de entrega por
+      WhatsApp o llamada telefónica. El pedido se considera <strong>confirmado</strong> una
+      vez realizado el pago por los medios acordados (Yape, Plin, transferencia bancaria u
+      otros medios habilitados).
+    </p>
+
+    <h2>5. Productos personalizados</h2>
+    <ul>
+      <li>El cliente es responsable de la exactitud de los textos, nombres y dedicatorias proporcionados (incluida la ortografía).</li>
+      <li>Los colores del producto final pueden presentar variaciones razonables respecto a las fotografías referenciales del catálogo.</li>
+      <li>Por su naturaleza, los productos personalizados <strong>no admiten devolución</strong>, salvo defecto de elaboración o daño en la entrega (ver <a href="/devoluciones/">Política de Cambios y Devoluciones</a>).</li>
+    </ul>
+
+    <h2>6. Entregas</h2>
+    <p>
+      Realizamos entregas en {LEGAL.cobertura}. Los rangos horarios elegidos en el pedido
+      son referenciales y pueden ajustarse por coordinación directa. Las condiciones de
+      reprogramación y ausencia del destinatario se detallan en la
+      <a href="/devoluciones/"> Política de Cambios, Devoluciones y Entregas</a>.
+    </p>
+
+    <h2>7. Servicios de decoración de eventos</h2>
+    <p>
+      Las decoraciones se cotizan de forma personalizada según el tipo de evento, los
+      materiales y el distrito. La reserva de fecha se realiza mediante una
+      <strong> separación de S/ 100</strong>, monto que se descuenta del precio total del
+      servicio. El saldo se cancela el día del evento, antes o al finalizar el montaje,
+      según lo acordado.
+    </p>
+
+    <h2>8. Propiedad intelectual</h2>
+    <p>
+      El contenido de este sitio (textos, fotografías de trabajos propios, logotipo y
+      diseño) pertenece a GloboBYM. No está permitida su reproducción con fines
+      comerciales sin autorización escrita.
+    </p>
+
+    <h2>9. Limitación de responsabilidad</h2>
+    <p>
+      GloboBYM no será responsable por retrasos o incumplimientos causados por fuerza
+      mayor, caso fortuito, datos de entrega incorrectos proporcionados por el cliente
+      o ausencia del destinatario en el rango horario coordinado.
+    </p>
+
+    <h2>10. Protección de datos personales</h2>
+    <p>
+      El tratamiento de los datos personales proporcionados a través de los formularios
+      del sitio se rige por nuestra <a href="/privacidad/">Política de Privacidad</a>,
+      conforme a la Ley N° 29733 — Ley de Protección de Datos Personales.
+    </p>
+
+    <h2>11. Legislación aplicable y reclamos</h2>
+    <p>
+      Estos términos se rigen por las leyes de la República del Perú. Cualquier
+      controversia podrá ser presentada ante INDECOPI. Para consultas o reclamos,
+      escríbenos primero a nuestro WhatsApp {LEGAL.whatsapp} — la mayoría de los casos
+      se resuelven directamente.
+    </p>
+
+    <h2>12. Modificaciones</h2>
+    <p>
+      GloboBYM puede actualizar estos términos en cualquier momento. La versión vigente
+      es siempre la publicada en esta página.
+    </p>
+  </main>
+
+  <Footer />
+</BaseLayout>
