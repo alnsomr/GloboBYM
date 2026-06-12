@@ -1,10 +1,18 @@
+# Dependencias y build
 node_modules/
-assets/*
-!assets/logo.jpg
+dist/
+.astro/
+.netlify/
+
+# Carpeta legacy de assets en la raíz (la fuente ahora es public/assets/)
+/assets/
+
+# Respaldos de imágenes originales sin comprimir
+public/assets/_originals/
+
+# Archivos locales
 index - copia.html
 *.log
 .DS_Store
 Thumbs.db
 .claude/
-package.json
-package-lock.json

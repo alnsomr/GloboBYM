@@ -1,63 +1,56 @@
-# Tu Instagram → Web Profesional
+# GloboBYM — Web + Panel de pedidos
 
-Este proyecto convierte tu perfil de Instagram en una web de marca personal profesional.
+Web de GloboBYM (@globobym_peru), boutique de globería en Lima, Perú. Dos unidades
+de negocio: **decoración de eventos a domicilio** (cotizaciones) y próximamente
+**venta de globos personalizados** (carrito de compras con Culqi).
 
-## Comportamiento al iniciar
+## Stack
 
-Cuando el usuario abra esta carpeta y escriba cualquier cosa (incluido "hola", "qué hago", "empezar"), responde con este mensaje de bienvenida:
+- **Astro 5** (output estático, sin frameworks de UI) + CSS propio (sin Tailwind)
+- **Firebase**: Firestore (pedidos + métricas) y Auth (login del panel). SDK compat v10 por CDN.
+- **Netlify**: hosting. Build `npm run build` → `dist/`. Config en `netlify.toml`.
+- **GA4**: G-FX6KTT78Z1 (solo page_view; el tracking real son contadores en Firestore `metricas/general`).
 
-> **Bienvenido al creador de webs desde Instagram**
->
-> Voy a convertir tu perfil de Instagram en una web profesional de marca personal.
->
-> Solo necesito tu **@handle de Instagram** para empezar. Yo me encargo del resto: descargo tus fotos, busco tus datos en redes, y genero la web.
->
-> **¿Cuál es tu @ de Instagram?**
+## Estructura
 
-Después de eso, usa la skill `instagram-a-web` automáticamente.
+- `src/pages/index.astro` — landing pública (eventos). Markup completo de secciones.
+- `src/pages/admin.astro` — panel de pedidos (login, estados, tracking, resumen, export CSV).
+- `src/layouts/BaseLayout.astro` — shell compartido (GA, favicon, slot "head").
+- `src/components/Nav.astro`, `Footer.astro` — compartidos.
+- `src/styles/global.css` — estilos de la landing. `admin.css` — estilos del panel.
+- `public/js/main.js` — JS de la landing (modales, carrusel, formulario→Firestore, tracking).
+- `public/js/admin.js` — JS del panel (auth, estados, métricas, gráficos Chart.js).
+- `public/assets/` — imágenes optimizadas (~4MB). `_originals/` está gitignored.
+- `firestore.rules` — reglas endurecidas. Aplicar a mano en Firebase Console → Firestore → Reglas.
+- `actualizar-semana.ps1` — regenera `public/assets/semana/index.json` (carrusel "Decoraciones de esta semana").
 
-## Qué hace Claude automáticamente
-1. Entra a tu perfil de Instagram y descarga tus datos y fotos automáticamente
-2. Busca tu presencia en otras redes (Threads, TikTok, YouTube, LinkedIn...)
-3. Suma tus seguidores de todas las plataformas
-4. Busca testimonios de tus clientes si los tienes publicados
-5. Te pregunta lo que no puede encontrar solo (servicios, colores, email)
-6. Genera una web premium y la abre en tu navegador
+## Comandos
 
-## Lo que necesitas tener a mano
+- `npm run dev` — desarrollo local (localhost:4321)
+- `npm run build` — genera `dist/`
+- Deploy: push a `main` → Netlify build automático (cuando esté conectado a GitHub)
 
-- Tu @handle de Instagram
-- A qué te dedicas y qué servicios ofreces
-- Tu email de contacto
-- Tus colores de marca (si los tienes; si no, Claude te propone opciones)
+## Datos del negocio
 
-## Lo que genera
+- WhatsApp: +51 960 876 002 · Firebase project: `globobym`
+- Packs decoración: 1=S/1999, 2=S/1399, 3=S/1099, 4=S/799, 5=S/650, Económico/Personalizado=precio manual
+- Flujo de estados pedidos: Nuevo → Contactado → Separado(`pagado`) → Atendido → Venta(terminal, auto-24h).
+  El estado interno sigue siendo `pagado` aunque la UI diga "Separado". Monto de separación: S/100.
+- Cumpleaños dividido en "Cumpleaños Infantil" / "Cumpleaños Adulto" (pedidos viejos dicen "Cumpleaños" a secas).
 
-- Un archivo HTML profesional que se abre en cualquier navegador
-- Hero con tu perfil de Instagram integrado (foto, stats, bio, tick verificado, mini grid de fotos)
-- Tus fotos reales de Instagram en la galería
-- Adaptado a tu tipo de marca personal (fotógrafo, coach, influencer, etc.)
-- Se ve bien en móvil, tablet y escritorio
-- Solo usa tus datos reales — nunca inventa información
+## Decisiones tomadas
 
-## Sobre las dependencias
+- Imágenes en el repo (no Cloudinary/Storage) — gratis y CDN de Netlify.
+- Firebase SDK compat (no modular) — migración pendiente, no urgente.
+- Métricas con contadores Firestore propios, no eventos GA4.
+- Testimonios eliminados hasta tener reviews reales (los anteriores eran inventados).
+- Stats hardcodeados (33K seguidores, 789 posts): actualizar a mano cuando cambien mucho.
 
-Antes de empezar, verifica si Node.js está instalado:
-```bash
-node --version 2>/dev/null && echo "Node.js OK" || echo "NO_NODE"
-```
+## Pendiente / Roadmap
 
-Si no tiene Node.js, dile:
-> "Para poder acceder a tu Instagram automáticamente necesito Node.js. Es una instalación rápida de 2 minutos: ve a https://nodejs.org y descarga la versión LTS. Cuando lo tengas instalado, dime y seguimos.
->
-> Si prefieres no instalarlo, no pasa nada — te pediré los datos directamente y la web quedará igual de bien."
-
-Si tiene Node.js, instala Playwright automáticamente y sigue con el scraping. El usuario no tiene que hacer nada más.
-
-## Si tienes imágenes extras
-
-Puedes meter fotos adicionales (retratos, logo, portfolio) en la carpeta `assets/`. Claude las usará en la web.
-
-## Después de generar
-
-Dile a Claude qué quieres cambiar: colores, textos, secciones, fotos. Itera hasta que te guste.
+- Tienda de globos personalizados (`tienda.astro`): catálogo Firestore + carrito localStorage +
+  checkout con Culqi vía Netlify Functions (cliente ya tiene cuenta Culqi, falta activar pagos online
+  y obtener API keys). Esperando catálogo de productos del cliente.
+- Conectar Netlify a GitHub (hoy el deploy es drag & drop manual).
+- Páginas legales (T&C, privacidad, devoluciones) — obligatorias antes de vender online.
+- Aplicar `firestore.rules` en la consola (si no se ha hecho).

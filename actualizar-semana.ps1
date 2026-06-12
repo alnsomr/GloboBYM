@@ -6,11 +6,11 @@ $ErrorActionPreference = 'Stop'
 $here = Split-Path -Parent $MyInvocation.MyCommand.Path
 Set-Location $here
 
-$folder = Join-Path $here 'assets\semana'
+$folder = Join-Path $here 'public\assets\semana'
 $jsonPath = Join-Path $folder 'index.json'
 
 if (-not (Test-Path $folder)) {
-    Write-Host "ERROR: No existe la carpeta assets\semana" -ForegroundColor Red
+    Write-Host "ERROR: No existe la carpeta public\assets\semana" -ForegroundColor Red
     Read-Host "Enter para salir"
     exit 1
 }
@@ -23,7 +23,7 @@ $files = Get-ChildItem $folder -File |
     Select-Object -ExpandProperty Name
 
 if (-not $files -or $files.Count -eq 0) {
-    Write-Host "ATENCION: No se encontraron imagenes en assets\semana" -ForegroundColor Yellow
+    Write-Host "ATENCION: No se encontraron imagenes en public\assets\semana" -ForegroundColor Yellow
     '[]' | Out-File -FilePath $jsonPath -Encoding utf8 -NoNewline
     Write-Host "  index.json escrito como lista vacia." -ForegroundColor Yellow
     Read-Host "Enter para salir"
@@ -35,7 +35,7 @@ $json = ConvertTo-Json @($files) -Compress
 [System.IO.File]::WriteAllText($jsonPath, $json, [System.Text.UTF8Encoding]::new($false))
 
 Write-Host ""
-Write-Host "OK Actualizado: assets\semana\index.json" -ForegroundColor Green
+Write-Host "OK Actualizado: public\assets\semana\index.json" -ForegroundColor Green
 Write-Host "  $($files.Count) foto(s) detectada(s):" -ForegroundColor Cyan
 $files | ForEach-Object { Write-Host "    - $_" }
 Write-Host ""

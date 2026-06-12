@@ -1,0 +1,77 @@
+rules_version = '2';
+
+// ═══════════════════════════════════════════════════════════════
+//  REGLAS FIRESTORE — GloboBYM
+//  Para aplicar: Firebase Console → Firestore Database → Reglas
+//  → pegar este contenido → Publicar
+//
+//  Qué endurecen respecto a las reglas anteriores:
+//  - El create público de pedidos ahora valida schema completo:
+//    solo los campos permitidos, tipos correctos, longitudes máximas,
+//    estado forzado a 'nuevo' y createdAt forzado al timestamp del
+//    servidor. Un bot ya no puede insertar documentos arbitrarios
+//    ni campos gigantes.
+//  - Las métricas solo aceptan update del documento 'general'
+//    (no se pueden crear documentos basura en la colección).
+//  - Todo lo demás (leer, editar, borrar) sigue requiriendo login.
+// ═══════════════════════════════════════════════════════════════
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // ── PEDIDOS (cotizaciones del formulario público) ──
+    match /pedidos/{id} {
+
+      allow create: if
+        // Solo los campos del formulario, nada más
+        request.resource.data.keys().hasOnly([
+          'nombre', 'telefono', 'tipo', 'pack', 'fecha',
+          'distrito', 'mensaje', 'estado', 'createdAt', 'precioTotal'
+        ]) &&
+        // Campos obligatorios
+        request.resource.data.keys().hasAll([
+          'nombre', 'telefono', 'tipo', 'fecha', 'distrito', 'estado', 'createdAt'
+        ]) &&
+        // Tipos y longitudes
+        request.resource.data.nombre is string &&
+        request.resource.data.nombre.size() >= 2 &&
+        request.resource.data.nombre.size() <= 100 &&
+        request.resource.data.telefono is string &&
+        request.resource.data.telefono.size() >= 6 &&
+        request.resource.data.telefono.size() <= 25 &&
+        request.resource.data.tipo is string &&
+        request.resource.data.tipo.size() <= 60 &&
+        request.resource.data.fecha is string &&
+        request.resource.data.fecha.size() <= 20 &&
+        request.resource.data.distrito is string &&
+        request.resource.data.distrito.size() <= 60 &&
+        // Opcionales (si vienen, deben ser válidos)
+        (!('pack' in request.resource.data) ||
+          (request.resource.data.pack is string && request.resource.data.pack.size() <= 40)) &&
+        (!('mensaje' in request.resource.data) ||
+          (request.resource.data.mensaje is string && request.resource.data.mensaje.size() <= 1500)) &&
+        (!('precioTotal' in request.resource.data) ||
+          (request.resource.data.precioTotal is number &&
+           request.resource.data.precioTotal >= 0 &&
+           request.resource.data.precioTotal <= 50000)) &&
+        // Estado inicial forzado y timestamp del servidor
+        request.resource.data.estado == 'nuevo' &&
+        request.resource.data.createdAt == request.time;
+
+      // Leer, editar y borrar: solo el panel (usuario autenticado)
+      allow read, update, delete: if request.auth != null;
+    }
+
+    // ── MÉTRICAS (contadores del sitio público) ──
+    // El sitio incrementa visitas/orígenes/tiempo sin login,
+    // pero solo sobre el documento 'general' ya existente.
+    match /metricas/general {
+      allow update: if true;
+      allow create: if true;   // primera escritura con merge
+      allow read: if request.auth != null;
+      allow delete: if false;
+    }
+
+    // Cualquier otra colección: bloqueada por defecto
+  }
+}

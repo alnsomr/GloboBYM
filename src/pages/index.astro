@@ -1,0 +1,581 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Nav from '../components/Nav.astro';
+import Footer from '../components/Footer.astro';
+import '../styles/global.css';
+
+const title = 'GloboBYM – Decoración con Globos a Domicilio en Lima, Perú';
+const description = 'Boutique de globería profesional en Lima. Decoraciones personalizadas para cumpleaños, baby shower, bautizos, graduaciones, propuestas de matrimonio y eventos corporativos. +200 eventos realizados · 33K seguidores.';
+---
+<BaseLayout title={title} description={description}>
+  <Fragment slot="head">
+  <meta name="keywords" content="decoración con globos Lima, globería Lima, decoración cumpleaños Lima, baby shower Lima, decoración eventos Lima, arco de globos, globos personalizados Perú" />
+  <meta name="author" content="GloboBYM" />
+  <meta name="robots" content="index, follow" />
+  <link rel="canonical" href="https://globobym.netlify.app/" />
+  <!-- Open Graph (Facebook, WhatsApp, LinkedIn) -->
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://globobym.netlify.app/" />
+  <meta property="og:site_name" content="GloboBYM" />
+  <meta property="og:locale" content="es_PE" />
+  <meta property="og:title" content="GloboBYM – Decoración con Globos a Domicilio en Lima" />
+  <meta property="og:description" content="Boutique de globería profesional en Lima. Decoraciones personalizadas para cumpleaños, baby shower y eventos. +200 eventos realizados." />
+  <meta property="og:image" content="https://globobym.netlify.app/assets/foto1.jpg" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:image:alt" content="Decoración con globos profesional GloboBYM" />
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="GloboBYM – Decoración con Globos a Domicilio en Lima" />
+  <meta name="twitter:description" content="Boutique de globería profesional en Lima. +200 eventos · 33K seguidores." />
+  <meta name="twitter:image" content="https://globobym.netlify.app/assets/foto1.jpg" />
+
+  <script type="application/ld+json" is:inline>
+  {
+    "@context": "https://schema.org",
+    "@type": "LocalBusiness",
+    "@id": "https://globobym.netlify.app/#business",
+    "name": "GloboBYM",
+    "alternateName": "GloboBYM Perú",
+    "description": "Boutique de globería profesional en Lima, Perú. Decoraciones personalizadas para cumpleaños, baby shower, bautizos, graduaciones, propuestas de matrimonio y eventos corporativos. Servicio a domicilio.",
+    "url": "https://globobym.netlify.app/",
+    "image": "https://globobym.netlify.app/assets/foto1.jpg",
+    "logo": "https://globobym.netlify.app/assets/logo.jpg",
+    "telephone": "+51960876002",
+    "priceRange": "S/ 650 – S/ 1,999",
+    "areaServed": [
+      { "@type": "City", "name": "Lima" },
+      { "@type": "City", "name": "Callao" }
+    ],
+    "address": {
+      "@type": "PostalAddress",
+      "addressLocality": "Lima",
+      "addressRegion": "Lima",
+      "addressCountry": "PE"
+    },
+    "geo": {
+      "@type": "GeoCoordinates",
+      "latitude": -12.0464,
+      "longitude": -77.0428
+    },
+    "sameAs": [
+      "https://www.instagram.com/globobym_peru/",
+      "https://www.tiktok.com/@globobym_peru"
+    ],
+    "aggregateRating": {
+      "@type": "AggregateRating",
+      "ratingValue": "5.0",
+      "reviewCount": "200",
+      "bestRating": "5"
+    },
+    "hasOfferCatalog": {
+      "@type": "OfferCatalog",
+      "name": "Packs de decoración con globos",
+      "itemListElement": [
+        { "@type": "Offer", "name": "Pack 1", "price": "1999", "priceCurrency": "PEN" },
+        { "@type": "Offer", "name": "Pack 2", "price": "1399", "priceCurrency": "PEN" },
+        { "@type": "Offer", "name": "Pack 3", "price": "1099", "priceCurrency": "PEN" },
+        { "@type": "Offer", "name": "Pack 4", "price": "799",  "priceCurrency": "PEN" },
+        { "@type": "Offer", "name": "Pack 5", "price": "650",  "priceCurrency": "PEN" }
+      ]
+    }
+  }
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  </Fragment>
+
+  <Nav />
+
+<!-- HERO -->
+<section class="hero" id="inicio">
+  <div class="hero-bg">
+    <div class="hero-bg-slide active" style="background-image:url('assets/foto1.jpg')"></div>
+    <div class="hero-bg-slide" style="background-image:url('assets/foto2.jpg')"></div>
+    <div class="hero-bg-slide" style="background-image:url('assets/foto3.jpg')"></div>
+    <div class="hero-bg-slide" style="background-image:url('assets/foto4.jpg')"></div>
+    <div class="hero-bg-overlay"></div>
+  </div>
+
+  <div class="hero-text">
+    <div class="hero-badge">Boutique de Globos · 33K seguidores · Lima, Perú</div>
+    <h1 class="hero-title">
+      Transformamos tus<br/>eventos en momentos<br/><em>inolvidables</em>
+    </h1>
+    <p class="hero-bio">
+      Somos <strong>GloboBYM</strong>, tu boutique de globería profesional personalizada en Lima.
+      Creamos decoraciones hechas a medida para esa fecha importante,
+      con más de 33.000 personas que ya confían en nosotros.
+    </p>
+    <div class="hero-actions">
+      <a href="https://wa.me/51960876002?text=Hola%20GloboBYM%2C%20me%20gustar%C3%ADa%20cotizar%20una%20decoraci%C3%B3n%20para%20mi%20evento" class="btn-primary" target="_blank">
+        💬 Cotizar por WhatsApp
+      </a>
+      <a href="#galeria" class="btn-secondary">Ver galería →</a>
+      <a href="#" class="btn-cotizar" id="btn-abrir-form-hero">📋 Solicitar cotización</a>
+      <a href="#" class="btn-catalogo" id="btn-abrir-catalogo">📖 Ver catálogo</a>
+    </div>
+  </div>
+
+  <!-- Decoraciones de esta semana (carousel dinámico — lee assets/semana/index.json) -->
+  <aside class="semana-card" id="semanaCard" aria-label="Decoraciones de esta semana" hidden>
+    <div class="semana-header">Decoraciones de esta semana</div>
+    <div class="semana-sub">Lo más reciente</div>
+    <div class="semana-slider" id="semanaSlider">
+      <button type="button" class="semana-nav semana-prev" id="semanaPrev" aria-label="Anterior">‹</button>
+      <button type="button" class="semana-nav semana-next" id="semanaNext" aria-label="Siguiente">›</button>
+    </div>
+    <div class="semana-dots" id="semanaDots"></div>
+  </aside>
+
+</section>
+
+<!-- STATS STRIP -->
+<div class="stats-strip">
+  <div class="reveal">
+    <span class="stat-item-num">33K</span>
+    <div class="stat-item-label">Seguidores en Instagram</div>
+  </div>
+  <div class="reveal reveal-d1">
+    <span class="stat-item-num">+5</span>
+    <div class="stat-item-label">Años de experiencia</div>
+  </div>
+  <div class="reveal reveal-d2">
+    <span class="stat-item-num">+500</span>
+    <div class="stat-item-label">Eventos decorados</div>
+  </div>
+  <div class="reveal reveal-d3">
+    <span class="stat-item-num">100%</span>
+    <div class="stat-item-label">Hecho a medida</div>
+  </div>
+</div>
+
+<!-- SERVICES -->
+<section id="servicios">
+  <div class="services-header">
+    <div class="section-tag">Nuestros servicios</div>
+    <h2 class="section-title">Todo lo que necesitas para<br/><em>tu evento perfecto</em></h2>
+    <p class="section-sub">Diseñamos cada decoración desde cero, adaptada a tus colores, temática y presupuesto.</p>
+  </div>
+  <div class="services-grid">
+
+    <div class="service-card reveal">
+      <div class="service-icon">🎂</div>
+      <h3>Cumpleaños Infantil</h3>
+      <p>Decoraciones temáticas llenas de magia para que el cumpleaños de tu peque sea un recuerdo inolvidable.</p>
+      <div class="service-tags"><span class="tag">Temático</span><span class="tag">Arco de globos</span><span class="tag">Personajes</span><span class="tag">Mesa dulce</span></div>
+    </div>
+
+    <div class="service-card reveal reveal-d1">
+      <div class="service-icon">🥂</div>
+      <h3>Cumpleaños Adulto</h3>
+      <p>Decoraciones elegantes y sofisticadas para celebrar tu cumpleaños con el estilo que mereces.</p>
+      <div class="service-tags"><span class="tag">Elegante</span><span class="tag">Backdrop</span><span class="tag">Dorado & Negro</span><span class="tag">Personalizado</span></div>
+    </div>
+
+    <div class="service-card reveal reveal-d2">
+      <div class="service-icon">👶</div>
+      <h3>Baby Shower</h3>
+      <p>Celebra la llegada de tu bebé con una decoración llena de ternura y elegancia. Creamos ambientes únicos para este momento especial.</p>
+      <div class="service-tags"><span class="tag">Niño / Niña</span><span class="tag">Pastel & Dorado</span><span class="tag">Globos orgánicos</span><span class="tag">Personalizado</span></div>
+    </div>
+
+    <div class="service-card reveal reveal-d3">
+      <div class="service-icon">🏢</div>
+      <h3>Corporativos</h3>
+      <p>Decoraciones corporativas sofisticadas para lanzamientos, aniversarios, inauguraciones y celebraciones de empresa.</p>
+      <div class="service-tags"><span class="tag">Branding</span><span class="tag">Corporativo</span><span class="tag">Lanzamientos</span><span class="tag">Aniversarios</span></div>
+    </div>
+
+    <div class="service-card reveal reveal-d4">
+      <div class="service-icon">🎓</div>
+      <h3>Graduaciones</h3>
+      <p>Celebra el gran logro académico con una decoración que esté a la altura del esfuerzo. Elegante, emotiva y memorable.</p>
+      <div class="service-tags"><span class="tag">Universitaria</span><span class="tag">Escolar</span><span class="tag">Toga & Birrete</span><span class="tag">Temático</span></div>
+    </div>
+
+    <div class="service-card reveal reveal-d5">
+      <div class="service-icon">🕊️</div>
+      <h3>Bautizos</h3>
+      <p>Decora este momento sagrado con detalles tiernos y delicados que harán del bautizo un recuerdo eterno para toda la familia.</p>
+      <div class="service-tags"><span class="tag">Niño / Niña</span><span class="tag">Pastel</span><span class="tag">Floral</span><span class="tag">Elegante</span></div>
+    </div>
+
+    <div class="service-card reveal reveal-d6">
+      <div class="service-icon">🩷💙</div>
+      <h3>Revelación de Sexo</h3>
+      <p>El momento más esperado merece la mejor decoración. Creamos el ambiente perfecto para la gran revelación con globos sorpresa.</p>
+      <div class="service-tags"><span class="tag">Gender Reveal</span><span class="tag">Niño / Niña</span><span class="tag">Globo sorpresa</span><span class="tag">Confeti</span></div>
+    </div>
+
+    <div class="service-card reveal reveal-d7">
+      <div class="service-icon">💍</div>
+      <h3>Propuestas de Matrimonio</h3>
+      <p>Convierte el "¿te casas conmigo?" en un instante mágico e irrepetible. Decoraciones románticas para la propuesta perfecta.</p>
+      <div class="service-tags"><span class="tag">Romántico</span><span class="tag">Sorpresa</span><span class="tag">Pétalos & Globos</span><span class="tag">Personalizado</span></div>
+    </div>
+
+  </div>
+</section>
+
+<!-- GALLERY -->
+<section id="galeria">
+  <div class="gallery-header">
+    <div class="section-tag">Galería de trabajos</div>
+    <h2 class="section-title">Nuestras creaciones<br/>hablan por sí solas</h2>
+    <p class="section-sub">Cada decoración es única, hecha con amor y dedicación para hacer realidad tu visión. Haz clic para ver más fotos de cada categoría.</p>
+  </div>
+
+  <div class="gallery-grid">
+
+    <div class="gallery-item reveal" data-slideshow>
+      <span class="gallery-cat-badge">🎂 Cumpleaños Infantil</span>
+      <img src="assets/cumpleanos-infantil/cumple1.jpg" class="slide active" alt="Cumpleaños Infantil" loading="lazy" />
+      <img src="assets/cumpleanos-infantil/cumple4.jpg" class="slide" alt="Cumpleaños Infantil" loading="lazy" />
+      <img src="assets/cumpleanos-infantil/cumple5.jpg" class="slide" alt="Cumpleaños Infantil" loading="lazy" />
+      <div class="gallery-item-overlay"></div>
+      <div class="gallery-expand" title="Ver foto completa">
+        <svg viewBox="0 0 24 24"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg>
+      </div>
+      <div class="slide-dots"></div>
+      <div class="slide-hint">Clic para ver más →</div>
+    </div>
+
+    <div class="gallery-item reveal reveal-d1" data-slideshow>
+      <span class="gallery-cat-badge">🥂 Cumpleaños Adulto</span>
+      <img src="assets/cumpleanos-adulto/cumple2.jpg" class="slide active" alt="Cumpleaños Adulto" loading="lazy" />
+      <img src="assets/cumpleanos-adulto/cumple3.jpg" class="slide" alt="Cumpleaños Adulto" loading="lazy" />
+      <img src="assets/cumpleanos-adulto/cumple6.jpg" class="slide" alt="Cumpleaños Adulto" loading="lazy" />
+      <div class="gallery-item-overlay"></div>
+      <div class="gallery-expand" title="Ver foto completa">
+        <svg viewBox="0 0 24 24"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg>
+      </div>
+      <div class="slide-dots"></div>
+      <div class="slide-hint">Clic para ver más →</div>
+    </div>
+
+    <div class="gallery-item reveal reveal-d2" data-slideshow>
+      <span class="gallery-cat-badge">👶 Baby Shower</span>
+      <img src="assets/baby-shower/foto2.jpg" class="slide active" alt="Baby Shower" loading="lazy" />
+      <img src="assets/baby-shower/baby2.jpg" class="slide" alt="Baby Shower" loading="lazy" />
+      <img src="assets/baby-shower/baby3.jpg" class="slide" alt="Baby Shower" loading="lazy" />
+      <img src="assets/baby-shower/baby4.jpg" class="slide" alt="Baby Shower" loading="lazy" />
+      <img src="assets/baby-shower/baby5.jpg" class="slide" alt="Baby Shower" loading="lazy" />
+      <div class="gallery-item-overlay"></div>
+      <div class="gallery-expand" title="Ver foto completa">
+        <svg viewBox="0 0 24 24"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg>
+      </div>
+      <div class="slide-dots"></div>
+      <div class="slide-hint">Clic para ver más →</div>
+    </div>
+
+    <div class="gallery-item reveal reveal-d3" data-slideshow>
+      <span class="gallery-cat-badge">💍 Propuesta de matrimonio</span>
+      <img src="assets/propuesta-de-matrimonio/foto3.jpg" class="slide active" alt="Propuesta" loading="lazy" />
+      <img src="assets/propuesta-de-matrimonio/propu2.jpg" class="slide" alt="Propuesta" loading="lazy" />
+      <img src="assets/propuesta-de-matrimonio/propu3.jpg" class="slide" alt="Propuesta" loading="lazy" />
+      <img src="assets/propuesta-de-matrimonio/propu4.jpg" class="slide" alt="Propuesta" loading="lazy" />
+      <div class="gallery-item-overlay"></div>
+      <div class="gallery-expand" title="Ver foto completa">
+        <svg viewBox="0 0 24 24"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg>
+      </div>
+      <div class="slide-dots"></div>
+      <div class="slide-hint">Clic para ver más →</div>
+    </div>
+
+    <div class="gallery-item reveal reveal-d4" data-slideshow>
+      <span class="gallery-cat-badge">🎓 Graduaciones</span>
+      <img src="assets/graduaciones/graduacion1.jpg" class="slide active" alt="Graduaciones" loading="lazy" />
+      <img src="assets/graduaciones/graduacion2.jpg" class="slide" alt="Graduaciones" loading="lazy" />
+      <img src="assets/graduaciones/graduacion3.jpg" class="slide" alt="Graduaciones" loading="lazy" />
+      <img src="assets/graduaciones/graduacion4.jpg" class="slide" alt="Graduaciones" loading="lazy" />
+      <div class="gallery-item-overlay"></div>
+      <div class="gallery-expand" title="Ver foto completa">
+        <svg viewBox="0 0 24 24"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg>
+      </div>
+      <div class="slide-dots"></div>
+      <div class="slide-hint">Clic para ver más →</div>
+    </div>
+
+    <div class="gallery-item reveal reveal-d5" data-slideshow>
+      <span class="gallery-cat-badge">🕊️ Bautizos</span>
+      <img src="assets/bautizos/bautizo1.jpg" class="slide active" alt="Bautizos" loading="lazy" />
+      <img src="assets/bautizos/bautizo2.jpg" class="slide" alt="Bautizos" loading="lazy" />
+      <img src="assets/bautizos/bautizo3.jpg" class="slide" alt="Bautizos" loading="lazy" />
+      <img src="assets/bautizos/bautizo4.jpg" class="slide" alt="Bautizos" loading="lazy" />
+      <div class="gallery-item-overlay"></div>
+      <div class="gallery-expand" title="Ver foto completa">
+        <svg viewBox="0 0 24 24"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg>
+      </div>
+      <div class="slide-dots"></div>
+      <div class="slide-hint">Clic para ver más →</div>
+    </div>
+
+    <div class="gallery-item reveal reveal-d6" data-slideshow>
+      <span class="gallery-cat-badge">🩷💙 Revelación de sexo</span>
+      <img src="assets/revelacion-de-sexo/reve1.jpg" class="slide active" alt="Revelación de sexo" loading="lazy" />
+      <img src="assets/revelacion-de-sexo/reve2.jpg" class="slide" alt="Revelación de sexo" loading="lazy" />
+      <img src="assets/revelacion-de-sexo/reve3.jpg" class="slide" alt="Revelación de sexo" loading="lazy" />
+      <div class="gallery-item-overlay"></div>
+      <div class="gallery-expand" title="Ver foto completa">
+        <svg viewBox="0 0 24 24"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg>
+      </div>
+      <div class="slide-dots"></div>
+      <div class="slide-hint">Clic para ver más →</div>
+    </div>
+
+    <div class="gallery-item coming-soon reveal reveal-d7">
+      <span class="gallery-cat-badge">🏢 Corporativo</span>
+      <div class="gallery-item-overlay"></div>
+      <div class="slide-dots"></div>
+      <div class="slide-hint">Clic para ver más →</div>
+    </div>
+
+  </div>
+
+  </section>
+
+<!-- LIGHTBOX -->
+<div class="lightbox" id="lightbox" role="dialog" aria-modal="true">
+  <button class="lightbox-close" id="lightboxClose" aria-label="Cerrar">✕</button>
+  <button class="lightbox-nav lightbox-prev" id="lightboxPrev" aria-label="Anterior">‹</button>
+  <img src="" alt="" class="lightbox-img" id="lightboxImg" />
+  <button class="lightbox-nav lightbox-next" id="lightboxNext" aria-label="Siguiente">›</button>
+  <div class="lightbox-caption" id="lightboxCaption"></div>
+</div>
+
+<!-- CATÁLOGO MODAL -->
+<div class="catalog-overlay" id="catalogOverlay" role="dialog" aria-modal="true" aria-label="Catálogo de packs">
+  <div class="catalog-topbar">
+    <div class="catalog-title">📖 Nuestro catálogo</div>
+    <div class="catalog-actions">
+      <button type="button" class="catalog-goto-galeria" id="catalogGotoGaleria">🖼️ Ir a la galería</button>
+      <button type="button" class="catalog-close" id="catalogClose" aria-label="Cerrar catálogo">✕</button>
+    </div>
+  </div>
+  <div class="catalog-grid">
+    <img src="assets/catalogo/Pack1.jpeg" alt="Pack 1" loading="lazy" />
+    <img src="assets/catalogo/Pack2.jpeg" alt="Pack 2" loading="lazy" />
+    <img src="assets/catalogo/Pack3.jpeg" alt="Pack 3" loading="lazy" />
+    <img src="assets/catalogo/Pack4.jpeg" alt="Pack 4" loading="lazy" />
+    <img src="assets/catalogo/Pack5.jpeg" alt="Pack 5" loading="lazy" />
+    <img src="assets/catalogo/Pack-economico.jpeg" alt="Pack Económico" loading="lazy" />
+  </div>
+</div>
+
+<!-- TESTIMONIALS -->
+<section id="testimonios">
+  <div class="testimonios-header">
+    <h2 class="section-title">Más de 33.000 personas<br/>nos <em>eligen con confianza</em></h2>
+  </div>
+</section>
+
+<!-- WHY US -->
+<section id="nosotros">
+  <div class="why-grid">
+    <div>
+      <div class="section-tag">¿Por qué elegirnos?</div>
+      <h2 class="section-title">Profesionalismo y<br/>pasión en cada<br/><em>detalle</em></h2>
+      <p class="section-sub" style="margin-bottom:40px">Más de 5 años de experiencia nos respaldan. Cada proyecto lo tratamos como si fuera el nuestro.</p>
+      <div class="why-features">
+        <div class="feature reveal">
+          <div class="feature-icon">🎯</div>
+          <div><h4>Diseño personalizado</h4><p>Cada decoración se diseña desde cero según tu temática, colores y presupuesto. Nada genérico.</p></div>
+        </div>
+        <div class="feature reveal reveal-d1">
+          <div class="feature-icon">⚡</div>
+          <div><h4>Montaje puntual</h4><p>Llegamos a tiempo y dejamos todo listo antes de que lleguen tus invitados.</p></div>
+        </div>
+        <div class="feature reveal reveal-d2">
+          <div class="feature-icon">💎</div>
+          <div><h4>Materiales premium</h4><p>Usamos globos y materiales de alta calidad que lucen perfectos en fotos y duran toda la fiesta.</p></div>
+        </div>
+        <div class="feature reveal reveal-d3">
+          <div class="feature-icon">📸</div>
+          <div><h4>Fotos que enamoran</h4><p>Nuestras decoraciones están pensadas para que tus fotos y videos queden espectaculares.</p></div>
+        </div>
+      </div>
+    </div>
+    <div class="why-visual reveal reveal-d1">
+      <div class="big-num">+5</div>
+      <div class="big-label">años decorando eventos en Lima</div>
+      <div class="why-ratings"><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span></div>
+      <div class="why-sub">+200 eventos decorados · 33K seguidores</div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contacto">
+  <div class="section-tag" style="color:rgba(255,255,255,.45)">Contáctanos</div>
+  <h2 class="section-title">¿Lista para tu evento<br/>de <em style="color:var(--gold-light)">ensueño?</em></h2>
+  <p class="section-sub">Cuéntanos tu idea y te enviamos una propuesta sin compromiso. Respondemos en menos de 2 horas.</p>
+
+  <div class="contact-cards">
+    <a href="https://wa.me/51960876002" target="_blank" class="contact-card">
+      <div class="contact-card-icon">📱</div>
+      <div><div class="contact-card-label">WhatsApp</div><div class="contact-card-value">+51 960 876 002</div></div>
+    </a>
+    <a href="https://www.tiktok.com/@globobym_peru" target="_blank" class="contact-card">
+      <div class="contact-card-icon">
+        <svg viewBox="0 0 24 24" width="26" height="26" fill="currentColor" aria-hidden="true">
+          <path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5.8 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1.84-.1z"/>
+        </svg>
+      </div>
+      <div><div class="contact-card-label">TikTok</div><div class="contact-card-value">@globobym_peru</div></div>
+    </a>
+    <a href="https://www.instagram.com/globobym_peru/" target="_blank" class="contact-card">
+      <div class="contact-card-icon">
+        <svg viewBox="0 0 24 24" width="26" height="26" fill="currentColor" aria-hidden="true">
+          <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 1 0 0 12.324 6.162 6.162 0 0 0 0-12.324zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm6.406-11.845a1.44 1.44 0 1 0 0 2.881 1.44 1.44 0 0 0 0-2.881z"/>
+        </svg>
+      </div>
+      <div><div class="contact-card-label">Instagram</div><div class="contact-card-value">@globobym_peru</div></div>
+    </a>
+    <a href="https://www.facebook.com/BYMARIAHA" target="_blank" class="contact-card">
+      <div class="contact-card-icon">
+        <svg viewBox="0 0 24 24" width="26" height="26" fill="currentColor" aria-hidden="true">
+          <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+        </svg>
+      </div>
+      <div><div class="contact-card-label">Facebook</div><div class="contact-card-value">BYMARIAHA</div></div>
+    </a>
+  </div>
+
+  <button class="btn-abrir-form-contacto" id="btn-abrir-form-contacto">
+    📋 Solicitar cotización online
+  </button>
+
+  <div class="contact-divider">o escríbenos directamente</div>
+
+  <a href="https://wa.me/51960876002?text=Hola%20GloboBYM%2C%20me%20gustar%C3%ADa%20cotizar%20una%20decoraci%C3%B3n%20para%20mi%20evento.%20%C2%BFPodr%C3%ADan%20ayudarme%3F" target="_blank" class="cta-whatsapp">
+    <svg viewBox="0 0 24 24" fill="white" width="22" height="22"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+    Cotizar por WhatsApp ahora
+  </a>
+</section>
+
+<!-- FORM MODAL -->
+<div class="form-modal-overlay" id="formModal" role="dialog" aria-modal="true" aria-labelledby="formModalTitle">
+  <div class="form-modal">
+    <button class="form-modal-close" id="formModalClose" aria-label="Cerrar">✕</button>
+    <div class="form-modal-title" id="formModalTitle">Solicitar cotización</div>
+    <p class="form-modal-sub">Cuéntanos tu idea y te enviamos una propuesta sin compromiso. Respondemos en menos de 2 horas.</p>
+    <!-- Honeypot anti-bots: invisible para humanos; si viene lleno, es un bot -->
+    <input type="text" id="f-website" name="website" tabindex="-1" autocomplete="off" style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0" aria-hidden="true" />
+    <div class="form-row">
+      <div class="form-field">
+        <label>Tu nombre</label>
+        <input type="text" id="f-nombre" placeholder="María García" required />
+      </div>
+      <div class="form-field">
+        <label>Teléfono / WhatsApp</label>
+        <input type="tel" id="f-telefono" placeholder="+51 987 654 321" required />
+      </div>
+      <div class="form-field">
+        <label>Tipo de evento</label>
+        <select id="f-tipo" required>
+          <option value="" disabled selected>Selecciona...</option>
+          <option>Cumpleaños Infantil</option>
+          <option>Cumpleaños Adulto</option>
+          <option>Baby Shower</option>
+          <option>Corporativo</option>
+          <option>Graduación</option>
+          <option>Bautizo</option>
+          <option>Revelación de Sexo</option>
+          <option>Propuesta de Matrimonio</option>
+          <option>Otro</option>
+        </select>
+      </div>
+      <div class="form-field">
+        <label>Pack</label>
+        <select id="f-pack" required>
+          <option value="Personalizado" selected>Personalizado</option>
+          <option value="Pack 1 - S/ 1,999">Pack 1 - S/ 1,999</option>
+          <option value="Pack 2 - S/ 1,399">Pack 2 - S/ 1,399</option>
+          <option value="Pack 3 - S/ 1,099">Pack 3 - S/ 1,099</option>
+          <option value="Pack 4 - S/ 799">Pack 4 - S/ 799</option>
+          <option value="Pack 5 - S/ 650">Pack 5 - S/ 650</option>
+          <option value="Pack Económico">Pack Económico</option>
+        </select>
+      </div>
+      <div class="form-field">
+        <label>Fecha del evento</label>
+        <input type="date" id="f-fecha" required />
+      </div>
+      <div class="form-field">
+        <label>Distrito</label>
+        <input type="text" id="f-distrito" list="distritos-lima" placeholder="Empieza a escribir..." autocomplete="off" required />
+        <datalist id="distritos-lima">
+          <option value="Ancón"></option>
+          <option value="Ate"></option>
+          <option value="Barranco"></option>
+          <option value="Breña"></option>
+          <option value="Carabayllo"></option>
+          <option value="Cercado de Lima"></option>
+          <option value="Chaclacayo"></option>
+          <option value="Chorrillos"></option>
+          <option value="Cieneguilla"></option>
+          <option value="Comas"></option>
+          <option value="El Agustino"></option>
+          <option value="Independencia"></option>
+          <option value="Jesús María"></option>
+          <option value="La Molina"></option>
+          <option value="La Victoria"></option>
+          <option value="Lince"></option>
+          <option value="Los Olivos"></option>
+          <option value="Lurigancho-Chosica"></option>
+          <option value="Lurín"></option>
+          <option value="Magdalena del Mar"></option>
+          <option value="Miraflores"></option>
+          <option value="Pachacámac"></option>
+          <option value="Pucusana"></option>
+          <option value="Pueblo Libre"></option>
+          <option value="Puente Piedra"></option>
+          <option value="Punta Hermosa"></option>
+          <option value="Punta Negra"></option>
+          <option value="Rímac"></option>
+          <option value="San Bartolo"></option>
+          <option value="San Borja"></option>
+          <option value="San Isidro"></option>
+          <option value="San Juan de Lurigancho"></option>
+          <option value="San Juan de Miraflores"></option>
+          <option value="San Luis"></option>
+          <option value="San Martín de Porres"></option>
+          <option value="San Miguel"></option>
+          <option value="Santa Anita"></option>
+          <option value="Santa María del Mar"></option>
+          <option value="Santa Rosa"></option>
+          <option value="Santiago de Surco"></option>
+          <option value="Surquillo"></option>
+          <option value="Villa El Salvador"></option>
+          <option value="Villa María del Triunfo"></option>
+          <option value="Callao"></option>
+          <option value="Bellavista"></option>
+          <option value="Carmen de la Legua"></option>
+          <option value="La Perla"></option>
+          <option value="La Punta"></option>
+          <option value="Ventanilla"></option>
+          <option value="Mi Perú"></option>
+        </datalist>
+      </div>
+      <div class="form-field full">
+        <label>Cuéntanos tu idea</label>
+        <textarea id="f-mensaje" placeholder="¿Qué temática tienes en mente? ¿Colores preferidos? ¿Número de invitados? Cuéntanos todo..."></textarea>
+      </div>
+    </div>
+    <button class="btn-form" onclick="enviarFormulario()">
+      📨 Enviar consulta
+    </button>
+  </div>
+</div>
+
+
+  <Footer />
+
+  <!-- Firebase compat SDK + JS principal -->
+  <script is:inline src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+  <script is:inline src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+  <script is:inline src="/js/main.js"></script>
+</BaseLayout>
