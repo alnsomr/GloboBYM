@@ -994,12 +994,36 @@
     const next = TD_NEXT[o.estado];
     const back = TD_BACK[o.estado];
     let html = '<div class="card-status-actions">';
+    html += `<button class="btn-delete" title="Eliminar definitivamente (requiere código)" onclick="deleteTiendaOrder('${o.id}')">🗑</button>`;
     if (back) html += `<button class="btn-back" title="Volver a ${TD_LABELS[back]}" onclick="setTiendaStatus('${o.id}','${back}')">↩</button>`;
     if (o.estado === 'nuevo') html += `<button class="btn-sincompra" onclick="setTiendaStatus('${o.id}','cancelado')">✕ Cancelar</button>`;
     if (next) html += `<button class="btn-venta" onclick="setTiendaStatus('${o.id}','${next}')">${TD_LABELS[next]}</button>`;
     html += '</div>';
     return html;
   }
+
+  // Eliminación DEFINITIVA — pide el código 'PRUEBA' para evitar borrados accidentales
+  async function deleteTiendaOrder(id) {
+    const o = tiendaOrders.find(x => x.id === id);
+    const quien = o?.cliente?.nombre ? ` de "${o.cliente.nombre}"` : '';
+    const code = prompt(
+      `⚠️ ELIMINACIÓN DEFINITIVA de la orden${quien}.\n\n` +
+      `Esta acción NO se puede deshacer. La orden desaparecerá del historial.\n\n` +
+      `Escribe PRUEBA para confirmar:`
+    );
+    if (code === null) return; // canceló
+    if (code.trim().toUpperCase() !== 'PRUEBA') {
+      alert('Código incorrecto. No se eliminó nada.');
+      return;
+    }
+    try {
+      await db.collection('ordenes_tienda').doc(id).delete();
+    } catch (e) {
+      console.error('Error eliminando orden:', e);
+      alert('No se pudo eliminar la orden. Revisa la conexión.');
+    }
+  }
+  window.deleteTiendaOrder = deleteTiendaOrder;
 
   function tiendaCardHTML(o) {
     const t   = o.createdAt?.toDate ? o.createdAt.toDate() : (o.createdAt?.seconds ? new Date(o.createdAt.seconds * 1000) : null);

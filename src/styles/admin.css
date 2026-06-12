@@ -121,6 +121,8 @@
     .card-item-det { color: var(--muted); font-size: .74rem; }
     .card-total-row { display: flex; justify-content: space-between; padding: 10px 16px; background: var(--bg); border-top: 1px solid var(--border); font-weight: 700; font-size: .9rem; }
     .nav-badge { display: inline-flex; align-items: center; justify-content: center; background: var(--nuevo); color: white; font-size: .62rem; font-weight: 700; min-width: 16px; height: 16px; border-radius: 50px; padding: 0 4px; margin-left: 6px; vertical-align: 2px; }
+    .btn-delete { display: inline-flex; align-items: center; background: transparent; border: 1.5px solid var(--border); color: var(--muted); padding: 6px 10px; border-radius: 8px; font-family: inherit; font-size: .8rem; cursor: pointer; transition: all .2s; }
+    .btn-delete:hover { border-color: #b91c1c; color: #b91c1c; background: #fef2f2; }
     .card-time { font-size: .7rem; color: var(--muted); white-space: nowrap; }
 
     .card-body { padding: 0 16px 14px; }
