@@ -46,11 +46,29 @@ de negocio: **decoración de eventos a domicilio** (cotizaciones) y próximament
 - Testimonios eliminados hasta tener reviews reales (los anteriores eran inventados).
 - Stats hardcodeados (33K seguidores, 789 posts): actualizar a mano cuando cambien mucho.
 
+## Tienda online (Fase 2 — construida, con datos demo)
+
+- Catálogo: `src/data/productos.json` (fuente de verdad, ver `src/data/README.md`).
+  Editar JSON + push = catálogo actualizado. NO hay admin de productos.
+- Páginas: `/tienda/` (grid + filtro por categoría), `/tienda/<id>/` (detalle con
+  color/dedicatoria/cantidad), `/checkout/` (envío + guardado en Firestore).
+- Carrito: localStorage (`gb_cart_v1`), drawer compartido (`CartDrawer.astro` + `public/js/tienda.js`).
+- Órdenes → colección `ordenes_tienda` (estado inicial `nuevo`).
+  Flujo admin: nuevo → preparando → enviado → entregado (+ cancelado). Sección "🛍 Tienda" del panel.
+- Pago: por ahora coordinado por WhatsApp (Fase 3 = Culqi).
+- Los 4 productos actuales son DEMO con fotos prestadas — reemplazar cuando el cliente pase el catálogo real.
+
 ## Pendiente / Roadmap
 
-- Tienda de globos personalizados (`tienda.astro`): catálogo Firestore + carrito localStorage +
-  checkout con Culqi vía Netlify Functions (cliente ya tiene cuenta Culqi, falta activar pagos online
-  y obtener API keys). Esperando catálogo de productos del cliente.
-- Conectar Netlify a GitHub (hoy el deploy es drag & drop manual).
-- Páginas legales (T&C, privacidad, devoluciones) — obligatorias antes de vender online.
-- Aplicar `firestore.rules` en la consola (si no se ha hecho).
+- Reemplazar productos demo por catálogo real del cliente (fotos + precios + categorías).
+- Fase 3 — Pago online Culqi: API routes de Astro + adapter (portable Netlify/Vercel),
+  validación de precios server-side contra productos.json, webhook, emails transaccionales.
+  Cliente ya tiene cuenta Culqi (POS); falta activar pagos online y obtener API keys.
+- Decisión de hosting pendiente: usuario evalúa migrar de Netlify a Vercel Pro (consolidar
+  proyectos). La arquitectura es portable: URLs formato directorio, sin features propietarias.
+  Si se va a Vercel: crear vercel.json (headers + redirect /admin.html→/admin/) y usar adapter
+  @astrojs/vercel en Fase 3.
+- Conectar el hosting elegido a GitHub (obligatorio a más tardar en Fase 3 por las functions).
+- Páginas legales (T&C, privacidad, devoluciones) — obligatorias antes de cobrar online.
+- Aplicar `firestore.rules` en la consola Firebase (incluye reglas de `ordenes_tienda`).
+- Zonas/costo de envío y stock: por confirmar con el cliente (hoy: "se coordina por WhatsApp").

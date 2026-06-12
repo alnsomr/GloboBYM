@@ -1,0 +1,82 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Nav from '../components/Nav.astro';
+import Footer from '../components/Footer.astro';
+import CartDrawer from '../components/CartDrawer.astro';
+import '../styles/global.css';
+import '../styles/tienda.css';
+import data from '../data/productos.json';
+
+const { categorias, productos } = data;
+// Destacados primero, agotados al final
+const ordenados = [...productos].sort((a, b) =>
+  Number(b.disponible) - Number(a.disponible) || Number(b.destacado) - Number(a.destacado)
+);
+const title = 'Tienda de Globos Personalizados | GloboBYM Lima';
+const description = 'Compra globos personalizados, box sorpresa y ramos de globos con delivery en Lima. Personaliza color y dedicatoria. GloboBYM, boutique de globería.';
+---
+<BaseLayout title={title} description={description}>
+  <Fragment slot="head">
+    <link rel="canonical" href="https://globobym.netlify.app/tienda/" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content="https://globobym.netlify.app/assets/foto1.jpg" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  </Fragment>
+
+  <Nav showCart={true} />
+
+  <main class="tienda-main">
+    <div class="tienda-header">
+      <div class="section-tag">Tienda GloboBYM</div>
+      <h2 class="section-title">Globos personalizados<br/><em>con delivery en Lima</em></h2>
+      <p class="section-sub" style="margin: 0 auto;">Elige tu producto, personalízalo y recíbelo en la puerta de tu casa.</p>
+    </div>
+
+    <div class="cat-filter" id="catFilter">
+      <button class="active" data-cat="">Todos</button>
+      {categorias.map((cat) => <button data-cat={cat}>{cat}</button>)}
+    </div>
+
+    <div class="productos-grid" id="productosGrid">
+      {ordenados.map((p) => (
+        <a href={`/tienda/${p.id}/`} class:list={['producto-card', { agotado: !p.disponible }]} data-cat={p.categoria}>
+          <div class="producto-img">
+            {p.destacado && p.disponible && <span class="producto-badge">★ Destacado</span>}
+            {!p.disponible && <span class="producto-badge agotado-badge">Agotado</span>}
+            {p.imagenes.length > 0
+              ? <img src={`/assets/productos/${p.imagenes[0]}`} alt={p.nombre} loading="lazy" />
+              : <div class="producto-img-placeholder">🎈</div>
+            }
+          </div>
+          <div class="producto-info">
+            <span class="producto-cat">{p.categoria}</span>
+            <span class="producto-nombre">{p.nombre}</span>
+            <span class="producto-precio">S/ {p.precio.toFixed(2)}</span>
+          </div>
+        </a>
+      ))}
+    </div>
+  </main>
+
+  <CartDrawer />
+  <Footer />
+
+  <script is:inline src="/js/tienda.js"></script>
+  <script is:inline>
+    // Filtro de categorías (client-side, todo ya está en el DOM)
+    document.querySelectorAll('#catFilter button').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('#catFilter button').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        const cat = btn.dataset.cat;
+        document.querySelectorAll('#productosGrid .producto-card').forEach(card => {
+          card.style.display = (!cat || card.dataset.cat === cat) ? '' : 'none';
+        });
+      });
+    });
+  </script>
+</BaseLayout>

@@ -62,6 +62,53 @@ service cloud.firestore {
       allow read, update, delete: if request.auth != null;
     }
 
+    // ── ÓRDENES DE LA TIENDA ONLINE ──
+    match /ordenes_tienda/{id} {
+
+      allow create: if
+        request.resource.data.keys().hasOnly([
+          'items', 'total', 'cliente', 'envio', 'notas', 'estado', 'createdAt'
+        ]) &&
+        request.resource.data.keys().hasAll([
+          'items', 'total', 'cliente', 'envio', 'estado', 'createdAt'
+        ]) &&
+        // Items: lista no vacía y acotada
+        request.resource.data.items is list &&
+        request.resource.data.items.size() >= 1 &&
+        request.resource.data.items.size() <= 30 &&
+        // Total: número en rango razonable
+        request.resource.data.total is number &&
+        request.resource.data.total > 0 &&
+        request.resource.data.total <= 50000 &&
+        // Cliente
+        request.resource.data.cliente is map &&
+        request.resource.data.cliente.nombre is string &&
+        request.resource.data.cliente.nombre.size() >= 2 &&
+        request.resource.data.cliente.nombre.size() <= 100 &&
+        request.resource.data.cliente.telefono is string &&
+        request.resource.data.cliente.telefono.size() >= 6 &&
+        request.resource.data.cliente.telefono.size() <= 25 &&
+        // Envío
+        request.resource.data.envio is map &&
+        request.resource.data.envio.direccion is string &&
+        request.resource.data.envio.direccion.size() >= 5 &&
+        request.resource.data.envio.direccion.size() <= 200 &&
+        request.resource.data.envio.distrito is string &&
+        request.resource.data.envio.distrito.size() <= 60 &&
+        request.resource.data.envio.fecha is string &&
+        request.resource.data.envio.fecha.size() <= 20 &&
+        request.resource.data.envio.rango is string &&
+        request.resource.data.envio.rango.size() <= 40 &&
+        // Notas opcionales
+        (!('notas' in request.resource.data) ||
+          (request.resource.data.notas is string && request.resource.data.notas.size() <= 500)) &&
+        // Estado inicial forzado y timestamp del servidor
+        request.resource.data.estado == 'nuevo' &&
+        request.resource.data.createdAt == request.time;
+
+      allow read, update, delete: if request.auth != null;
+    }
+
     // ── MÉTRICAS (contadores del sitio público) ──
     // El sitio incrementa visitas/orígenes/tiempo sin login,
     // pero solo sobre el documento 'general' ya existente.

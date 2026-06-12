@@ -1,0 +1,166 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Nav from '../../components/Nav.astro';
+import Footer from '../../components/Footer.astro';
+import CartDrawer from '../../components/CartDrawer.astro';
+import '../../styles/global.css';
+import '../../styles/tienda.css';
+import data from '../../data/productos.json';
+
+export function getStaticPaths() {
+  return data.productos.map((p) => ({ params: { id: p.id }, props: { p } }));
+}
+
+const { p } = Astro.props;
+const title = `${p.nombre} | Tienda GloboBYM`;
+const imgPrincipal = p.imagenes.length > 0 ? `/assets/productos/${p.imagenes[0]}` : null;
+const jsonLd = JSON.stringify({
+  '@context': 'https://schema.org',
+  '@type': 'Product',
+  name: p.nombre,
+  description: p.descripcion,
+  image: imgPrincipal ? `https://globobym.netlify.app${imgPrincipal}` : undefined,
+  offers: {
+    '@type': 'Offer',
+    price: p.precio.toFixed(2),
+    priceCurrency: 'PEN',
+    availability: p.disponible ? 'https://schema.org/InStock' : 'https://schema.org/OutOfStock',
+  },
+});
+---
+<BaseLayout title={title} description={p.descripcion}>
+  <Fragment slot="head">
+    <link rel="canonical" href={`https://globobym.netlify.app/tienda/${p.id}/`} />
+    <meta property="og:type" content="product" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={p.descripcion} />
+    {imgPrincipal && <meta property="og:image" content={`https://globobym.netlify.app${imgPrincipal}`} />}
+    <script type="application/ld+json" is:inline set:html={jsonLd} />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  </Fragment>
+
+  <Nav showCart={true} />
+
+  <main class="tienda-main">
+    <a href="/tienda/" class="pd-volver">← Volver a la tienda</a>
+
+    <div class="producto-detalle">
+      <div class="pd-galeria">
+        <div class="pd-img-main" id="pdImgMain">
+          {imgPrincipal
+            ? <img src={imgPrincipal} alt={p.nombre} id="pdMainImg" />
+            : <div class="producto-img-placeholder" style="font-size:5rem; height:100%; display:flex; align-items:center; justify-content:center;">🎈</div>
+          }
+        </div>
+        {p.imagenes.length > 1 && (
+          <div class="pd-thumbs" id="pdThumbs">
+            {p.imagenes.map((img, i) => (
+              <img src={`/assets/productos/${img}`} alt={`${p.nombre} ${i + 1}`} class:list={[{ active: i === 0 }]} data-src={`/assets/productos/${img}`} />
+            ))}
+          </div>
+        )}
+      </div>
+
+      <div class="pd-info">
+        <div class="pd-cat">{p.categoria}</div>
+        <h1>{p.nombre}</h1>
+        <div class="pd-precio">S/ {p.precio.toFixed(2)}</div>
+        <p class="pd-desc">{p.descripcion}</p>
+
+        {p.colores.length > 0 && (
+          <div class="pd-opcion">
+            <label>Color</label>
+            <div class="pd-colores" id="pdColores">
+              {p.colores.map((c, i) => (
+                <button type="button" class:list={['pd-color-btn', { active: i === 0 }]} data-color={c}>{c}</button>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {p.personalizable && (
+          <div class="pd-opcion">
+            <label>Dedicatoria / detalle personalizado</label>
+            <textarea id="pdDedicatoria" maxlength="200" placeholder="Ej: Feliz cumpleaños Valeria — letras doradas"></textarea>
+          </div>
+        )}
+
+        <div class="pd-opcion">
+          <label>Cantidad</label>
+          <div class="pd-cantidad">
+            <button type="button" class="pd-qty-btn" id="pdQtyMinus">−</button>
+            <span class="pd-qty-num" id="pdQtyNum">1</span>
+            <button type="button" class="pd-qty-btn" id="pdQtyPlus">+</button>
+          </div>
+        </div>
+
+        <button
+          class="pd-agregar"
+          id="pdAgregar"
+          disabled={!p.disponible}
+          data-id={p.id}
+          data-nombre={p.nombre}
+          data-precio={p.precio}
+          data-imagen={imgPrincipal || ''}
+        >
+          {p.disponible ? '🛒 Agregar al carrito' : 'Agotado'}
+        </button>
+
+        <div class="pd-nota-envio">
+          🚚 Delivery en Lima Metropolitana y Callao. El costo de envío se coordina
+          según tu distrito al confirmar el pedido.
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <CartDrawer />
+  <Footer />
+
+  <script is:inline src="/js/tienda.js"></script>
+  <script is:inline>
+    // Galería: cambiar imagen principal al hacer clic en thumb
+    document.querySelectorAll('#pdThumbs img').forEach(t => {
+      t.addEventListener('click', () => {
+        document.querySelectorAll('#pdThumbs img').forEach(x => x.classList.remove('active'));
+        t.classList.add('active');
+        const main = document.getElementById('pdMainImg');
+        if (main) main.src = t.dataset.src;
+      });
+    });
+
+    // Selector de color
+    document.querySelectorAll('#pdColores .pd-color-btn').forEach(b => {
+      b.addEventListener('click', () => {
+        document.querySelectorAll('#pdColores .pd-color-btn').forEach(x => x.classList.remove('active'));
+        b.classList.add('active');
+      });
+    });
+
+    // Cantidad
+    let qty = 1;
+    const qtyNum = document.getElementById('pdQtyNum');
+    document.getElementById('pdQtyMinus').addEventListener('click', () => { if (qty > 1) qty--; qtyNum.textContent = qty; });
+    document.getElementById('pdQtyPlus').addEventListener('click', () => { if (qty < 20) qty++; qtyNum.textContent = qty; });
+
+    // Agregar al carrito (gbCart viene de /js/tienda.js)
+    document.getElementById('pdAgregar').addEventListener('click', e => {
+      const btn = e.currentTarget;
+      if (btn.disabled) return;
+      const colorBtn = document.querySelector('#pdColores .pd-color-btn.active');
+      const dedicatoriaEl = document.getElementById('pdDedicatoria');
+      gbCart.add({
+        id: btn.dataset.id,
+        nombre: btn.dataset.nombre,
+        precio: parseFloat(btn.dataset.precio),
+        imagen: btn.dataset.imagen,
+        color: colorBtn ? colorBtn.dataset.color : '',
+        dedicatoria: dedicatoriaEl ? dedicatoriaEl.value.trim() : '',
+        cantidad: qty,
+      });
+      gbCart.openDrawer();
+    });
+  </script>
+</BaseLayout>

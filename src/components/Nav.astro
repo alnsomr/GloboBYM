@@ -1,24 +1,54 @@
+---
+// Nav compartido entre landing y tienda.
+// En la landing los anchors son locales (#servicios); desde otras páginas
+// apuntan a /#servicios. showCart activa el botón del carrito (páginas de tienda).
+interface Props {
+  showCart?: boolean;
+}
+const { showCart = false } = Astro.props;
+const isHome = Astro.url.pathname === '/';
+const p = (anchor: string) => (isHome ? anchor : '/' + anchor);
+---
 <!-- NAV -->
 <nav>
-  <a href="#inicio" aria-label="GloboBYM"><img src="assets/logo.jpg" alt="GloboBYM" class="nav-logo-img" /></a>
+  <a href={isHome ? '#inicio' : '/'} aria-label="GloboBYM"><img src="/assets/logo.jpg" alt="GloboBYM" class="nav-logo-img" /></a>
   <ul>
-    <li><a href="#servicios">Servicios</a></li>
-    <li><a href="#galeria">Galería</a></li>
-    <li><a href="#testimonios">Testimonios</a></li>
-    <li><a href="#nosotros">Nosotros</a></li>
-    <li><a href="#" class="nav-cta" id="nav-cta-desktop">Cotizar ahora</a></li>
+    <li><a href={p('#servicios')}>Servicios</a></li>
+    <li><a href={p('#galeria')}>Galería</a></li>
+    <li><a href="/tienda/">Tienda</a></li>
+    <li><a href={p('#nosotros')}>Nosotros</a></li>
+    {isHome
+      ? <li><a href="#" class="nav-cta" id="nav-cta-desktop">Cotizar ahora</a></li>
+      : <li><a href="/#contacto" class="nav-cta">Cotizar ahora</a></li>
+    }
+    {showCart && (
+      <li>
+        <button class="nav-cart-btn" id="navCartBtn" aria-label="Ver carrito">
+          🛒<span class="nav-cart-count" id="navCartCount" hidden>0</span>
+        </button>
+      </li>
+    )}
   </ul>
-  <button class="nav-hamburger" id="hamburger" aria-label="Abrir menú">
-    <span></span><span></span><span></span>
-  </button>
+  <div class="nav-right-mobile">
+    {showCart && (
+      <button class="nav-cart-btn nav-cart-btn-mobile" id="navCartBtnMobile" aria-label="Ver carrito">
+        🛒<span class="nav-cart-count" id="navCartCountMobile" hidden>0</span>
+      </button>
+    )}
+    <button class="nav-hamburger" id="hamburger" aria-label="Abrir menú">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
 </nav>
 
 <!-- MENÚ MÓVIL -->
 <div class="nav-mobile-menu" id="mobileMenu">
-  <a href="#servicios">Servicios</a>
-  <a href="#galeria">Galería</a>
-  <a href="#testimonios">Testimonios</a>
-  <a href="#nosotros">Nosotros</a>
-  <a href="#" class="nav-cta" id="nav-cta-mobile">Cotizar ahora</a>
+  <a href={p('#servicios')}>Servicios</a>
+  <a href={p('#galeria')}>Galería</a>
+  <a href="/tienda/">Tienda</a>
+  <a href={p('#nosotros')}>Nosotros</a>
+  {isHome
+    ? <a href="#" class="nav-cta" id="nav-cta-mobile">Cotizar ahora</a>
+    : <a href="/#contacto" class="nav-cta">Cotizar ahora</a>
+  }
 </div>
-

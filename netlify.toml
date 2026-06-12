@@ -20,3 +20,9 @@
   for = "/assets/*"
   [headers.values]
     Cache-Control = "public, max-age=604800"
+
+# Redirect del admin viejo (marcadores / PWA instalada con la URL anterior)
+[[redirects]]
+  from = "/admin.html"
+  to = "/admin/"
+  status = 301

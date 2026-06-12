@@ -351,6 +351,7 @@
       btn.classList.add('active');
       const section = btn.dataset.section;
       document.getElementById('sectionCotizaciones').hidden = section !== 'cotizaciones';
+      document.getElementById('sectionTienda').hidden       = section !== 'tienda';
       document.getElementById('sectionResumen').hidden      = section !== 'resumen';
       document.getElementById('sectionTracking').hidden     = section !== 'tracking';
       if (section === 'tracking') renderTracking();
@@ -945,3 +946,143 @@
     }
     return { labels, nuevo, contactado, pagado, atendido, venta, sin_compra };
   }
+
+  // ═══════════════════════════════════════════════
+  //  ÓRDENES DE LA TIENDA ONLINE (ordenes_tienda)
+  // ═══════════════════════════════════════════════
+  const TD_LABELS = {
+    nuevo:      '🔴 Nueva',
+    preparando: '📦 Preparando',
+    enviado:    '🚚 Enviada',
+    entregado:  '✅ Entregada',
+    cancelado:  '✕ Cancelada',
+  };
+  // estado actual → siguiente paso del flujo
+  const TD_NEXT = { nuevo: 'preparando', preparando: 'enviado', enviado: 'entregado' };
+  const TD_BACK = { preparando: 'nuevo', enviado: 'preparando', entregado: 'enviado', cancelado: 'nuevo' };
+
+  let tiendaOrders = [];
+  let tdFilter     = 'todos';
+  let tdInit       = false;
+
+  auth.onAuthStateChanged(user => {
+    if (!user || tdInit) return;
+    tdInit = true;
+    db.collection('ordenes_tienda')
+      .orderBy('createdAt', 'desc')
+      .onSnapshot(snap => {
+        tiendaOrders = [];
+        snap.forEach(doc => tiendaOrders.push({ id: doc.id, ...doc.data() }));
+        renderTiendaStats();
+        renderTiendaOrders();
+      }, err => console.error('Firestore ordenes_tienda:', err));
+  });
+
+  function renderTiendaStats() {
+    const c = { nuevo: 0, preparando: 0, enviado: 0, entregado: 0, cancelado: 0 };
+    tiendaOrders.forEach(o => { if (c[o.estado] !== undefined) c[o.estado]++; });
+    document.getElementById('tdStatNuevo').textContent      = c.nuevo;
+    document.getElementById('tdStatPreparando').textContent = c.preparando;
+    document.getElementById('tdStatEnviado').textContent    = c.enviado;
+    document.getElementById('tdStatEntregado').textContent  = c.entregado;
+    document.getElementById('tdStatCancelado').textContent  = c.cancelado;
+    const badge = document.getElementById('tiendaNavBadge');
+    if (badge) { badge.textContent = c.nuevo; badge.hidden = c.nuevo === 0; }
+  }
+
+  function tdActions(o) {
+    const next = TD_NEXT[o.estado];
+    const back = TD_BACK[o.estado];
+    let html = '<div class="card-status-actions">';
+    if (back) html += `<button class="btn-back" title="Volver a ${TD_LABELS[back]}" onclick="setTiendaStatus('${o.id}','${back}')">↩</button>`;
+    if (o.estado === 'nuevo') html += `<button class="btn-sincompra" onclick="setTiendaStatus('${o.id}','cancelado')">✕ Cancelar</button>`;
+    if (next) html += `<button class="btn-venta" onclick="setTiendaStatus('${o.id}','${next}')">${TD_LABELS[next]}</button>`;
+    html += '</div>';
+    return html;
+  }
+
+  function tiendaCardHTML(o) {
+    const t   = o.createdAt?.toDate ? o.createdAt.toDate() : (o.createdAt?.seconds ? new Date(o.createdAt.seconds * 1000) : null);
+    const tel = o.cliente?.telefono ? o.cliente.telefono.replace(/[\s\-\(\)]/g, '') : '';
+    const waText = encodeURIComponent(
+      `Hola ${o.cliente?.nombre || 'cliente'} 👋, te escribimos de GloboBYM 🎈\n` +
+      `Recibimos tu pedido de la tienda por S/ ${(o.total || 0).toFixed(2)}. Te confirmamos los detalles y coordinamos el pago.`
+    );
+    const items = (o.items || []).map(it => `
+      <div class="card-item-row">
+        <div>
+          ${it.cantidad}× ${esc(it.nombre)}
+          ${it.color ? `<div class="card-item-det">Color: ${esc(it.color)}</div>` : ''}
+          ${it.dedicatoria ? `<div class="card-item-det">"${esc(it.dedicatoria)}"</div>` : ''}
+        </div>
+        <strong>S/ ${(it.precio * it.cantidad).toFixed(2)}</strong>
+      </div>`).join('');
+
+    return `
+      <div class="order-card ${o.estado}">
+        <div class="card-header">
+          <span class="status-badge ${o.estado}">${TD_LABELS[o.estado] || o.estado}</span>
+          <span class="card-time">${t ? timeAgo(t) : ''}</span>
+        </div>
+        <div class="card-body">
+          <div class="card-name">${esc(o.cliente?.nombre) || 'Sin nombre'}</div>
+          <div class="card-meta">
+            ${o.cliente?.telefono ? `<span class="card-meta-item">📱 <strong>${esc(o.cliente.telefono)}</strong></span>` : ''}
+            ${o.envio?.fecha ? `<span class="card-meta-item">📅 <strong>${esc(o.envio.fecha)}</strong></span>` : ''}
+            ${o.envio?.rango ? `<span class="card-meta-item">🕐 <strong>${esc(o.envio.rango)}</strong></span>` : ''}
+          </div>
+          <div class="card-meta" style="margin-top:4px">
+            ${o.envio?.direccion ? `<span class="card-meta-item">📍 <strong>${esc(o.envio.direccion)}${o.envio.distrito ? ' · ' + esc(o.envio.distrito) : ''}</strong></span>` : ''}
+          </div>
+          ${o.notas ? `<div class="card-message">"${esc(o.notas)}"</div>` : ''}
+        </div>
+        <div class="card-items">${items}</div>
+        <div class="card-total-row"><span>Total productos</span><span>S/ ${(o.total || 0).toFixed(2)}</span></div>
+        <div class="card-actions">
+          ${tel ? `
+            <a href="https://wa.me/${tel}?text=${waText}" target="_blank" class="btn-wa">💬 WhatsApp</a>
+            <a href="tel:${tel}" class="btn-call">📞 Llamar</a>
+          ` : ''}
+          ${tdActions(o)}
+        </div>
+      </div>`;
+  }
+
+  function renderTiendaOrders() {
+    const wrap = document.getElementById('tiendaOrdersList');
+    if (!wrap) return;
+    const list = tdFilter === 'todos' ? tiendaOrders : tiendaOrders.filter(o => o.estado === tdFilter);
+    if (!list.length) {
+      wrap.innerHTML = `
+        <div class="empty-state">
+          <div class="empty-icon">🛍</div>
+          <div class="empty-title">No hay órdenes aquí</div>
+          <div class="empty-sub">Cuando lleguen pedidos de la tienda online aparecerán en esta sección.</div>
+        </div>`;
+      return;
+    }
+    wrap.innerHTML = `<div class="orders-grid">${list.map(tiendaCardHTML).join('')}</div>`;
+  }
+
+  async function setTiendaStatus(id, newState) {
+    const extra = {};
+    if (newState === 'preparando') extra.preparandoAt = firebase.firestore.FieldValue.serverTimestamp();
+    if (newState === 'enviado')    extra.enviadoAt    = firebase.firestore.FieldValue.serverTimestamp();
+    if (newState === 'entregado')  extra.entregadoAt  = firebase.firestore.FieldValue.serverTimestamp();
+    if (newState === 'cancelado')  extra.canceladoAt  = firebase.firestore.FieldValue.serverTimestamp();
+    try {
+      await db.collection('ordenes_tienda').doc(id).update({ estado: newState, ...extra });
+    } catch (e) {
+      console.error('Error actualizando orden tienda:', e);
+    }
+  }
+  window.setTiendaStatus = setTiendaStatus;
+
+  document.querySelectorAll('[data-tdfilter]').forEach(tab => {
+    tab.addEventListener('click', () => {
+      document.querySelectorAll('[data-tdfilter]').forEach(t => t.classList.remove('active'));
+      tab.classList.add('active');
+      tdFilter = tab.dataset.tdfilter;
+      renderTiendaOrders();
+    });
+  });

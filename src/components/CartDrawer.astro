@@ -1,0 +1,16 @@
+---
+// Drawer del carrito. El contenido lo renderiza /js/tienda.js desde localStorage.
+---
+<div class="cart-overlay" id="cartOverlay"></div>
+<aside class="cart-drawer" id="cartDrawer" aria-label="Carrito de compras">
+  <div class="cart-head">
+    <h3>🛒 Tu carrito</h3>
+    <button class="cart-close" id="cartClose" aria-label="Cerrar carrito">✕</button>
+  </div>
+  <div class="cart-items" id="cartItems"><!-- JS --></div>
+  <div class="cart-foot" id="cartFoot" hidden>
+    <div class="cart-total-row"><span>Subtotal</span><span id="cartTotal">S/ 0.00</span></div>
+    <div class="cart-envio-nota">El costo de envío se coordina según tu distrito.</div>
+    <a href="/checkout/" class="cart-checkout-btn" id="cartCheckoutBtn">Finalizar pedido →</a>
+  </div>
+</aside>

@@ -49,9 +49,53 @@ import '../styles/admin.css';
   <!-- Main nav -->
   <nav class="main-nav">
     <button class="main-nav-btn active" data-section="cotizaciones">📋 Cotizaciones</button>
+    <button class="main-nav-btn" data-section="tienda">🛍 Tienda<span class="nav-badge" id="tiendaNavBadge" hidden>0</span></button>
     <button class="main-nav-btn" data-section="resumen">📊 Resumen</button>
     <button class="main-nav-btn" data-section="tracking">📈 Tracking</button>
   </nav>
+
+  <!-- ══ SECCIÓN TIENDA (órdenes de la tienda online) ══ -->
+  <div id="sectionTienda" hidden>
+    <div class="stats-bar">
+      <div class="stat-card s-nuevo">
+        <div class="stat-num" id="tdStatNuevo">0</div>
+        <div class="stat-label">🔴 Nuevas</div>
+      </div>
+      <div class="stat-card s-contactado">
+        <div class="stat-num" id="tdStatPreparando">0</div>
+        <div class="stat-label">📦 Preparando</div>
+      </div>
+      <div class="stat-card s-venta">
+        <div class="stat-num" id="tdStatEnviado">0</div>
+        <div class="stat-label">🚚 Enviadas</div>
+      </div>
+      <div class="stat-card s-atendido">
+        <div class="stat-num" id="tdStatEntregado">0</div>
+        <div class="stat-label">✅ Entregadas</div>
+      </div>
+      <div class="stat-card s-sin_compra">
+        <div class="stat-num" id="tdStatCancelado">0</div>
+        <div class="stat-label">✕ Canceladas</div>
+      </div>
+    </div>
+
+    <div class="filter-bar">
+      <div class="filter-tabs-row">
+        <button class="tab active" data-tdfilter="todos">Todas</button>
+        <button class="tab" data-tdfilter="nuevo">🔴 Nuevas</button>
+        <button class="tab" data-tdfilter="preparando">📦 Preparando</button>
+        <button class="tab" data-tdfilter="enviado">🚚 Enviadas</button>
+        <button class="tab" data-tdfilter="entregado">✅ Entregadas</button>
+        <button class="tab" data-tdfilter="cancelado">✕ Canceladas</button>
+      </div>
+    </div>
+
+    <div class="orders-wrap">
+      <div id="tiendaOrdersList">
+        <div class="loading-wrap"><div class="spinner"></div></div>
+      </div>
+    </div>
+  </div>
 
   <!-- ══ SECCIÓN COTIZACIONES ══ -->
   <div id="sectionCotizaciones">

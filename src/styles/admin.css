@@ -95,6 +95,11 @@
     .order-card.atendido       { border-left: 4px solid var(--atendido); }
     .order-card.venta          { border-left: 4px solid var(--venta); background: linear-gradient(90deg, rgba(212,160,23,.04) 0%, transparent 60%); }
     .order-card.sin_compra     { border-left: 4px solid var(--sin_compra); opacity: .7; }
+    /* Estados de órdenes de tienda */
+    .order-card.preparando     { border-left: 4px solid var(--contactado); }
+    .order-card.enviado        { border-left: 4px solid var(--pagado); }
+    .order-card.entregado      { border-left: 4px solid var(--atendido); }
+    .order-card.cancelado      { border-left: 4px solid var(--sin_compra); opacity: .7; }
 
     .card-header { padding: 14px 16px 10px; display: flex; align-items: center; justify-content: space-between; gap: 8px; }
     .status-badge { display: inline-flex; align-items: center; gap: 4px; padding: 3px 10px; border-radius: 50px; font-size: .68rem; font-weight: 700; letter-spacing: .4px; text-transform: uppercase; white-space: nowrap; }
@@ -105,6 +110,17 @@
     .status-badge.atendido      { background: var(--atendido-bg);       color: var(--atendido); }
     .status-badge.venta         { background: var(--venta-bg);          color: var(--venta); }
     .status-badge.sin_compra    { background: var(--sin_compra-bg);     color: var(--sin_compra); }
+    .status-badge.preparando    { background: var(--contactado-bg);     color: var(--contactado); }
+    .status-badge.enviado       { background: var(--pagado-bg);         color: var(--pagado); }
+    .status-badge.entregado     { background: var(--atendido-bg);       color: var(--atendido); }
+    .status-badge.cancelado     { background: var(--sin_compra-bg);     color: var(--sin_compra); }
+    /* Detalle de items dentro de la card de orden */
+    .card-items { padding: 0 16px 12px; }
+    .card-item-row { display: flex; justify-content: space-between; gap: 10px; font-size: .82rem; padding: 6px 0; border-bottom: 1px dashed var(--border); }
+    .card-item-row:last-child { border-bottom: none; }
+    .card-item-det { color: var(--muted); font-size: .74rem; }
+    .card-total-row { display: flex; justify-content: space-between; padding: 10px 16px; background: var(--bg); border-top: 1px solid var(--border); font-weight: 700; font-size: .9rem; }
+    .nav-badge { display: inline-flex; align-items: center; justify-content: center; background: var(--nuevo); color: white; font-size: .62rem; font-weight: 700; min-width: 16px; height: 16px; border-radius: 50px; padding: 0 4px; margin-left: 6px; vertical-align: 2px; }
     .card-time { font-size: .7rem; color: var(--muted); white-space: nowrap; }
 
     .card-body { padding: 0 16px 14px; }

@@ -3,8 +3,6 @@ import { defineConfig } from 'astro/config';
 export default defineConfig({
   site: 'https://globobym.netlify.app',
   output: 'static',
-  build: {
-    // URLs sin trailing slash: /admin en vez de /admin/
-    format: 'file',
-  },
+  // format 'directory' (default): /admin/index.html → la URL /admin/
+  // funciona igual en Netlify y Vercel sin configuración de rewrites
 });

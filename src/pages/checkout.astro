@@ -1,0 +1,110 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Nav from '../components/Nav.astro';
+import Footer from '../components/Footer.astro';
+import CartDrawer from '../components/CartDrawer.astro';
+import DistritosDatalist from '../components/DistritosDatalist.astro';
+import '../styles/global.css';
+import '../styles/tienda.css';
+---
+<BaseLayout title="Finalizar pedido | Tienda GloboBYM" description="Completa tu pedido de globos personalizados con delivery en Lima.">
+  <Fragment slot="head">
+    <meta name="robots" content="noindex" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  </Fragment>
+
+  <Nav showCart={true} />
+
+  <main class="tienda-main">
+    <div class="tienda-header">
+      <div class="section-tag">Último paso</div>
+      <h2 class="section-title">Finaliza tu <em>pedido</em></h2>
+    </div>
+
+    <!-- Carrito vacío -->
+    <div class="checkout-vacio" id="checkoutVacio" hidden>
+      <div class="icon">🛒</div>
+      <h2 style="font-family:'Playfair Display',serif; margin-bottom:10px;">Tu carrito está vacío</h2>
+      <p style="color:var(--gray); margin-bottom:18px;">Agrega productos desde la tienda para hacer tu pedido.</p>
+      <a href="/tienda/">← Ir a la tienda</a>
+    </div>
+
+    <!-- Confirmación post-envío -->
+    <div class="orden-ok" id="ordenOk" hidden>
+      <div class="icon">🎉</div>
+      <h2>¡Pedido recibido!</h2>
+      <p id="ordenOkMsg">
+        Gracias por tu compra. Te contactaremos por WhatsApp en las próximas horas
+        para coordinar el pago y confirmar la entrega.
+      </p>
+      <a href="#" class="btn-wa-confirm" id="ordenOkWa" target="_blank">💬 Confirmar por WhatsApp ahora</a>
+    </div>
+
+    <!-- Formulario + resumen -->
+    <div class="checkout-grid" id="checkoutGrid">
+      <div class="checkout-form">
+        <h2>Datos de entrega</h2>
+        <!-- Honeypot anti-bots -->
+        <input type="text" id="co-website" name="website" tabindex="-1" autocomplete="off" style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0" aria-hidden="true" />
+        <div class="co-row">
+          <div class="co-field">
+            <label for="co-nombre">Tu nombre *</label>
+            <input type="text" id="co-nombre" placeholder="María García" required />
+          </div>
+          <div class="co-field">
+            <label for="co-telefono">Teléfono / WhatsApp *</label>
+            <input type="tel" id="co-telefono" placeholder="+51 987 654 321" required />
+          </div>
+          <div class="co-field full">
+            <label for="co-direccion">Dirección de envío *</label>
+            <input type="text" id="co-direccion" placeholder="Av. Ejemplo 123, Dpto 401" required />
+          </div>
+          <div class="co-field">
+            <label for="co-distrito">Distrito *</label>
+            <input type="text" id="co-distrito" list="distritos-lima" placeholder="Empieza a escribir..." autocomplete="off" required />
+            <DistritosDatalist />
+          </div>
+          <div class="co-field">
+            <label for="co-fecha">Fecha de entrega *</label>
+            <input type="date" id="co-fecha" required />
+          </div>
+          <div class="co-field full">
+            <label for="co-rango">Rango de hora de entrega *</label>
+            <select id="co-rango" required>
+              <option value="" disabled selected>Selecciona...</option>
+              <option>9:00 am – 12:00 pm</option>
+              <option>12:00 pm – 3:00 pm</option>
+              <option>3:00 pm – 6:00 pm</option>
+              <option>6:00 pm – 9:00 pm</option>
+            </select>
+          </div>
+          <div class="co-field full">
+            <label for="co-notas">Notas adicionales (opcional)</label>
+            <textarea id="co-notas" maxlength="500" placeholder="Referencias de la dirección, instrucciones especiales..."></textarea>
+          </div>
+        </div>
+      </div>
+
+      <div class="checkout-resumen">
+        <h3>Resumen del pedido</h3>
+        <div id="coResumenItems"><!-- JS --></div>
+        <div class="co-total"><span>Subtotal</span><span id="coTotal">S/ 0.00</span></div>
+        <div class="co-envio-nota">
+          🚚 El costo de envío se coordina por WhatsApp según tu distrito,
+          y el pago se realiza por Yape, Plin o transferencia.
+        </div>
+        <button class="co-enviar" id="coEnviar">📨 Enviar pedido</button>
+      </div>
+    </div>
+  </main>
+
+  <CartDrawer />
+  <Footer />
+
+  <script is:inline src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+  <script is:inline src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+  <script is:inline src="/js/tienda.js"></script>
+  <script is:inline src="/js/checkout.js"></script>
+</BaseLayout>
