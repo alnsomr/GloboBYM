@@ -762,6 +762,32 @@
       tiempoSesiones = data.tiempo_sesiones       || 0;
       origenes       = data.origenes              || {};
       if (!document.getElementById('sectionTracking').hidden) renderTracking();
+
+      // ── Métricas extra de tracking (catálogo packs + WhatsApp) ──
+      const elCat = document.getElementById('trCatalogo');
+      const elWa  = document.getElementById('trWhatsapp');
+      if (elCat) elCat.textContent = data.catalogo_aperturas || 0;
+      if (elWa)  elWa.textContent  = data.whatsapp_clicks || 0;
+
+      // ── Funnel de la tienda ──
+      const tv = data.tienda_visitas      || 0;
+      const ca = data.carrito_agregados   || 0;
+      const ci = data.checkout_inicios    || 0;
+      const oc = data.ordenes_completadas || 0;
+      const setNum = (id, v) => { const el = document.getElementById(id); if (el) el.textContent = v; };
+      setNum('tdfVisitas',  tv);
+      setNum('tdfCarrito',  ca);
+      setNum('tdfCheckout', ci);
+      setNum('tdfOrdenes',  oc);
+      const elAb = document.getElementById('tdfAbandono');
+      if (elAb) {
+        if (ci > 0) {
+          const abandonos = Math.max(0, ci - oc);
+          elAb.textContent = abandonos + ' (' + Math.round(abandonos / ci * 100) + '%)';
+        } else {
+          elAb.textContent = '—';
+        }
+      }
     });
 
   // ── FILTERS ──

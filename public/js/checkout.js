@@ -94,6 +94,7 @@ async function enviarOrden() {
 
   try {
     await _codb.collection('ordenes_tienda').add(orden);
+    coTrack('ordenes_completadas'); // funnel
   } catch (e) {
     console.error('Error guardando orden:', e);
     btn.disabled = false;
@@ -123,7 +124,20 @@ async function enviarOrden() {
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
+// Funnel: contador en metricas/general
+function coTrack(field) {
+  try {
+    _codb.collection('metricas').doc('general').set(
+      { [field]: firebase.firestore.FieldValue.increment(1) },
+      { merge: true }
+    );
+    if (window.gtag) gtag('event', field);
+  } catch (e) {}
+}
+
 document.addEventListener('DOMContentLoaded', () => {
   renderResumen();
   document.getElementById('coEnviar').addEventListener('click', enviarOrden);
+  // Funnel: llegó al checkout con productos en el carrito
+  if (gbCart.read().length > 0) coTrack('checkout_inicios');
 });

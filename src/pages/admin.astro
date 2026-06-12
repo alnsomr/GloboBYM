@@ -56,6 +56,39 @@ import '../styles/admin.css';
 
   <!-- ══ SECCIÓN TIENDA (órdenes de la tienda online) ══ -->
   <div id="sectionTienda" hidden>
+
+    <!-- Funnel de conversión de la tienda -->
+    <div class="tracking-wrap" style="padding-bottom: 0;">
+      <div class="tracking-title">Funnel de la tienda</div>
+      <div class="metric-grid">
+        <div class="metric-card">
+          <div class="metric-num" id="tdfVisitas">—</div>
+          <div class="metric-label">🛍 Visitas a la tienda</div>
+          <div class="metric-sub">Abrieron el catálogo online</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-num" id="tdfCarrito">—</div>
+          <div class="metric-label">🛒 Agregados al carrito</div>
+          <div class="metric-sub">Productos añadidos</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-num" id="tdfCheckout">—</div>
+          <div class="metric-label">📝 Checkouts iniciados</div>
+          <div class="metric-sub">Llegaron al formulario de pedido</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-num" id="tdfOrdenes">—</div>
+          <div class="metric-label">✅ Pedidos enviados</div>
+          <div class="metric-sub">Completaron el pedido</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-num" id="tdfAbandono">—</div>
+          <div class="metric-label">🚪 Abandono de checkout</div>
+          <div class="metric-sub">Iniciaron pero no enviaron</div>
+        </div>
+      </div>
+    </div>
+
     <div class="stats-bar">
       <div class="stat-card s-nuevo">
         <div class="stat-num" id="tdStatNuevo">0</div>
@@ -230,6 +263,16 @@ import '../styles/admin.css';
           <div class="metric-num" id="trVisitas">—</div>
           <div class="metric-label">👁 Abrieron el formulario</div>
           <div class="metric-sub">De las visitas que vieron el form</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-num" id="trCatalogo">—</div>
+          <div class="metric-label">📖 Abrieron el catálogo</div>
+          <div class="metric-sub">Vieron los packs y precios</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-num" id="trWhatsapp">—</div>
+          <div class="metric-label">💬 Clics a WhatsApp</div>
+          <div class="metric-sub">Salieron a conversar por WA</div>
         </div>
         <div class="metric-card">
           <div class="metric-num" id="trFormularios">0</div>

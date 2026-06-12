@@ -3,6 +3,13 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import Nav from '../components/Nav.astro';
 import Footer from '../components/Footer.astro';
 import '../styles/global.css';
+import dataProductos from '../data/productos.json';
+
+// 3 productos para la vitrina de la tienda en la landing (destacados primero)
+const vitrina = dataProductos.productos
+  .filter((p) => p.disponible)
+  .sort((a, b) => Number(b.destacado) - Number(a.destacado))
+  .slice(0, 3);
 
 const title = 'GloboBYM – Decoración con Globos a Domicilio en Lima, Perú';
 const description = 'Boutique de globería profesional en Lima. Decoraciones personalizadas para cumpleaños, baby shower, bautizos, graduaciones, propuestas de matrimonio y eventos corporativos. +200 eventos realizados · 33K seguidores.';
@@ -102,20 +109,17 @@ const description = 'Boutique de globería profesional en Lima. Decoraciones per
   <div class="hero-text">
     <div class="hero-badge">Boutique de Globos · 33K seguidores · Lima, Perú</div>
     <h1 class="hero-title">
-      Transformamos tus<br/>eventos en momentos<br/><em>inolvidables</em>
+      Decoración con globos<br/><em>premium</em> a domicilio<br/>en Lima y Callao
     </h1>
     <p class="hero-bio">
-      Somos <strong>GloboBYM</strong>, tu boutique de globería profesional personalizada en Lima.
-      Creamos decoraciones hechas a medida para esa fecha importante,
+      Somos <strong>GloboBYM</strong>, boutique de globería profesional.
+      Diseñamos tu decoración a medida y la montamos en tu casa o local,
       con más de 33.000 personas que ya confían en nosotros.
     </p>
     <div class="hero-actions">
-      <a href="https://wa.me/51960876002?text=Hola%20GloboBYM%2C%20me%20gustar%C3%ADa%20cotizar%20una%20decoraci%C3%B3n%20para%20mi%20evento" class="btn-primary" target="_blank">
-        💬 Cotizar por WhatsApp
-      </a>
+      <a href="#" class="btn-primary" id="btn-abrir-form-hero">📋 Solicitar cotización</a>
+      <a href="#" class="btn-catalogo" id="btn-abrir-catalogo">📖 Ver packs y precios</a>
       <a href="#galeria" class="btn-secondary">Ver galería →</a>
-      <a href="#" class="btn-cotizar" id="btn-abrir-form-hero">📋 Solicitar cotización</a>
-      <a href="#" class="btn-catalogo" id="btn-abrir-catalogo">📖 Ver catálogo</a>
     </div>
   </div>
 
@@ -365,10 +369,31 @@ const description = 'Boutique de globería profesional en Lima. Decoraciones per
   </div>
 </div>
 
-<!-- TESTIMONIALS -->
-<section id="testimonios">
-  <div class="testimonios-header">
-    <h2 class="section-title">Más de 33.000 personas<br/>nos <em>eligen con confianza</em></h2>
+<!-- TIENDA SHOWCASE -->
+<section id="tienda-home">
+  <div class="tienda-home-header">
+    <div class="section-tag">🎁 Tienda GloboBYM</div>
+    <h2 class="section-title">¿Necesitas un regalo <em>hoy</em>?</h2>
+    <p class="section-sub">Globos personalizados, box sorpresa y ramos con delivery en Lima y Callao. Personalízalos con nombre y dedicatoria.</p>
+  </div>
+  <div class="tienda-home-grid">
+    {vitrina.map((p) => (
+      <a href={`/tienda/${p.id}/`} class="tienda-home-card reveal">
+        <div class="tienda-home-img">
+          {p.imagenes.length > 0
+            ? <img src={`/assets/productos/${p.imagenes[0]}`} alt={p.nombre} loading="lazy" />
+            : <div class="tienda-home-placeholder">🎈</div>
+          }
+        </div>
+        <div class="tienda-home-info">
+          <span class="tienda-home-nombre">{p.nombre}</span>
+          <span class="tienda-home-precio">S/ {p.precio.toFixed(2)}</span>
+        </div>
+      </a>
+    ))}
+  </div>
+  <div class="tienda-home-cta">
+    <a href="/tienda/" class="btn-primary">🛍 Visitar la tienda →</a>
   </div>
 </section>
 

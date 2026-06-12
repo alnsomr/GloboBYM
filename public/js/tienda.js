@@ -24,6 +24,7 @@ const gbCart = (() => {
     if (existing) existing.cantidad = Math.min(20, existing.cantidad + item.cantidad);
     else items.push(item);
     write(items);
+    gbTrack('carrito_agregados'); // funnel
   }
 
   function setQty(index, qty) {
@@ -154,4 +155,34 @@ document.addEventListener('DOMContentLoaded', () => {
       mobileMenu.classList.remove('open');
     }));
   }
+});
+
+// ── FUNNEL: contadores via API REST de Firestore (sin cargar el SDK completo) ──
+// Las reglas permiten update en metricas/general; el resto sigue protegido.
+function gbTrack(field) {
+  try {
+    fetch('https://firestore.googleapis.com/v1/projects/globobym/databases/(default)/documents:commit?key=AIzaSyDDRomYCtRzPkCLbWlqlgRNnQ8aSj2izQ4', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        writes: [{
+          transform: {
+            document: 'projects/globobym/databases/(default)/documents/metricas/general',
+            fieldTransforms: [{ fieldPath: field, increment: { integerValue: '1' } }]
+          }
+        }]
+      })
+    }).catch(() => {});
+  } catch (e) {}
+  try { if (window.gtag) gtag('event', field); } catch (e) {}
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  // Visita al catálogo de la tienda (solo la página /tienda/, no productos)
+  if (document.getElementById('productosGrid')) gbTrack('tienda_visitas');
+
+  // Clics a WhatsApp desde páginas de tienda
+  document.querySelectorAll('a[href*="wa.me"]').forEach(a => {
+    a.addEventListener('click', () => gbTrack('whatsapp_clicks'));
+  });
 });

@@ -302,6 +302,14 @@
     catalogOverlay.classList.add('open');
     document.body.style.overflow = 'hidden';
     catalogOverlay.scrollTop = 0;
+    // Funnel: apertura del catálogo de packs
+    try {
+      _db.collection('metricas').doc('general').set(
+        { catalogo_aperturas: firebase.firestore.FieldValue.increment(1) },
+        { merge: true }
+      );
+      if (window.gtag) gtag('event', 'ver_catalogo_packs');
+    } catch (e) {}
   }
   function closeCatalog() {
     catalogOverlay.classList.remove('open');
@@ -396,3 +404,16 @@
     closeFormModal();
     alert('✅ ¡Gracias ' + nombre + '! Recibimos tu solicitud. Te contactaremos pronto.');
   }
+
+  // ── FUNNEL: clics a WhatsApp (cualquier enlace wa.me de la landing) ──
+  document.querySelectorAll('a[href*="wa.me"]').forEach(a => {
+    a.addEventListener('click', () => {
+      try {
+        _db.collection('metricas').doc('general').set(
+          { whatsapp_clicks: firebase.firestore.FieldValue.increment(1) },
+          { merge: true }
+        );
+        if (window.gtag) gtag('event', 'click_whatsapp');
+      } catch (e) {}
+    });
+  });
