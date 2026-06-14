@@ -67,6 +67,13 @@ async function enviarOrden() {
     return;
   }
 
+  // Consentimiento de datos obligatorio (Ley N.° 29733)
+  const acepto = document.getElementById('co-acepto');
+  if (acepto && !acepto.checked) {
+    alert('Para continuar debes aceptar los Términos y la Política de Privacidad.');
+    return;
+  }
+
   // Anti-bot: honeypot lleno o envío en menos de 4 segundos
   const honeypot = document.getElementById('co-website');
   if ((honeypot && honeypot.value !== '') || Date.now() - checkoutOpenedAt < 4000) return;

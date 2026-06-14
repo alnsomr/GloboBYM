@@ -36,10 +36,13 @@ import '../styles/tienda.css';
       <div class="icon">🎉</div>
       <h2>¡Pedido recibido!</h2>
       <p id="ordenOkMsg">
-        Gracias por tu compra. Te contactaremos por WhatsApp en las próximas horas
-        para coordinar el pago y confirmar la entrega.
+        Tu pedido quedó registrado. <strong>El último paso es confirmarlo por WhatsApp</strong>
+        para coordinar el pago (Yape, Plin o transferencia) y el envío según tu distrito.
       </p>
-      <a href="#" class="btn-wa-confirm" id="ordenOkWa" target="_blank">💬 Confirmar por WhatsApp ahora</a>
+      <a href="#" class="btn-wa-confirm" id="ordenOkWa" target="_blank">💬 Confirmar mi pedido por WhatsApp</a>
+      <p style="font-size:.85rem; color:var(--gray); margin-top:12px;">
+        Si no puedes ahora, no te preocupes: también te escribiremos nosotros.
+      </p>
     </div>
 
     <!-- Formulario + resumen -->
@@ -96,8 +99,12 @@ import '../styles/tienda.css';
           y el pago se realiza por Yape, Plin o transferencia.
         </div>
         <div class="co-legal">
-          Al enviar tu pedido aceptas nuestros <a href="/terminos/" target="_blank">Términos y Condiciones</a>
-          y nuestra <a href="/privacidad/" target="_blank">Política de Privacidad</a>.
+          <label class="co-consent" style="display:flex; gap:8px; align-items:flex-start; cursor:pointer;">
+            <input type="checkbox" id="co-acepto" required style="margin-top:3px; flex-shrink:0;" />
+            <span>He leído y acepto los <a href="/terminos/" target="_blank">Términos y Condiciones</a>
+            y la <a href="/privacidad/" target="_blank">Política de Privacidad</a>, y autorizo el
+            tratamiento de mis datos personales para gestionar mi pedido (Ley N.° 29733).</span>
+          </label>
         </div>
         <button class="co-enviar" id="coEnviar">📨 Enviar pedido</button>
       </div>
