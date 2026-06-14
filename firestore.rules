@@ -13,11 +13,19 @@ rules_version = '2';
 //    ni campos gigantes.
 //  - Las métricas solo aceptan update del documento 'general'
 //    (no se pueden crear documentos basura en la colección).
-//  - Todo lo demás (leer, editar, borrar) sigue requiriendo login.
+//  - Leer, editar y borrar (datos de clientes) queda restringido SOLO
+//    a la cuenta de admin por UID, no a cualquier usuario con sesión.
 // ═══════════════════════════════════════════════════════════════
 
 service cloud.firestore {
   match /databases/{database}/documents {
+
+    // Solo la cuenta del dueño (admin) puede leer/editar/borrar datos
+    // de clientes. El UID sale de Firebase Console → Authentication → Users.
+    function isAdmin() {
+      return request.auth != null
+        && request.auth.uid == 'BeMfp5JFeubl2WlMmyEwzC8R49s1';
+    }
 
     // ── PEDIDOS (cotizaciones del formulario público) ──
     match /pedidos/{id} {
@@ -59,7 +67,7 @@ service cloud.firestore {
         request.resource.data.createdAt == request.time;
 
       // Leer, editar y borrar: solo el panel (usuario autenticado)
-      allow read, update, delete: if request.auth != null;
+      allow read, update, delete: if isAdmin();
     }
 
     // ── ÓRDENES DE LA TIENDA ONLINE ──
@@ -106,7 +114,7 @@ service cloud.firestore {
         request.resource.data.estado == 'nuevo' &&
         request.resource.data.createdAt == request.time;
 
-      allow read, update, delete: if request.auth != null;
+      allow read, update, delete: if isAdmin();
     }
 
     // ── MÉTRICAS (contadores del sitio público) ──
@@ -115,7 +123,7 @@ service cloud.firestore {
     match /metricas/general {
       allow update: if true;
       allow create: if true;   // primera escritura con merge
-      allow read: if request.auth != null;
+      allow read: if isAdmin();
       allow delete: if false;
     }
 
