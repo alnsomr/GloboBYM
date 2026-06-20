@@ -11,8 +11,8 @@ rules_version = '2';
 //    estado forzado a 'nuevo' y createdAt forzado al timestamp del
 //    servidor. Un bot ya no puede insertar documentos arbitrarios
 //    ni campos gigantes.
-//  - Las métricas solo aceptan update del documento 'general'
-//    (no se pueden crear documentos basura en la colección).
+//  - Las métricas solo aceptan escrituras al documento 'general' y solo
+//    sobre los campos conocidos del funnel (números), no campos arbitrarios.
 //  - Leer, editar y borrar (datos de clientes) queda restringido SOLO
 //    a la cuenta de admin por UID, no a cualquier usuario con sesión.
 // ═══════════════════════════════════════════════════════════════
@@ -118,11 +118,48 @@ service cloud.firestore {
     }
 
     // ── MÉTRICAS (contadores del sitio público) ──
-    // El sitio incrementa visitas/orígenes/tiempo sin login,
-    // pero solo sobre el documento 'general' ya existente.
+    // El sitio incrementa visitas/orígenes/tiempo sin login, pero solo
+    // sobre el documento 'general' y solo los campos conocidos del funnel.
+    // Antes era `if true`: cualquiera podía sobrescribir el doc con basura
+    // o blobs gigantes. Ahora la escritura solo puede tocar estos campos
+    // y deben ser números (o mapa, en el caso de 'origenes').
     match /metricas/general {
-      allow update: if true;
-      allow create: if true;   // primera escritura con merge
+
+      // Campos del funnel que el sitio público puede escribir.
+      function camposMetricas() {
+        return [
+          'visitas_sitio', 'origenes', 'tiempo_total_segundos', 'tiempo_sesiones',
+          'visitas_formulario', 'catalogo_aperturas', 'whatsapp_clicks',
+          'tienda_visitas', 'carrito_agregados', 'checkout_inicios', 'ordenes_completadas'
+        ];
+      }
+
+      // Cada contador, si viene en la escritura, debe ser número; 'origenes'
+      // debe ser mapa. Evita meter un blob gigante en un campo válido.
+      function tiposMetricasOk() {
+        return (!('origenes'             in request.resource.data) || request.resource.data.origenes is map)
+          && (!('visitas_sitio'          in request.resource.data) || request.resource.data.visitas_sitio is number)
+          && (!('tiempo_total_segundos'  in request.resource.data) || request.resource.data.tiempo_total_segundos is number)
+          && (!('tiempo_sesiones'        in request.resource.data) || request.resource.data.tiempo_sesiones is number)
+          && (!('visitas_formulario'     in request.resource.data) || request.resource.data.visitas_formulario is number)
+          && (!('catalogo_aperturas'     in request.resource.data) || request.resource.data.catalogo_aperturas is number)
+          && (!('whatsapp_clicks'        in request.resource.data) || request.resource.data.whatsapp_clicks is number)
+          && (!('tienda_visitas'         in request.resource.data) || request.resource.data.tienda_visitas is number)
+          && (!('carrito_agregados'      in request.resource.data) || request.resource.data.carrito_agregados is number)
+          && (!('checkout_inicios'       in request.resource.data) || request.resource.data.checkout_inicios is number)
+          && (!('ordenes_completadas'    in request.resource.data) || request.resource.data.ordenes_completadas is number);
+      }
+
+      // Crear el doc por primera vez: solo campos conocidos y bien tipados.
+      allow create: if request.resource.data.keys().hasOnly(camposMetricas())
+                    && tiposMetricasOk();
+
+      // Actualizar: la escritura solo puede TOCAR campos conocidos (diff sobre
+      // las claves afectadas). Así no se rompe aunque el doc ya tuviera algún
+      // campo viejo, pero impide añadir/modificar campos basura.
+      allow update: if request.resource.data.diff(resource.data).affectedKeys().hasOnly(camposMetricas())
+                    && tiposMetricasOk();
+
       allow read: if isAdmin();
       allow delete: if false;
     }

@@ -1,7 +1,19 @@
-# Configuración de build para Netlify (deploy automático desde GitHub)
+# Configuración de build para Netlify (conectado a GitHub)
+#
+# DEPLOY OPT-IN (ahorro de minutos de build):
+# Por defecto, un `git push` NO dispara build → no consume créditos.
+# El build (y por tanto el deploy) solo ocurre si el ÚLTIMO commit del push
+# incluye la etiqueta [deploy] en su mensaje.
+#
+#   • Solo guardar en GitHub, sin desplegar:  git commit -m "..."         → push sin build
+#   • Guardar Y desplegar a producción:        git commit -m "... [deploy]" → push + build + deploy
+#
+# Cómo funciona el comando `ignore`: si devuelve 0 Netlify CANCELA el build;
+# si devuelve ≠0 lo EJECUTA. Aquí: build solo cuando el mensaje trae [deploy].
 [build]
   command = "npm run build"
   publish = "dist"
+  ignore = "if git log -1 --pretty=%B | grep -qF '[deploy]'; then exit 1; else exit 0; fi"
 
 [build.environment]
   NODE_VERSION = "20"
