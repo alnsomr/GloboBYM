@@ -889,9 +889,19 @@
     return currentDateType === 'evento' ? getEventDate(o) : getOrderDate(o);
   }
 
+  // Colores del gráfico según el tema activo (los toma del CSS, no duplicados aquí)
+  function chartTheme() {
+    const cs = getComputedStyle(document.documentElement);
+    return {
+      grid: cs.getPropertyValue('--chart-grid').trim() || '#f1f5f9',
+      text: cs.getPropertyValue('--chart-text').trim() || '#64748b',
+    };
+  }
+
   function updateChart() {
     const { labels, nuevo, contactado, pagado, atendido, venta, sin_compra } = buildChartData();
     const ctx = document.getElementById('statsChart').getContext('2d');
+    const tema = chartTheme();
     if (chartInstance) chartInstance.destroy();
     chartInstance = new Chart(ctx, {
       type: 'bar',
@@ -910,14 +920,14 @@
         responsive: true,
         maintainAspectRatio: false,
         plugins: {
-          legend: { position: 'top', labels: { usePointStyle: true, padding: 20, font: { size: 12 } } },
+          legend: { position: 'top', labels: { usePointStyle: true, padding: 20, font: { size: 12 }, color: tema.text } },
           tooltip: {
             callbacks: { label: c => ` ${c.dataset.label.slice(3)}: ${c.parsed.y} pedido${c.parsed.y !== 1 ? 's' : ''}` }
           }
         },
         scales: {
-          x: { stacked: true, grid: { display: false } },
-          y: { stacked: true, beginAtZero: true, ticks: { stepSize: 1, precision: 0 }, grid: { color: '#f1f5f9' } }
+          x: { stacked: true, grid: { display: false }, ticks: { color: tema.text } },
+          y: { stacked: true, beginAtZero: true, ticks: { stepSize: 1, precision: 0, color: tema.text }, grid: { color: tema.grid } }
         }
       }
     });
@@ -1127,6 +1137,12 @@
     }
   }
   window.setTiendaStatus = setTiendaStatus;
+
+  // Al cambiar de tema, repintar el gráfico: Chart.js dibuja sobre canvas y
+  // no hereda las variables CSS, así que hay que reconstruirlo a mano.
+  document.addEventListener('gb:themechange', () => {
+    if (chartInstance) updateChart();
+  });
 
   document.querySelectorAll('[data-tdfilter]').forEach(tab => {
     tab.addEventListener('click', () => {

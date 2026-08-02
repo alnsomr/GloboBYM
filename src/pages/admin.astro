@@ -11,6 +11,40 @@ import '../styles/admin.css';
     <meta name="robots" content="noindex, nofollow" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+    <script is:inline>
+      // Tema claro/oscuro del panel.
+      // Se aplica ANTES del primer pintado para que al recargar no haya
+      // un flash blanco. Por eso vive en el <head> y no en admin.js.
+      (function () {
+        var KEY = 'gb_admin_theme';
+
+        function aplicar(tema) {
+          document.documentElement.setAttribute('data-theme', tema);
+          var meta = document.querySelector('meta[name="theme-color"]');
+          if (meta) meta.setAttribute('content', tema === 'dark' ? '#0f172a' : '#C2006B');
+        }
+
+        // Preferencia guardada; si no hay, la del sistema operativo.
+        var guardado = null;
+        try { guardado = localStorage.getItem(KEY); } catch (e) {}
+        aplicar(guardado || (window.matchMedia &&
+          window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'));
+
+        window.gbToggleTheme = function () {
+          var nuevo = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+          aplicar(nuevo);
+          try { localStorage.setItem(KEY, nuevo); } catch (e) {}
+          // admin.js escucha esto para repintar el gráfico con los colores del tema
+          document.dispatchEvent(new CustomEvent('gb:themechange', { detail: { tema: nuevo } }));
+        };
+
+        document.addEventListener('DOMContentLoaded', function () {
+          var btn = document.getElementById('themeBtn');
+          if (btn) btn.addEventListener('click', window.gbToggleTheme);
+        });
+      })();
+    </script>
   </Fragment>
 
 <!-- ══ LOGIN SCREEN ══ -->
@@ -42,6 +76,10 @@ import '../styles/admin.css';
     <div class="header-logo">🎈 Globo<span>BYM</span></div>
     <div class="header-right">
       <span class="header-email" id="userEmail"></span>
+      <button class="btn-theme" id="themeBtn" type="button" title="Cambiar tema claro / oscuro" aria-label="Cambiar tema claro / oscuro">
+        <span class="icon-dark" aria-hidden="true">🌙</span>
+        <span class="icon-light" aria-hidden="true">☀️</span>
+      </button>
       <button class="btn-logout" id="logoutBtn">Salir</button>
     </div>
   </header>

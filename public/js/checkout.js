@@ -126,7 +126,13 @@ async function enviarOrden() {
     'https://wa.me/' + WHATSAPP + '?text=' + encodeURIComponent(txt);
 
   gbCart.clear();
+  // Restaurar el botón: si algo dejara el formulario visible, no debe quedar
+  // congelado en "Enviando..." (se lee como que el pedido sigue en proceso).
+  btn.disabled = false;
+  btn.textContent = '📨 Enviar pedido';
+
   document.getElementById('checkoutGrid').hidden = true;
+  document.getElementById('checkoutVacio').hidden = true; // el carrito quedó vacío tras clear()
   document.getElementById('ordenOk').hidden = false;
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }

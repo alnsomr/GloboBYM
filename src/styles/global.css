@@ -1,3 +1,8 @@
+    /* El atributo [hidden] debe ganarle a cualquier display: grid/flex de autor.
+       Sin esto, `el.hidden = true` no oculta nada en bloques con display propio
+       (ej. .checkout-grid quedaba visible tras enviar el pedido). */
+    [hidden] { display: none !important; }
+
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {

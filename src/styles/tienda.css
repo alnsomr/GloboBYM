@@ -126,7 +126,13 @@
 .orden-ok .icon { font-size: 3.4rem; margin-bottom: 18px; }
 .orden-ok h2 { font-family: 'Playfair Display', serif; font-size: 1.6rem; color: var(--dark); margin-bottom: 12px; }
 .orden-ok p { color: var(--gray); font-size: .95rem; line-height: 1.7; margin-bottom: 22px; }
-.orden-ok .btn-wa-confirm { display: inline-flex; align-items: center; gap: 8px; background: #25D366; color: white; padding: 13px 26px; border-radius: 50px; font-weight: 700; text-decoration: none; font-size: .92rem; }
+.orden-ok-acciones { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+.orden-ok .btn-volver-tienda { display: inline-flex; align-items: center; gap: 8px; background: var(--primary); color: white; padding: 13px 26px; border-radius: 50px; font-weight: 700; text-decoration: none; font-size: .92rem; transition: background .2s; }
+.orden-ok .btn-volver-tienda:hover { background: var(--primary-light); }
+/* WhatsApp pasa a secundario: sigue disponible, ya no se lee como obligación */
+.orden-ok .btn-wa-confirm { display: inline-flex; align-items: center; gap: 8px; background: transparent; color: #128C4A; border: 1.5px solid #25D366; padding: 13px 26px; border-radius: 50px; font-weight: 700; text-decoration: none; font-size: .92rem; transition: background .2s, color .2s; }
+.orden-ok .btn-wa-confirm:hover { background: #25D366; color: white; }
+.orden-ok .orden-ok-nota { font-size: .85rem; color: var(--gray); margin-top: 18px; margin-bottom: 0; }
 
 /* ── RESPONSIVE ── */
 @media (max-width: 900px) {
