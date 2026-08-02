@@ -84,7 +84,8 @@
         autoTransitionAtendido();
         updateStats();
         renderOrders();
-        if (!document.getElementById('sectionResumen').hidden) renderResumen();
+        if (!document.getElementById('sectionResumen').hidden)   renderResumen();
+        if (!document.getElementById('sectionCalendario').hidden) renderCalendario();
       }, err => {
         console.error('Firestore error:', err);
       });
@@ -352,10 +353,12 @@
       const section = btn.dataset.section;
       document.getElementById('sectionCotizaciones').hidden = section !== 'cotizaciones';
       document.getElementById('sectionTienda').hidden       = section !== 'tienda';
+      document.getElementById('sectionCalendario').hidden   = section !== 'calendario';
       document.getElementById('sectionResumen').hidden      = section !== 'resumen';
       document.getElementById('sectionTracking').hidden     = section !== 'tracking';
-      if (section === 'tracking') renderTracking();
-      if (section === 'resumen')  renderResumen();
+      if (section === 'tracking')   renderTracking();
+      if (section === 'resumen')    renderResumen();
+      if (section === 'calendario') renderCalendario();
     });
   });
 
@@ -1011,6 +1014,7 @@
         snap.forEach(doc => tiendaOrders.push({ id: doc.id, ...doc.data() }));
         renderTiendaStats();
         renderTiendaOrders();
+        if (!document.getElementById('sectionCalendario').hidden) renderCalendario();
       }, err => console.error('Firestore ordenes_tienda:', err));
   });
 
@@ -1142,6 +1146,182 @@
   // no hereda las variables CSS, así que hay que reconstruirlo a mano.
   document.addEventListener('gb:themechange', () => {
     if (chartInstance) updateChart();
+  });
+
+
+  // ═══════════════════════════════════════════════
+  //  CALENDARIO (eventos a domicilio + entregas de tienda)
+  // ═══════════════════════════════════════════════
+  //  Une dos fuentes en una sola agenda por fecha:
+  //   • pedidos        → o.fecha       (fecha del evento)
+  //   • ordenes_tienda → o.envio.fecha (fecha de entrega)
+  //  Solo cotizaciones ya comprometidas (Separado / Atendido / Venta): las
+  //  que están en Nuevo o Contactado todavía no son fechas confirmadas.
+
+  const CAL_ESTADOS_EVENTO = ['pagado', 'atendido', 'venta'];
+  const CAL_DOW = ['Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb', 'Dom'];
+
+  let calRef    = new Date();   // mes que se está mostrando
+  let calFiltro = 'todos';
+  let calSel    = null;         // día seleccionado ('YYYY-MM-DD') o null = mes completo
+
+  // Clave local YYYY-MM-DD. No usar toISOString(): convierte a UTC y en Lima
+  // (UTC-5) devuelve el día anterior.
+  function calYmd(d) {
+    return d.getFullYear() + '-' +
+           String(d.getMonth() + 1).padStart(2, '0') + '-' +
+           String(d.getDate()).padStart(2, '0');
+  }
+
+  function calItems() {
+    const out = [];
+
+    if (calFiltro !== 'productos') {
+      allOrders.forEach(o => {
+        if (!o.fecha || !CAL_ESTADOS_EVENTO.includes(o.estado)) return;
+        out.push({
+          clase:   'evento',
+          fecha:   o.fecha,
+          nombre:  o.nombre || 'Sin nombre',
+          detalle: [o.tipo, o.pack, o.distrito].filter(Boolean).join(' · '),
+          monto:   typeof o.precioTotal === 'number' ? o.precioTotal : null,
+          estado:  STATUS_LABELS[o.estado] || o.estado,
+        });
+      });
+    }
+
+    if (calFiltro !== 'eventos') {
+      tiendaOrders.forEach(o => {
+        const f = o.envio && o.envio.fecha;
+        if (!f || o.estado === 'cancelado') return;
+        const n = (o.items || []).reduce((s, it) => s + (Number(it.cantidad) || 0), 0);
+        out.push({
+          clase:   'producto',
+          fecha:   f,
+          nombre:  (o.cliente && o.cliente.nombre) || 'Sin nombre',
+          detalle: [n + (n === 1 ? ' producto' : ' productos'), o.envio.distrito, o.envio.rango].filter(Boolean).join(' · '),
+          monto:   typeof o.total === 'number' ? o.total : null,
+          estado:  TD_LABELS[o.estado] || o.estado,
+        });
+      });
+    }
+
+    return out.sort((a, b) => a.fecha.localeCompare(b.fecha));
+  }
+
+  function renderCalendario() {
+    const y = calRef.getFullYear();
+    const m = calRef.getMonth();
+    const nombreMes = calRef.toLocaleDateString('es-PE', { month: 'long', year: 'numeric' });
+    document.getElementById('calMonth').textContent = nombreMes;
+
+    // Agrupar por fecha solo lo del mes visible
+    const prefijo = y + '-' + String(m + 1).padStart(2, '0');
+    const delMes  = calItems().filter(it => it.fecha.startsWith(prefijo));
+    const porDia  = {};
+    delMes.forEach(it => (porDia[it.fecha] = porDia[it.fecha] || []).push(it));
+
+    // ── Resumen del mes ──
+    const nEventos   = delMes.filter(i => i.clase === 'evento').length;
+    const nProductos = delMes.filter(i => i.clase === 'producto').length;
+    const ingreso    = delMes.reduce((s, i) => s + (i.monto || 0), 0);
+    document.getElementById('calStats').innerHTML = `
+      <div class="cal-stat c-eventos"><div class="cal-stat-num">${nEventos}</div><div class="cal-stat-label">🎈 Eventos</div></div>
+      <div class="cal-stat c-productos"><div class="cal-stat-num">${nProductos}</div><div class="cal-stat-label">🛍 Entregas tienda</div></div>
+      <div class="cal-stat c-ingreso"><div class="cal-stat-num">S/ ${ingreso.toFixed(2)}</div><div class="cal-stat-label">Monto agendado</div></div>`;
+
+    // ── Rejilla del mes (semana empieza en lunes) ──
+    const primero = new Date(y, m, 1);
+    const offset  = (primero.getDay() + 6) % 7;      // 0 = lunes
+    const dias    = new Date(y, m + 1, 0).getDate();
+    const celdas  = Math.ceil((offset + dias) / 7) * 7;
+    const hoyKey  = calYmd(new Date());
+
+    let html = CAL_DOW.map(d => `<div class="cal-dow">${d}</div>`).join('');
+
+    for (let i = 0; i < celdas; i++) {
+      const diaNum = i - offset + 1;
+      if (diaNum < 1 || diaNum > dias) { html += '<div class="cal-dia vacio"></div>'; continue; }
+
+      const key   = y + '-' + String(m + 1).padStart(2, '0') + '-' + String(diaNum).padStart(2, '0');
+      const items = porDia[key] || [];
+      const cls   = ['cal-dia'];
+      if (key === hoyKey) cls.push('hoy');
+      if (key === calSel) cls.push('sel');
+
+      // Máximo 2 chips visibles; el resto se resume en "+N"
+      const chips = items.slice(0, 2).map(it =>
+        `<div class="cal-ev ev-${it.clase}" title="${esc(it.nombre)}">${esc(it.nombre)}</div>`).join('');
+      const resto = items.length > 2 ? `<div class="cal-ev-mas">+${items.length - 2}</div>` : '';
+
+      html += `<button type="button" class="${cls.join(' ')}" data-caldia="${key}">
+        <div class="cal-dia-num">${diaNum}</div>${chips}${resto}</button>`;
+    }
+    document.getElementById('calGrid').innerHTML = html;
+
+    // ── Detalle: día seleccionado, o todo el mes ──
+    const lista = calSel ? (porDia[calSel] || []) : delMes;
+    let titulo;
+    if (calSel) {
+      const d = new Date(calSel + 'T00:00:00');
+      titulo = d.toLocaleDateString('es-PE', { weekday: 'long', day: 'numeric', month: 'long' });
+    } else {
+      titulo = 'Todo ' + nombreMes;
+    }
+
+    const det = document.getElementById('calDetalle');
+    if (!lista.length) {
+      det.innerHTML = `<div class="cal-vacio">Sin eventos en ${esc(calSel ? titulo : nombreMes)}.</div>`;
+    } else {
+      det.innerHTML =
+        `<div class="cal-detalle-title">${esc(titulo)} · ${lista.length} ${lista.length === 1 ? 'registro' : 'registros'}</div>` +
+        lista.map(it => {
+          const d   = new Date(it.fecha + 'T00:00:00');
+          const lbl = d.toLocaleDateString('es-PE', { day: 'numeric', month: 'short' });
+          return `<div class="cal-item it-${it.clase}">
+            <div class="cal-item-fecha">${lbl}</div>
+            <div class="cal-item-info">
+              <div class="cal-item-nombre">${it.clase === 'evento' ? '🎈' : '🛍'} ${esc(it.nombre)}</div>
+              <div class="cal-item-det">${esc(it.detalle)} — ${esc(it.estado)}</div>
+            </div>
+            <div class="cal-item-monto">${it.monto != null ? 'S/ ' + it.monto.toFixed(2) : '—'}</div>
+          </div>`;
+        }).join('');
+    }
+  }
+
+  // Click en un día: alterna entre ver ese día y ver el mes completo.
+  // Delegado en la rejilla porque las celdas se regeneran en cada render.
+  document.getElementById('calGrid').addEventListener('click', e => {
+    const celda = e.target.closest('[data-caldia]');
+    if (!celda) return;
+    calSel = (calSel === celda.dataset.caldia) ? null : celda.dataset.caldia;
+    renderCalendario();
+  });
+
+  document.getElementById('calPrev').addEventListener('click', () => {
+    calRef = new Date(calRef.getFullYear(), calRef.getMonth() - 1, 1);
+    calSel = null;
+    renderCalendario();
+  });
+  document.getElementById('calNext').addEventListener('click', () => {
+    calRef = new Date(calRef.getFullYear(), calRef.getMonth() + 1, 1);
+    calSel = null;
+    renderCalendario();
+  });
+  document.getElementById('calHoy').addEventListener('click', () => {
+    calRef = new Date();
+    calSel = null;
+    renderCalendario();
+  });
+
+  document.querySelectorAll('[data-calfiltro]').forEach(chip => {
+    chip.addEventListener('click', () => {
+      document.querySelectorAll('[data-calfiltro]').forEach(c => c.classList.remove('active'));
+      chip.classList.add('active');
+      calFiltro = chip.dataset.calfiltro;
+      renderCalendario();
+    });
   });
 
   document.querySelectorAll('[data-tdfilter]').forEach(tab => {

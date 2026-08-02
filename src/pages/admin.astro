@@ -88,6 +88,7 @@ import '../styles/admin.css';
   <nav class="main-nav">
     <button class="main-nav-btn active" data-section="cotizaciones">📋 Cotizaciones</button>
     <button class="main-nav-btn" data-section="tienda">🛍 Tienda<span class="nav-badge" id="tiendaNavBadge" hidden>0</span></button>
+    <button class="main-nav-btn" data-section="calendario">📅 Calendario</button>
     <button class="main-nav-btn" data-section="resumen">📊 Resumen</button>
     <button class="main-nav-btn" data-section="tracking">📈 Tracking</button>
   </nav>
@@ -235,6 +236,40 @@ import '../styles/admin.css';
   </div>
 
   <!-- ══ SECCIÓN RESUMEN ══ -->
+  <!-- ══ CALENDARIO ══ -->
+  <div id="sectionCalendario" hidden>
+    <div class="tracking-wrap">
+
+      <div class="cal-head">
+        <div>
+          <div class="cal-title">Calendario</div>
+          <div class="cal-sub">Eventos a domicilio y entregas de tienda agendadas por fecha.</div>
+        </div>
+        <div class="cal-nav">
+          <button class="cal-nav-btn" id="calPrev" type="button" aria-label="Mes anterior">←</button>
+          <div class="cal-month" id="calMonth">—</div>
+          <button class="cal-nav-btn" id="calNext" type="button" aria-label="Mes siguiente">→</button>
+          <button class="cal-hoy" id="calHoy" type="button">Hoy</button>
+        </div>
+      </div>
+
+      <!-- Resumen del mes -->
+      <div class="cal-stats" id="calStats"></div>
+
+      <!-- Filtro por unidad de negocio -->
+      <div class="cal-filtros">
+        <button class="cal-chip active" data-calfiltro="todos" type="button">Todo</button>
+        <button class="cal-chip" data-calfiltro="eventos" type="button">🎈 Eventos</button>
+        <button class="cal-chip" data-calfiltro="productos" type="button">🛍 Productos</button>
+      </div>
+
+      <div class="cal-grid" id="calGrid"></div>
+
+      <div class="cal-detalle" id="calDetalle"></div>
+
+    </div>
+  </div>
+
   <div id="sectionResumen" hidden>
     <div class="tracking-wrap">
       <div class="tracking-title">Totales</div>
