@@ -2,6 +2,7 @@
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import Nav from '../../components/Nav.astro';
 import Footer from '../../components/Footer.astro';
+import WhatsAppFloat from '../../components/WhatsAppFloat.astro';
 import CartDrawer from '../../components/CartDrawer.astro';
 import '../../styles/global.css';
 import '../../styles/tienda.css';
@@ -117,6 +118,7 @@ const jsonLd = JSON.stringify({
   </main>
 
   <CartDrawer />
+  <WhatsAppFloat />
   <Footer />
 
   <script is:inline src="/js/tienda.js"></script>

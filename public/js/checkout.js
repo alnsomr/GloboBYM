@@ -17,6 +17,79 @@ function coEsc(str) {
   return String(str || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 }
 
+// ── ENVÍO POR DISTRITO ──
+// El tarifario lo inyecta checkout.astro desde src/data/envios.js (window.GB_ENVIOS).
+// Estado actual del cálculo, que enviarOrden() reutiliza para no recalcular.
+let envioActual = { costo: null, listado: false, distrito: '' };
+
+function coNormDistrito(s) {
+  return String(s || '').normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase().trim();
+}
+
+function coCostoEnvio(distrito) {
+  const tabla = window.GB_ENVIOS || {};
+  const objetivo = coNormDistrito(distrito);
+  if (!objetivo) return { costo: null, listado: false };
+  for (const nombre of Object.keys(tabla)) {
+    if (coNormDistrito(nombre) === objetivo) return { costo: tabla[nombre], listado: true };
+  }
+  const fallback = window.GB_ENVIO_NO_LISTADO;
+  return { costo: fallback === undefined ? null : fallback, listado: false };
+}
+
+// Recalcula la línea de envío y el total. Se llama al escribir el distrito.
+function renderEnvio() {
+  const distrito = (document.getElementById('co-distrito') || {}).value || '';
+  const r = coCostoEnvio(distrito);
+  envioActual = { costo: r.costo, listado: r.listado, distrito: distrito.trim() };
+
+  const elEnvio    = document.getElementById('coEnvio');
+  const elDist     = document.getElementById('coEnvioDistrito');
+  const elTotal    = document.getElementById('coTotal');
+  const elNota     = document.getElementById('coEnvioNota');
+  const btn        = document.getElementById('coEnviar');
+  const subtotal   = gbCart.total();
+
+  elDist.textContent = envioActual.distrito ? '· ' + envioActual.distrito : '';
+
+  // Sin distrito escrito todavía
+  if (!envioActual.distrito) {
+    elEnvio.textContent = '—';
+    elEnvio.className   = '';
+    elTotal.textContent = 'S/ ' + subtotal.toFixed(2);
+    elNota.textContent  = '🚚 Elige tu distrito para calcular el costo de envío.';
+    btn.disabled = false;
+    return;
+  }
+
+  // Distrito sin reparto (null) o no reconocido
+  if (r.costo === null || r.costo === undefined) {
+    elEnvio.textContent = 'A coordinar';
+    elEnvio.className   = 'co-envio-pendiente';
+    elTotal.textContent = 'S/ ' + subtotal.toFixed(2);
+    elNota.textContent  = r.listado
+      ? '📍 Todavía no tenemos tarifa fija para ' + envioActual.distrito +
+        '. Puedes enviar tu pedido igual y coordinamos el envío por WhatsApp.'
+      : '📍 No reconocimos ese distrito. Revisa que esté bien escrito o envía tu ' +
+        'pedido igual: coordinamos el envío contigo por WhatsApp.';
+    btn.disabled = false;   // no bloqueamos la venta: se coordina manualmente
+    return;
+  }
+
+  // Con tarifa
+  const total = subtotal + r.costo;
+  elEnvio.textContent = r.costo === 0 ? 'Gratis' : 'S/ ' + r.costo.toFixed(2);
+  elEnvio.className   = r.costo === 0 ? 'co-envio-gratis' : '';
+  elTotal.textContent = 'S/ ' + total.toFixed(2);
+  elNota.textContent  = r.costo === 0
+    ? '🎉 ¡Envío gratis a ' + envioActual.distrito + '!'
+    : '🚚 Movilidad a ' + envioActual.distrito + ': S/ ' + r.costo.toFixed(2) + '.';
+  if (window.GB_TARIFAS_PROVISIONALES) {
+    elNota.textContent += ' (tarifa referencial, se confirma al coordinar)';
+  }
+  btn.disabled = false;
+}
+
 function renderResumen() {
   const items = gbCart.read();
   const grid = document.getElementById('checkoutGrid');
@@ -39,7 +112,8 @@ function renderResumen() {
       <div class="co-item-precio">S/ ${(it.precio * it.cantidad).toFixed(2)}</div>
     </div>`).join('');
 
-  document.getElementById('coTotal').textContent = 'S/ ' + gbCart.total().toFixed(2);
+  document.getElementById('coSubtotal').textContent = 'S/ ' + gbCart.total().toFixed(2);
+  renderEnvio();  // recalcula envío y total sobre el nuevo subtotal
 }
 
 // Fecha mínima: mañana
@@ -91,9 +165,16 @@ async function enviarOrden() {
       color: it.color || '',
       dedicatoria: it.dedicatoria || '',
     })),
-    total: Math.round(gbCart.total() * 100) / 100,
+    // El total que se guarda YA incluye la movilidad. Si el distrito no tiene
+    // tarifa fija, el envío se coordina aparte y aquí va solo el subtotal.
+    total: Math.round((gbCart.total() + (envioActual.costo || 0)) * 100) / 100,
     cliente: { nombre, telefono },
-    envio: { direccion, distrito, fecha, rango },
+    envio: {
+      direccion, distrito, fecha, rango,
+      // number = tarifa aplicada (0 = gratis) · null = se coordina por WhatsApp
+      costo: typeof envioActual.costo === 'number' ? envioActual.costo : null,
+      subtotal: Math.round(gbCart.total() * 100) / 100,
+    },
     notas,
     estado: 'nuevo',
     createdAt: firebase.firestore.FieldValue.serverTimestamp(),
@@ -117,9 +198,15 @@ async function enviarOrden() {
     if (it.color) txt += ` (${it.color})`;
     txt += `\n`;
   });
-  txt += `\n*Total:* S/ ${gbCart.total().toFixed(2)}`;
+  txt += `\n*Subtotal:* S/ ${gbCart.total().toFixed(2)}`;
+  if (typeof envioActual.costo === 'number') {
+    txt += `\n*Envío (${distrito}):* ${envioActual.costo === 0 ? 'Gratis' : 'S/ ' + envioActual.costo.toFixed(2)}`;
+    txt += `\n*Total:* S/ ${(gbCart.total() + envioActual.costo).toFixed(2)}`;
+  } else {
+    txt += `\n*Envío (${distrito}):* a coordinar`;
+    txt += `\n*Total (sin envío):* S/ ${gbCart.total().toFixed(2)}`;
+  }
   txt += `\n*Entrega:* ${fecha} · ${rango}`;
-  txt += `\n*Distrito:* ${distrito}`;
   txt += `\n*A nombre de:* ${nombre}`;
 
   document.getElementById('ordenOkWa').href =
@@ -151,6 +238,15 @@ function coTrack(field) {
 document.addEventListener('DOMContentLoaded', () => {
   renderResumen();
   document.getElementById('coEnviar').addEventListener('click', enviarOrden);
+
+  // Recalcular el envío mientras se escribe el distrito. 'input' cubre tanto
+  // el tipeo como la selección desde el datalist (click o Enter).
+  const inputDistrito = document.getElementById('co-distrito');
+  if (inputDistrito) {
+    inputDistrito.addEventListener('input',  renderEnvio);
+    inputDistrito.addEventListener('change', renderEnvio);
+    inputDistrito.addEventListener('blur',   renderEnvio);
+  }
   // Funnel: llegó al checkout con productos en el carrito
   if (gbCart.read().length > 0) coTrack('checkout_inicios');
 });

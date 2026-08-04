@@ -1,11 +1,22 @@
 ---
 // Layout base compartido: shell HTML + GA + favicon.
 // Cada página aporta sus meta/fonts/estilos via slot "head".
+import { CAMPANIA, revisaFechas } from '../data/campania.js';
+
 interface Props {
   title: string;
   description?: string;
 }
 const { title, description } = Astro.props;
+
+// Avisa en la consola del build si las fechas están mal o ya vencieron
+revisaFechas();
+
+const camp = {
+  activa: !!CAMPANIA.activa,
+  desde: CAMPANIA.desde || '',
+  hasta: CAMPANIA.hasta || '',
+};
 ---
 <!DOCTYPE html>
 <html lang="es">
@@ -24,6 +35,30 @@ const { title, description } = Astro.props;
     function gtag(){dataLayer.push(arguments);}
     gtag('js', new Date());
     gtag('config', 'G-FX6KTT78Z1');
+  </script>
+
+  <script is:inline define:vars={{ camp }}>
+    // ── VIGENCIA DE LA CAMPAÑA ──
+    // El sitio es estático: si la fecha se evaluara al compilar, el HTML
+    // quedaría congelado y la campaña no caducaría hasta el siguiente deploy.
+    // Por eso se comprueba AQUÍ, en el navegador de cada visitante: así se
+    // apaga sola el día indicado aunque nadie vuelva a publicar el sitio.
+    // Corre antes del primer pintado para que no se vea un parpadeo.
+    (function () {
+      var on = false;
+      try {
+        var d = new Date();
+        var hoy = d.getFullYear() + '-' +
+                  String(d.getMonth() + 1).padStart(2, '0') + '-' +
+                  String(d.getDate()).padStart(2, '0');
+        var fmt = /^\d{4}-\d{2}-\d{2}$/;
+        // Una fecha vacía o mal escrita se ignora (ese extremo queda abierto)
+        on = camp.activa
+          && (!fmt.test(camp.desde) || hoy >= camp.desde)
+          && (!fmt.test(camp.hasta) || hoy <= camp.hasta);
+      } catch (e) { on = false; }
+      document.documentElement.setAttribute('data-campania', on ? 'on' : 'off');
+    })();
   </script>
 
   <slot name="head" />

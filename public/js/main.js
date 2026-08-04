@@ -171,13 +171,30 @@
   });
 
   // ── HERO SLIDESHOW ──
-  const heroSlides = document.querySelectorAll('.hero-bg-slide');
-  let hCur = 0;
-  setInterval(() => {
-    heroSlides[hCur].classList.remove('active');
-    hCur = (hCur + 1) % heroSlides.length;
-    heroSlides[hCur].classList.add('active');
-  }, 4000);
+  // La rotación del fondo se movió a src/components/HeroFondo.astro, que es
+  // compartido por la landing y la tienda (main.js solo se carga en la landing).
+
+  // ── CARRUSEL DE LA PORTADA DE CAMPAÑA ──
+  // Mismas fotos que antes rotaban de fondo, ahora dentro de la tarjeta.
+  (function campaniaSlider() {
+    // Si la campaña ya venció, la tarjeta está oculta: no rotar nada.
+    if (document.documentElement.dataset.campania !== 'on') return;
+    const cont = document.getElementById('campaniaSlider');
+    if (!cont) return;                       // no hay campaña activa
+    const fotos = cont.querySelectorAll('.campania-hero-foto');
+    const dots  = cont.querySelectorAll('.campania-hero-dot');
+    if (fotos.length < 2) return;            // una sola foto: nada que rotar
+
+    const intervalo = parseInt(cont.dataset.intervalo, 10) || 4000;
+    let cCur = 0;
+    setInterval(() => {
+      fotos[cCur].classList.remove('active');
+      if (dots[cCur]) dots[cCur].classList.remove('active');
+      cCur = (cCur + 1) % fotos.length;
+      fotos[cCur].classList.add('active');
+      if (dots[cCur]) dots[cCur].classList.add('active');
+    }, intervalo);
+  })();
 
   // ── HAMBURGER ──
   const hamburger  = document.getElementById('hamburger');
@@ -217,6 +234,14 @@
 
   document.getElementById('btn-abrir-form-hero').addEventListener('click', e => { e.preventDefault(); openFormModal(); });
   document.getElementById('btn-abrir-form-contacto').addEventListener('click', openFormModal);
+
+  // Portada de campaña: en Servicios convierte a cotización, no a la tienda
+  // (accionServicios en src/data/campania.js). El href queda en #contacto como
+  // respaldo por si el JS no carga, así que aquí hay que frenar la navegación.
+  const campaniaCta = document.querySelector('[data-abre-modal="true"]');
+  if (campaniaCta) {
+    campaniaCta.addEventListener('click', e => { e.preventDefault(); openFormModal(); });
+  }
   document.getElementById('nav-cta-desktop').addEventListener('click', e => { e.preventDefault(); openFormModal(); });
   document.getElementById('nav-cta-mobile').addEventListener('click', e => {
     e.preventDefault();
@@ -224,8 +249,16 @@
     openFormModal();
   });
 
+  // ¿Hay campaña vigente? Lo decide BaseLayout comparando la fecha de hoy
+  // con desde/hasta, y lo deja en <html data-campania="on|off">.
+  const campaniaVigente = document.documentElement.dataset.campania === 'on';
+
   // ── SEMANA SLIDER (dinámico, lee assets/semana/index.json) ──
   (async function initSemana() {
+    // Con campaña vigente esta tarjeta está oculta por CSS: no tiene sentido
+    // descargar el manifiesto ni las fotos de la semana.
+    if (campaniaVigente) return;
+
     const card = document.getElementById('semanaCard');
     const slider = document.getElementById('semanaSlider');
     const dotsWrap = document.getElementById('semanaDots');

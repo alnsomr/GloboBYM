@@ -1004,6 +1004,34 @@
   let tdFilter     = 'todos';
   let tdInit       = false;
 
+  // Desglose del cobro. Desde que hay movilidad por distrito, `total` incluye
+  // el envío: sin separarlo no se sabe cuánto es producto y cuánto flete.
+  // Los pedidos anteriores a este cambio no traen envio.costo -> se muestran
+  // como antes, con una sola línea.
+  function tdDesgloseTotal(o) {
+    const total = Number(o.total) || 0;
+    const envio = o.envio || {};
+    const costo = typeof envio.costo === 'number' ? envio.costo : null;
+
+    if (costo === null) {
+      const nota = envio.distrito ? ' <small style="font-weight:400;opacity:.7">· envío a coordinar</small>' : '';
+      return `<div class="card-total-row"><span>Total${nota}</span><span>S/ ${total.toFixed(2)}</span></div>`;
+    }
+
+    const sub = typeof envio.subtotal === 'number' ? envio.subtotal : total - costo;
+    return `
+      <div class="card-total-row" style="font-weight:400;font-size:.8rem;border-bottom:none;padding-bottom:2px;">
+        <span>Productos</span><span>S/ ${sub.toFixed(2)}</span>
+      </div>
+      <div class="card-total-row" style="font-weight:400;font-size:.8rem;border-top:none;padding-top:0;padding-bottom:2px;">
+        <span>Envío${envio.distrito ? ' · ' + esc(envio.distrito) : ''}</span>
+        <span>${costo === 0 ? 'Gratis' : 'S/ ' + costo.toFixed(2)}</span>
+      </div>
+      <div class="card-total-row" style="border-top:none;padding-top:4px;">
+        <span>Total</span><span>S/ ${total.toFixed(2)}</span>
+      </div>`;
+  }
+
   auth.onAuthStateChanged(user => {
     if (!user || tdInit) return;
     tdInit = true;
@@ -1101,7 +1129,7 @@
           ${o.notas ? `<div class="card-message">"${esc(o.notas)}"</div>` : ''}
         </div>
         <div class="card-items">${items}</div>
-        <div class="card-total-row"><span>Total productos</span><span>S/ ${(o.total || 0).toFixed(2)}</span></div>
+        ${tdDesgloseTotal(o)}
         <div class="card-actions">
           ${tel ? `
             <a href="https://wa.me/${tel}?text=${waText}" target="_blank" class="btn-wa">💬 WhatsApp</a>

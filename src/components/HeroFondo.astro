@@ -1,0 +1,52 @@
+---
+// Fondo de fotos rotativas del hero. Compartido por la landing y la tienda.
+//
+// Las rutas van ABSOLUTAS ('/assets/...'): en /tienda/ una ruta relativa
+// resolvería a /tienda/assets/... y las fotos no cargarían.
+//
+// La rotación vive aquí y no en main.js porque main.js solo se carga en la
+// landing; así el componente funciona en cualquier página donde se use.
+const FOTOS = [
+  '/assets/foto1.jpg',
+  '/assets/foto2.jpg',
+  '/assets/foto3.jpg',
+  '/assets/foto4.jpg',
+];
+---
+<div class="hero-bg">
+  {FOTOS.map((src, i) => (
+    <div
+      class:list={['hero-bg-slide', i === 0 && 'active']}
+      style={`background-image:url('${src}')`}
+    />
+  ))}
+  <div class="hero-bg-overlay"></div>
+</div>
+
+<script is:inline>
+  (function () {
+    // El componente puede aparecer una vez por página; la guarda evita
+    // registrar dos temporizadores si en el futuro se usara dos veces.
+    if (window.__gbHeroBgInit) return;
+    window.__gbHeroBgInit = true;
+
+    function iniciar() {
+      document.querySelectorAll('.hero-bg').forEach(function (bg) {
+        var slides = bg.querySelectorAll('.hero-bg-slide');
+        if (slides.length < 2) return;
+        var i = 0;
+        setInterval(function () {
+          slides[i].classList.remove('active');
+          i = (i + 1) % slides.length;
+          slides[i].classList.add('active');
+        }, 4000);
+      });
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', iniciar);
+    } else {
+      iniciar();
+    }
+  })();
+</script>

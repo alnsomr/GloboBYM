@@ -60,18 +60,48 @@ Cerrar siempre con **síntesis breve** y recomendación concreta.
 
 ## Estructura
 
-- `src/pages/index.astro` — landing eventos. Hero con carrusel "Decoraciones de esta
-  semana" (lee `public/assets/semana/index.json`, regenerable con `actualizar-semana.ps1`),
-  servicios 8 cards, galería, **sección vitrina de tienda** (3 destacados), why-us, contacto+form.
+- `src/pages/index.astro` — landing eventos. Hero con fondo rotativo (`HeroFondo`) +
+  carrusel "Decoraciones de esta semana" (lee `public/assets/semana/index.json`,
+  regenerable con `actualizar-semana.ps1`), servicios 8 cards, galería,
+  **sección vitrina de tienda** (3 destacados), why-us, contacto+form.
 - `src/pages/tienda.astro` + `tienda/[id].astro` — catálogo y páginas de producto desde
   `src/data/productos.json` (fuente de verdad del catálogo, ver `src/data/README.md`).
+  La tienda tiene su propio hero (`.tienda-hero`), más bajo que el de la landing a
+  propósito: aquí lo que importa es que el catálogo quede cerca del primer pantallazo.
+  El banner de cross-promoción a eventos va DESPUÉS del catálogo y apunta a `/`.
 - `src/pages/checkout.astro` — datos de entrega → guarda en Firestore `ordenes_tienda`.
 - `src/pages/admin.astro` — panel: Cotizaciones / 🛍 Tienda (con funnel) / Resumen / Tracking.
 - `src/pages/{terminos,privacidad,devoluciones}.astro` — legales. Variables en `src/data/legal.js`.
 - `src/pages/libro-de-reclamaciones.astro` — comparte la base del proyecto Firebase
   `pulso-reclamaciones` (de otro proyecto del usuario) + respaldo Supabase; los reclamos
   llevan `negocioId: 'globobym'` y numeración `GBR-`.
-- `src/components/` — Nav (prop showCart), Footer, CartDrawer, DistritosDatalist.
+- `src/components/` — Nav (prop showCart, incluye "Inicio"), Footer, CartDrawer,
+  **HeroFondo** (fondo de fotos rotativas, compartido landing+tienda; la rotación vive
+  ahí y NO en main.js, que solo carga en la landing), **DistritoSelect** (`<select>`
+  agrupado por zona, alimentado por `envios.js`), **WhatsAppFloat** (botón flotante),
+  **CampaniaHero** (portada de campaña) y **CampaniaTienda** (sección de productos).
+- `src/data/campania.js` — campañas de temporada (día de la madre/padre/niño, San Valentín).
+  **Un solo interruptor para las dos páginas**:
+  - `activa: true` → landing: la portada de campaña reemplaza a "Decoraciones de esta
+    semana"; tienda: aparece la sección con fotos de productos.
+  - `activa: false` → vuelve el carrusel semanal y la sección de tienda desaparece.
+  - En móvil/tablet la campaña se apodera de la portada (`order:-1`) y oculta el fondo
+    del hero. **En escritorio el hero se mantiene intacto** — la campaña ocupa el hueco
+    lateral que tenía el carrusel semanal.
+  - **`desde`/`hasta` (`AAAA-MM-DD`, ambos incluidos) la apagan sola.** La fecha se
+    comprueba EN EL NAVEGADOR (`data-campania` en `<html>`, lo pone `BaseLayout`), no al
+    compilar: el sitio es estático y si se evaluara en build el HTML quedaría congelado y
+    la campaña no caducaría hasta el siguiente deploy. Efecto secundario aceptado: el HTML
+    publica las dos tarjetas y el CSS elige, así que sin JS se verían ambas.
+  - `accionServicios: 'cotizar'` — en la landing la campaña abre el **formulario de
+    cotización**, no la tienda. Los packs son S/650–1999 y los productos S/50–129: mandar
+    esa visita a la tienda cambia un lead caro por uno barato. En tienda no redirige.
+- `src/data/envios.js` — tarifario de movilidad por distrito (50 distritos de Lima + Callao).
+  `0` = gratis · número = costo · `null` = sin reparto/a coordinar.
+  ⚠️ **PRECIOS PROVISIONALES** hasta que el cliente entregue su tarifario real
+  (`TARIFAS_PROVISIONALES = true` muestra el aviso "tarifa referencial" en el checkout).
+- `src/data/pagos.js` — configuración de Culqi (link de separación S/100 + llaves de tienda).
+  Todo vacío = el sitio se comporta como hoy y no muestra botones de pago.
 - `public/js/main.js` (landing), `tienda.js` (carrito localStorage `gb_cart_v1` + gbTrack),
   `checkout.js`, `admin.js`.
 - `firestore.rules` — reglas endurecidas con validación de schema (pedidos, ordenes_tienda,
@@ -86,7 +116,12 @@ Cerrar siempre con **síntesis breve** y recomendación concreta.
 - **Compra tienda**: producto (color/dedicatoria/cantidad) → carrito drawer → checkout →
   `ordenes_tienda` (estado `nuevo`) → panel Tienda. Estados: nuevo → preparando →
   enviado → entregado (+cancelado). Eliminación definitiva con código **PRUEBA** (botón 🗑).
-  Pago actual: coordinado por WhatsApp/Yape. Envío: "se coordina según distrito".
+  Pago actual: coordinado por WhatsApp/Yape.
+- **Envío**: el checkout muestra Subtotal + Envío = Total, calculado desde `envios.js`
+  según el distrito elegido. `envio.costo` y `envio.subtotal` se guardan DENTRO del mapa
+  `envio` a propósito: las reglas de Firestore restringen las claves raíz con `hasOnly`,
+  pero no las de `envio` → **no hubo que republicar reglas**. El panel desglosa
+  Productos / Envío / Total; los pedidos viejos sin `envio.costo` se ven como antes.
 - **Funnel** (contadores en `metricas/general` + eventos GA4): visitas_sitio,
   visitas_formulario, catalogo_aperturas, whatsapp_clicks, tienda_visitas,
   carrito_agregados, checkout_inicios, ordenes_completadas. Panel muestra funnel de
@@ -101,8 +136,18 @@ Cerrar siempre con **síntesis breve** y recomendación concreta.
   el cliente compre el dominio se crea/actualiza el perfil (clave para búsquedas locales y
   para reviews reales). Hoy el sitio se anuncia como `LocalBusiness` con geo pero no existe
   en Google Maps.
-- WhatsApp solo al final (sección contacto + footer): se "educa" al cliente a usar
-  el formulario/carrito. Sin botón flotante ni WA en el hero.
+- ⚠️ **REVERTIDO (reunión 2 ago 2026)**: antes WhatsApp iba solo al final para "educar"
+  al cliente a usar el formulario/carrito. El cliente pidió **botón flotante siempre
+  visible** en todas las páginas (`src/components/WhatsAppFloat.astro`). Riesgo advertido
+  y aceptado: canibaliza cotizaciones del formulario, y lo que entra por WhatsApp **no
+  queda registrado en el CRM**. Vigilar en el funnel si `whatsapp_clicks` sube mientras
+  `visitas_formulario` baja.
+- **Color de marca: fucsia → azul navy `#1B2138`** (reunión 2 ago 2026, color dado por el
+  cliente en imagen). Centralizado en 3 tokens en `global.css`: `--primary`, `--primary-light`,
+  `--primary-rgb`. Cambiar el color del sitio = editar esas 3 líneas.
+  Se añadió `--primary-accent: #3D5BA9` porque el navy puro es casi igual a `--dark`: usado
+  en texto (los `<em>` de los títulos, `.section-tag`) el acento se volvía invisible.
+  **El panel `/admin/` sigue en fucsia a propósito** — el pedido fue solo para la web pública.
 - Headline: "Decoración con globos premium a domicilio en Lima y Callao".
 - CTAs hero: Solicitar cotización (primario) → Ver packs y precios → Ver galería.
 - NO splash de bienvenida para separar unidades de negocio: se usa cross-promoción
@@ -134,6 +179,17 @@ Cerrar siempre con **síntesis breve** y recomendación concreta.
    6. El dev configura el **webhook** de confirmación en el panel (Fase 3).
    - Costos: comisión ~3.99% + S/0.50 + IGV por venta. Sin costo fijo mensual.
    - ⚠️ Los rótulos exactos del panel pueden variar; confirmar en el panel real / soporte Culqi.
+
+## Pendientes del cliente tras la reunión del 2 ago 2026
+
+1. **Tarifario de movilidad por distrito** → reemplazar los valores provisionales de
+   `src/data/envios.js`. Es prerequisito de Culqi: no se puede cobrar un total automático
+   si el envío es variable y desconocido.
+2. **Link de pago Culqi de S/100** (monto fijo → se genera desde el panel, sin programación)
+   → pegar en `PAGOS.linkSeparacion`. El botón "Separar mi fecha" aparece solo.
+3. **Llaves API de Culqi** (`pk_live_` / `sk_live_`) para el cobro variable de la tienda.
+4. Sigue pendiente de antes: catálogo real, razón social + RUC, plazos legales.
+5. **Imágenes de campaña** cuando arranque la primera temporada.
 
 ## Fase 3 (siguiente, bloqueada por insumos)
 

@@ -13,6 +13,9 @@ const p = (anchor: string) => (isHome ? anchor : '/' + anchor);
 <nav>
   <a href={isHome ? '#inicio' : '/'} aria-label="GloboBYM"><img src="/assets/logo.jpg" alt="GloboBYM" class="nav-logo-img" /></a>
   <ul>
+    {/* Desde tienda/checkout, "Servicios" cae a media página (#servicios).
+        "Inicio" lleva al tope de la landing. */}
+    <li><a href={isHome ? '#inicio' : '/'}>Inicio</a></li>
     <li><a href={p('#servicios')}>Servicios</a></li>
     <li><a href={p('#galeria')}>Galería</a></li>
     <li><a href="/tienda/">Tienda</a></li>
@@ -43,6 +46,7 @@ const p = (anchor: string) => (isHome ? anchor : '/' + anchor);
 
 <!-- MENÚ MÓVIL -->
 <div class="nav-mobile-menu" id="mobileMenu">
+  <a href={isHome ? '#inicio' : '/'}>Inicio</a>
   <a href={p('#servicios')}>Servicios</a>
   <a href={p('#galeria')}>Galería</a>
   <a href="/tienda/">Tienda</a>

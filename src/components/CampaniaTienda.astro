@@ -1,0 +1,38 @@
+---
+// Sección de campaña dentro de /tienda/.
+// A diferencia de la tarjeta del hero, esta NO redirige a ningún lado:
+// muestra las fotos de los productos de campaña aquí mismo, y cada tarjeta
+// enlaza a su propia página de producto.
+// Solo se renderiza si CAMPANIA.activa === true.
+import { CAMPANIA, productosDeCampania } from '../data/campania.js';
+import data from '../data/productos.json';
+
+const c = CAMPANIA;
+const productos = productosDeCampania(data);
+---
+{c.activa && productos.length > 0 && (
+  <section class="campania-tienda">
+    <div class="campania-tienda-head">
+      {c.etiqueta && <span class="campania-etiqueta">{c.etiqueta}</span>}
+      <h2 class="campania-tienda-titulo">{c.titulo}</h2>
+      {c.subtitulo && <p class="campania-tienda-sub">{c.subtitulo}</p>}
+    </div>
+
+    <div class="campania-productos">
+      {productos.map(p => (
+        <a href={`/tienda/${p.id}/`} class:list={['campania-producto', !p.disponible && 'agotado']}>
+          <div class="campania-producto-img">
+            {!p.disponible && <span class="producto-badge agotado-badge">Agotado</span>}
+            {p.imagenes && p.imagenes.length
+              ? <img src={`/assets/productos/${p.imagenes[0]}`} alt={p.nombre} loading="lazy" />
+              : <div class="producto-img-placeholder">🎈</div>}
+          </div>
+          <div class="campania-producto-info">
+            <span class="campania-producto-nombre">{p.nombre}</span>
+            <span class="campania-producto-precio">S/ {p.precio.toFixed(2)}</span>
+          </div>
+        </a>
+      ))}
+    </div>
+  </section>
+)}

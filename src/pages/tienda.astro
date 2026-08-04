@@ -2,6 +2,9 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Nav from '../components/Nav.astro';
 import Footer from '../components/Footer.astro';
+import WhatsAppFloat from '../components/WhatsAppFloat.astro';
+import CampaniaTienda from '../components/CampaniaTienda.astro';
+import HeroFondo from '../components/HeroFondo.astro';
 import CartDrawer from '../components/CartDrawer.astro';
 import '../styles/global.css';
 import '../styles/tienda.css';
@@ -29,16 +32,21 @@ const description = 'Compra globos personalizados, box sorpresa y ramos de globo
 
   <Nav showCart={true} />
 
-  <main class="tienda-main">
-    <div class="tienda-header">
+  {/* Hero con las mismas fotos rotativas de la landing. Deliberadamente más
+      bajo que el de inicio: aquí lo principal es el catálogo, así que los
+      productos deben quedar cerca del primer pantallazo. */}
+  <section class="tienda-hero">
+    <HeroFondo />
+    <div class="tienda-hero-text">
       <div class="section-tag">Tienda GloboBYM</div>
       <h2 class="section-title">Globos personalizados<br/><em>con delivery en Lima</em></h2>
-      <p class="section-sub" style="margin: 0 auto;">Elige tu producto, personalízalo y recíbelo en la puerta de tu casa.</p>
+      <p class="section-sub">Elige tu producto, personalízalo y recíbelo en la puerta de tu casa.</p>
     </div>
+  </section>
 
-    <a href="/#servicios" class="tienda-cross-banner">
-      🎈 ¿Celebras un evento? También hacemos <strong>decoración completa a domicilio</strong> — mira nuestros servicios →
-    </a>
+  <main class="tienda-main">
+
+    <CampaniaTienda />
 
     <div class="cat-filter" id="catFilter">
       <button class="active" data-cat="">Todos</button>
@@ -64,9 +72,18 @@ const description = 'Compra globos personalizados, box sorpresa y ramos de globo
         </a>
       ))}
     </div>
+
+    {/* Cross-promoción hacia eventos. Va DESPUÉS del catálogo: en esta página
+        lo principal es vender producto, no desviar al visitante antes de que
+        vea la tienda. Apunta a "/" (tope de la landing), no a #servicios, para
+        que llegue al hero y no a media página. */}
+    <a href="/" class="tienda-cross-banner">
+      🎈 ¿Celebras un evento? También hacemos <strong>decoración completa a domicilio</strong> — mira nuestros servicios →
+    </a>
   </main>
 
   <CartDrawer />
+  <WhatsAppFloat />
   <Footer />
 
   <script is:inline src="/js/tienda.js"></script>

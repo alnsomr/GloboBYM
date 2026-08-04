@@ -1,0 +1,26 @@
+---
+// Selector de distrito. Reemplaza al input de texto libre + <datalist>.
+//
+// Por qué se cambió: con datalist, al escribir algo el navegador FILTRA la lista
+// y ya no se puede volver a ver el listado completo sin borrar lo escrito.
+// Además, al ser texto libre, un typo dejaba el distrito fuera del tarifario de
+// envío. Con <select> la lista completa está siempre disponible, el valor
+// siempre coincide con src/data/envios.js y en móvil abre el selector nativo.
+//
+// Las opciones salen de ZONAS (envios.js): una sola fuente de verdad.
+import { ZONAS } from '../data/envios.js';
+
+interface Props {
+  id: string;
+  required?: boolean;
+}
+const { id, required = true } = Astro.props;
+---
+<select id={id} class="distrito-select" required={required}>
+  <option value="" disabled selected>Selecciona tu distrito...</option>
+  {ZONAS.map(zona => (
+    <optgroup label={zona.nombre}>
+      {zona.distritos.map(d => <option value={d}>{d}</option>)}
+    </optgroup>
+  ))}
+</select>

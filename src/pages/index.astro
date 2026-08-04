@@ -2,6 +2,12 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Nav from '../components/Nav.astro';
 import Footer from '../components/Footer.astro';
+import WhatsAppFloat from '../components/WhatsAppFloat.astro';
+import CampaniaHero from '../components/CampaniaHero.astro';
+import { CAMPANIA } from '../data/campania.js';
+import { PAGOS, separacionDisponible } from '../data/pagos.js';
+import DistritoSelect from '../components/DistritoSelect.astro';
+import HeroFondo from '../components/HeroFondo.astro';
 import '../styles/global.css';
 import dataProductos from '../data/productos.json';
 
@@ -92,13 +98,10 @@ const description = 'Boutique de globería profesional en Lima. Decoraciones per
 
 <!-- HERO -->
 <section class="hero" id="inicio">
-  <div class="hero-bg">
-    <div class="hero-bg-slide active" style="background-image:url('assets/foto1.jpg')"></div>
-    <div class="hero-bg-slide" style="background-image:url('assets/foto2.jpg')"></div>
-    <div class="hero-bg-slide" style="background-image:url('assets/foto3.jpg')"></div>
-    <div class="hero-bg-slide" style="background-image:url('assets/foto4.jpg')"></div>
-    <div class="hero-bg-overlay"></div>
-  </div>
+  {/* Carrusel de fondo: SIEMPRE se renderiza. En escritorio se ve haya o no
+      campaña. En móvil, con campaña activa, el CSS lo oculta y la portada
+      pasa a ser la tarjeta de campaña (esas mismas fotos rotan dentro). */}
+  <HeroFondo />
 
   <div class="hero-text">
     <div class="hero-badge">Boutique de Globos · 33K seguidores · Lima, Perú</div>
@@ -117,7 +120,12 @@ const description = 'Boutique de globería profesional en Lima. Decoraciones per
     </div>
   </div>
 
-  <!-- Decoraciones de esta semana (carousel dinámico — lee assets/semana/index.json) -->
+  {/* Se publican las DOS y el CSS muestra una según data-campania, que el
+      navegador calcula con la fecha de hoy (ver BaseLayout). Si se decidiera
+      al compilar, la campaña no podría caducar sola. */}
+  {CAMPANIA.activa && <CampaniaHero />}
+
+  {/* Carousel dinámico — lee assets/semana/index.json */}
   <aside class="semana-card" id="semanaCard" aria-label="Decoraciones de esta semana" hidden>
     <div class="semana-header">Decoraciones de esta semana</div>
     <div class="semana-sub">Lo más reciente</div>
@@ -467,6 +475,12 @@ const description = 'Boutique de globería profesional en Lima. Decoraciones per
     📋 Solicitar cotización online
   </button>
 
+  {separacionDisponible && (
+    <a href={PAGOS.linkSeparacion} target="_blank" rel="noopener" class="btn-reserva btn-separar">
+      💳 Separar mi fecha con S/{PAGOS.montoSeparacion}
+    </a>
+  )}
+
   <div class="contact-divider">o escríbenos directamente</div>
 
   <a href="https://wa.me/51960876002?text=Hola%20GloboBYM%2C%20me%20gustar%C3%ADa%20cotizar%20una%20decoraci%C3%B3n%20para%20mi%20evento.%20%C2%BFPodr%C3%ADan%20ayudarme%3F" target="_blank" class="cta-whatsapp">
@@ -525,59 +539,7 @@ const description = 'Boutique de globería profesional en Lima. Decoraciones per
       </div>
       <div class="form-field">
         <label>Distrito</label>
-        <input type="text" id="f-distrito" list="distritos-lima" placeholder="Empieza a escribir..." autocomplete="off" required />
-        <datalist id="distritos-lima">
-          <option value="Ancón"></option>
-          <option value="Ate"></option>
-          <option value="Barranco"></option>
-          <option value="Breña"></option>
-          <option value="Carabayllo"></option>
-          <option value="Cercado de Lima"></option>
-          <option value="Chaclacayo"></option>
-          <option value="Chorrillos"></option>
-          <option value="Cieneguilla"></option>
-          <option value="Comas"></option>
-          <option value="El Agustino"></option>
-          <option value="Independencia"></option>
-          <option value="Jesús María"></option>
-          <option value="La Molina"></option>
-          <option value="La Victoria"></option>
-          <option value="Lince"></option>
-          <option value="Los Olivos"></option>
-          <option value="Lurigancho-Chosica"></option>
-          <option value="Lurín"></option>
-          <option value="Magdalena del Mar"></option>
-          <option value="Miraflores"></option>
-          <option value="Pachacámac"></option>
-          <option value="Pucusana"></option>
-          <option value="Pueblo Libre"></option>
-          <option value="Puente Piedra"></option>
-          <option value="Punta Hermosa"></option>
-          <option value="Punta Negra"></option>
-          <option value="Rímac"></option>
-          <option value="San Bartolo"></option>
-          <option value="San Borja"></option>
-          <option value="San Isidro"></option>
-          <option value="San Juan de Lurigancho"></option>
-          <option value="San Juan de Miraflores"></option>
-          <option value="San Luis"></option>
-          <option value="San Martín de Porres"></option>
-          <option value="San Miguel"></option>
-          <option value="Santa Anita"></option>
-          <option value="Santa María del Mar"></option>
-          <option value="Santa Rosa"></option>
-          <option value="Santiago de Surco"></option>
-          <option value="Surquillo"></option>
-          <option value="Villa El Salvador"></option>
-          <option value="Villa María del Triunfo"></option>
-          <option value="Callao"></option>
-          <option value="Bellavista"></option>
-          <option value="Carmen de la Legua"></option>
-          <option value="La Perla"></option>
-          <option value="La Punta"></option>
-          <option value="Ventanilla"></option>
-          <option value="Mi Perú"></option>
-        </datalist>
+        <DistritoSelect id="f-distrito" />
       </div>
       <div class="form-field full">
         <label>Cuéntanos tu idea</label>
@@ -589,6 +551,9 @@ const description = 'Boutique de globería profesional en Lima. Decoraciones per
     </button>
   </div>
 </div>
+
+
+  <WhatsAppFloat />
 
 
   <Footer />

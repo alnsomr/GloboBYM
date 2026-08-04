@@ -1,0 +1,47 @@
+---
+// PORTADA DE CAMPAÑA — reemplaza al hero normal cuando CAMPANIA.activa = true.
+//
+// Con campaña activa, index.astro NO renderiza .hero-bg (el carrusel de fondo).
+// Las fotos que antes rotaban de fondo ahora rotan DENTRO de esta tarjeta,
+// leídas de CAMPANIA.imagenes (public/assets/campanias/).
+//
+// La rotación la maneja main.js (#campaniaSlider), reutilizando el mismo
+// patrón de clase .active que ya usaba el hero.
+import { CAMPANIA, destinoServicios } from '../data/campania.js';
+const c = CAMPANIA;
+const imgs = c.imagenes || [];
+// En Servicios la campaña convierte a COTIZACIÓN, no a la tienda (ver campania.js)
+const destino = destinoServicios();
+---
+<a
+  href={destino.href}
+  class:list={['campania-hero', imgs.length && 'con-imagen']}
+  aria-label={`Campaña ${c.titulo}`}
+  data-intervalo={c.intervaloMs || 4000}
+  data-abre-modal={destino.abreModal ? 'true' : undefined}
+  id="campaniaSlider"
+>
+  {imgs.length > 0 && (
+    <div class="campania-hero-fotos" aria-hidden="true">
+      {imgs.map((src, i) => (
+        <div
+          class:list={['campania-hero-foto', i === 0 && 'active']}
+          style={`background-image: url('${src}')`}
+        />
+      ))}
+    </div>
+  )}
+
+  <div class="campania-hero-inner">
+    {c.etiqueta && <span class="campania-etiqueta">{c.etiqueta}</span>}
+    <span class="campania-hero-titulo">{c.titulo}</span>
+    {c.subtitulo && <span class="campania-hero-sub">{c.subtitulo}</span>}
+    <span class="campania-cta">{destino.cta} →</span>
+  </div>
+
+  {imgs.length > 1 && (
+    <div class="campania-hero-dots" id="campaniaDots" aria-hidden="true">
+      {imgs.map((_, i) => <span class:list={['campania-hero-dot', i === 0 && 'active']} />)}
+    </div>
+  )}
+</a>

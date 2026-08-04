@@ -2,10 +2,12 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Nav from '../components/Nav.astro';
 import Footer from '../components/Footer.astro';
+import WhatsAppFloat from '../components/WhatsAppFloat.astro';
 import CartDrawer from '../components/CartDrawer.astro';
-import DistritosDatalist from '../components/DistritosDatalist.astro';
+import DistritoSelect from '../components/DistritoSelect.astro';
 import '../styles/global.css';
 import '../styles/tienda.css';
+import { ENVIOS, TARIFAS_PROVISIONALES, ENVIO_NO_LISTADO } from '../data/envios.js';
 ---
 <BaseLayout title="Finalizar pedido | Tienda GloboBYM" description="Completa tu pedido de globos personalizados con delivery en Lima.">
   <Fragment slot="head">
@@ -71,8 +73,7 @@ import '../styles/tienda.css';
           </div>
           <div class="co-field">
             <label for="co-distrito">Distrito *</label>
-            <input type="text" id="co-distrito" list="distritos-lima" placeholder="Empieza a escribir..." autocomplete="off" required />
-            <DistritosDatalist />
+            <DistritoSelect id="co-distrito" />
           </div>
           <div class="co-field">
             <label for="co-fecha">Fecha de entrega *</label>
@@ -98,10 +99,14 @@ import '../styles/tienda.css';
       <div class="checkout-resumen">
         <h3>Resumen del pedido</h3>
         <div id="coResumenItems"><!-- JS --></div>
-        <div class="co-total"><span>Subtotal</span><span id="coTotal">S/ 0.00</span></div>
-        <div class="co-envio-nota">
-          🚚 El costo de envío se coordina por WhatsApp según tu distrito,
-          y el pago se realiza por Yape, Plin o transferencia.
+        <div class="co-linea"><span>Subtotal</span><span id="coSubtotal">S/ 0.00</span></div>
+        <div class="co-linea">
+          <span>Envío <small id="coEnvioDistrito"></small></span>
+          <span id="coEnvio">—</span>
+        </div>
+        <div class="co-total"><span>Total</span><span id="coTotal">S/ 0.00</span></div>
+        <div class="co-envio-nota" id="coEnvioNota">
+          🚚 Elige tu distrito para calcular el costo de envío.
         </div>
         <div class="co-legal">
           <label class="co-consent" style="display:flex; gap:8px; align-items:flex-start; cursor:pointer;">
@@ -117,7 +122,16 @@ import '../styles/tienda.css';
   </main>
 
   <CartDrawer />
+  <WhatsAppFloat />
   <Footer />
+
+  <!-- Tarifario de envío: se inyecta desde src/data/envios.js en tiempo de build.
+       checkout.js es un script plano y no puede importar módulos de src/. -->
+  <script is:inline define:vars={{ ENVIOS, TARIFAS_PROVISIONALES, ENVIO_NO_LISTADO }}>
+    window.GB_ENVIOS = ENVIOS;
+    window.GB_ENVIO_NO_LISTADO = ENVIO_NO_LISTADO;
+    window.GB_TARIFAS_PROVISIONALES = TARIFAS_PROVISIONALES;
+  </script>
 
   <script is:inline src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
   <script is:inline src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
